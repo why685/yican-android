@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#b53a2d" />
+    <meta name="description" content="按菜名或现有食材快速查找家常菜谱，管理属于自己的离线菜谱库。" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>一餐｜离线菜谱库</title>
+  </head>
+  <body>
+    <header class="topbar">
+      <button class="brand" id="brand-home" type="button" aria-label="回到发现页">
+        <span class="brand-mark" aria-hidden="true">一</span>
+        <span>一餐</span>
+      </button>
+      <p class="top-note">好好吃饭，从手边的食材开始</p>
+    </header>
+
+    <main>
+      <section class="page-view active" id="view-discover" data-view="discover">
+        <section class="search-stage" aria-labelledby="page-title">
+          <div class="search-copy">
+            <p class="eyebrow">今天吃什么？</p>
+            <h1 id="page-title">把冰箱里的食材，<br />变成今晚的一餐。</h1>
+            <p class="intro">输入菜名直接找做法，或告诉我们你有什么食材。</p>
+            <div class="source-note">
+              <span>菜谱来源</span>
+              <a href="https://space.bilibili.com/3546888255048212" target="_blank" rel="noopener">特厨隋坡</a>
+              <i>·</i>
+              <a href="https://space.bilibili.com/419872064" target="_blank" rel="noopener">老饭骨</a>
+            </div>
+            <div class="search-panel">
+              <div class="mode-tabs" role="tablist" aria-label="搜索方式">
+                <button class="mode-tab active" role="tab" aria-selected="true" data-mode="dish">按菜名找</button>
+                <button class="mode-tab" role="tab" aria-selected="false" data-mode="ingredient">按食材找</button>
+              </div>
+              <form id="search-form" class="search-form" role="search">
+                <label class="sr-only" for="search-input">搜索菜名</label>
+                <span class="search-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg></span>
+                <input id="search-input" autocomplete="off" placeholder="例如：番茄炒蛋" />
+                <button type="submit">开始找菜</button>
+              </form>
+              <div id="quick-picks" class="quick-picks" aria-label="热门搜索"></div>
+            </div>
+          </div>
+          <figure class="hero-visual">
+            <img src="./assets/recipe-hero.png" alt="摆放整齐的新鲜食材和中式家常菜" />
+            <figcaption><span>今日灵感</span><strong>简单食材，也能认真生活</strong></figcaption>
+          </figure>
+        </section>
+
+        <section class="results-section" aria-labelledby="results-title">
+          <div class="results-head">
+            <div><p class="eyebrow" id="result-kicker">为你推荐</p><h2 id="results-title">家常好味道</h2></div>
+            <div class="result-tools"><span id="result-count" aria-live="polite"></span><select id="time-filter" aria-label="按烹饪时间筛选"><option value="all">全部时间</option><option value="15">15 分钟内</option><option value="30">30 分钟内</option><option value="60">60 分钟内</option></select></div>
+          </div>
+          <div id="ingredient-summary" class="ingredient-summary" hidden></div>
+          <p class="source-disclaimer">内置菜谱根据两位 UP 主的公开教学内容整理；个人菜谱与偏好只保存在本机。</p>
+          <div id="recipe-grid" class="recipe-grid"></div>
+          <div id="discover-empty" class="empty-state" hidden><span aria-hidden="true">🥣</span><h3>还没有找到合适的菜谱</h3><p>试试减少关键词，或换一种食材组合。</p><button id="reset-button" type="button">看看全部菜谱</button></div>
+        </section>
+      </section>
+
+      <section class="page-view library-view" id="view-favorites" data-view="favorites" hidden>
+        <div class="section-shell">
+          <div class="page-heading"><p class="eyebrow">随时再做</p><h1>我的收藏</h1><p>把喜欢的味道留在手边。</p></div>
+          <div id="favorites-grid" class="recipe-grid"></div>
+          <div id="favorites-empty" class="empty-state" hidden><span aria-hidden="true">♡</span><h3>还没有收藏</h3><p>打开任意菜谱，点一下收藏即可。</p><button type="button" data-go="discover">去发现菜谱</button></div>
+        </div>
+      </section>
+
+      <section class="page-view library-view" id="view-mine" data-view="mine" hidden>
+        <div class="section-shell">
+          <div class="page-heading mine-heading"><div><p class="eyebrow">只属于你的菜谱本</p><h1>我的</h1><p>个人菜谱、浏览记录和本机数据都在这里。</p></div><button class="primary-action" id="new-recipe" type="button">＋ 新建菜谱</button></div>
+
+          <section class="dashboard-card update-card" aria-labelledby="update-title">
+            <div><p class="eyebrow">应用更新</p><h2 id="update-title">一餐 <span id="current-version">1.2.0</span></h2><p id="update-status" role="status">每天自动检查一次，也可以随时手动检查。</p></div>
+            <button class="secondary-action" id="check-update" type="button">检查更新</button>
+          </section>
+
+          <section class="mine-section" aria-labelledby="recent-title">
+            <div class="subhead"><div><p class="eyebrow">最近翻过</p><h2 id="recent-title">最近浏览</h2></div><button class="text-button" id="clear-recent" type="button">清空记录</button></div>
+            <div id="recent-grid" class="recipe-grid compact-grid"></div>
+            <p id="recent-empty" class="inline-empty" hidden>打开过的菜谱会出现在这里。</p>
+          </section>
+
+          <section class="mine-section" aria-labelledby="personal-title">
+            <div class="subhead"><div><p class="eyebrow">本机保存</p><h2 id="personal-title">个人菜谱</h2></div><span id="personal-count" class="muted-count"></span></div>
+            <div id="personal-grid" class="recipe-grid"></div>
+            <p id="personal-empty" class="inline-empty" hidden>还没有个人菜谱，可以新建或导入一份。</p>
+          </section>
+
+          <section class="data-actions" aria-label="数据管理">
+            <button id="open-import" type="button"><strong>导入与恢复</strong><span>支持传统菜谱 JSON 和完整备份</span></button>
+            <button id="export-backup" type="button"><strong>导出完整备份</strong><span>包含个人菜谱、收藏和最近浏览</span></button>
+          </section>
+          <p id="data-status" class="global-status" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="主要页面">
+      <button class="active" type="button" data-view-target="discover" aria-current="page"><span aria-hidden="true">⌕</span><b>发现</b></button>
+      <button type="button" data-view-target="favorites"><span aria-hidden="true">♡</span><b>收藏</b></button>
+      <button type="button" data-view-target="mine"><span aria-hidden="true">人</span><b>我的</b></button>
+    </nav>
+
+    <dialog id="recipe-dialog" class="recipe-dialog">
+      <button class="dialog-close" data-close="recipe-dialog" aria-label="关闭菜谱详情"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+      <div id="dialog-content"></div>
+    </dialog>
+
+    <dialog id="editor-dialog" class="recipe-dialog editor-dialog">
+      <button class="dialog-close light" data-close="editor-dialog" aria-label="关闭编辑窗口"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+      <form id="editor-form" class="editor-form">
+        <p class="eyebrow">我的菜谱</p><h2 id="editor-title">新建菜谱</h2>
+        <input type="hidden" id="editor-id" />
+        <div class="form-grid">
+          <label class="wide">菜名<input id="editor-name" maxlength="60" required placeholder="例如：青椒炒蛋" /></label>
+          <label>表情<input id="editor-emoji" maxlength="8" value="🍽️" /></label>
+          <label>用时（分钟）<input id="editor-time" type="number" min="1" max="1440" value="20" required /></label>
+          <label>难度<select id="editor-difficulty"><option>简单</option><option>适中</option><option>进阶</option></select></label>
+          <label>来源<input id="editor-source" maxlength="40" value="我的菜谱" /></label>
+          <label class="wide">口味标签<input id="editor-flavors" maxlength="100" placeholder="用逗号分开，例如：快手，下饭" /></label>
+          <label class="wide">一句介绍<textarea id="editor-description" maxlength="240" rows="3" placeholder="这道菜有什么特别之处？"></textarea></label>
+        </div>
+        <div class="dynamic-section"><div class="dynamic-head"><h3>食材</h3><button type="button" id="add-ingredient">＋ 添加</button></div><div id="ingredient-rows"></div></div>
+        <div class="dynamic-section"><div class="dynamic-head"><h3>步骤</h3><button type="button" id="add-step">＋ 添加</button></div><div id="step-rows"></div></div>
+        <p id="editor-status" class="import-status" role="status"></p>
+        <button class="import-submit" type="submit">保存菜谱</button>
+      </form>
+    </dialog>
+
+    <dialog id="import-dialog" class="recipe-dialog import-dialog">
+      <button class="dialog-close light" data-close="import-dialog" aria-label="关闭导入窗口"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+      <form id="import-form" class="import-form">
+        <p class="eyebrow">添加到我的菜谱</p><h2>导入与恢复</h2>
+        <p class="import-intro">选择传统菜谱 JSON 或一餐完整备份。恢复采用合并去重，不会覆盖现有内容。</p>
+        <label class="file-picker" for="recipe-file"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m-4 4 4-4 4 4M5 14v5h14v-5"/></svg><span><strong>选择 JSON 文件</strong><small>最大 5 MB</small></span></label>
+        <input class="sr-only" id="recipe-file" type="file" accept="application/json,.json" />
+        <div class="import-divider"><span>或者粘贴 JSON</span></div>
+        <label for="recipe-json">菜谱数据</label>
+        <textarea id="recipe-json" rows="9" spellcheck="false" placeholder='例如：{"name":"青椒炒蛋","ingredients":["青椒","鸡蛋"],"steps":["处理食材","炒熟调味"]}'></textarea>
+        <details><summary>查看数据格式说明</summary><p>传统菜谱必填 name、ingredients、steps；完整备份还包含收藏和最近浏览。</p></details>
+        <p id="import-status" class="import-status" role="status" aria-live="polite"></p>
+        <button class="import-submit" type="submit">确认导入</button>
+      </form>
+    </dialog>
+
+    <dialog id="update-dialog" class="recipe-dialog update-dialog">
+      <button class="dialog-close light" data-close="update-dialog" aria-label="关闭更新窗口"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+      <div class="update-content"><p class="eyebrow">发现新版本</p><h2 id="update-version">一餐新版</h2><p id="update-message"></p><div id="release-notes" class="release-notes"></div><div class="dialog-actions"><button type="button" data-close="update-dialog">稍后</button><button class="primary-action" id="download-update" type="button">下载并更新</button></div></div>
+    </dialog>
+
+    <script src="./app-core.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

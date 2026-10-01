@@ -1,0 +1,57 @@
+plugins {
+    id 'com.android.application'
+}
+
+def signingProperties = new Properties()
+def signingPropertiesFile = rootProject.file('signing.properties')
+if (signingPropertiesFile.exists()) {
+    signingPropertiesFile.withInputStream { signingProperties.load(it) }
+}
+
+android {
+    namespace 'com.yican.recipe'
+    compileSdk 35
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    defaultConfig {
+        applicationId 'com.yican.recipe'
+        minSdk 24
+        targetSdk 35
+        versionCode 3
+        versionName '1.2.0'
+    }
+
+    signingConfigs {
+        if (signingPropertiesFile.exists()) {
+            continuity {
+                storeFile rootProject.file(signingProperties['storeFile'])
+                storePassword signingProperties['storePassword']
+                keyAlias signingProperties['keyAlias']
+                keyPassword signingProperties['keyPassword']
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            if (signingPropertiesFile.exists()) signingConfig signingConfigs.continuity
+        }
+        release {
+            minifyEnabled false
+            if (signingPropertiesFile.exists()) signingConfig signingConfigs.continuity
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core:1.15.0'
+}

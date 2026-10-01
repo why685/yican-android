@@ -1,0 +1,6 @@
+# Copy this file to signing.properties and keep the real values private.
+# The storeFile path is relative to this project root.
+storeFile=../signing/yican-debug.keystore
+storePassword=change-me
+keyAlias=androiddebugkey
+keyPassword=change-me
