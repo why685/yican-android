@@ -33,7 +33,8 @@ test("recent history de-duplicates and caps at twenty", () => {
 });
 
 test("backup round-trip keeps personal data", () => {
-  const backup = core.createBackup([recipe()], ["custom:10", "builtin:1"], ["custom:10"], "2026-09-30T00:00:00.000Z");
+  const backup = core.createBackup([recipe()], ["custom:10", "builtin:1"], ["custom:10"], "2026-09-30T00:00:00.000Z", "1.2.1");
+  assert.equal(backup.appVersion, "1.2.1");
   const restored = core.mergeBackup({customRecipes: [], favorites: [], recent: []}, backup, new Set(["builtin:1"]));
   assert.equal(restored.added, 1);
   assert.deepEqual(restored.favorites.sort(), ["builtin:1", "custom:10"]);

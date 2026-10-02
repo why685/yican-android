@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -48,6 +49,11 @@ final class AppBridge {
     private static final String UPDATE_ASSET = "update.json";
     private static final String PREFS = "yican_native_v1";
     private static final String LAST_UPDATE_CHECK = "last_update_check";
+    private static final String PENDING_MANIFEST = "pending_manifest";
+    private static final String PENDING_DOWNLOAD_ID = "pending_download_id";
+    private static final String PENDING_DOWNLOAD_PATH = "pending_download_path";
+    private static final String UPDATE_STATE = "update_state";
+    private static final String UPDATE_MESSAGE = "update_message";
     private static final long CHECK_INTERVAL_MS = 24L * 60L * 60L * 1000L;
     private static final int JSON_LIMIT_BYTES = 2 * 1024 * 1024;
     private static final int BACKUP_LIMIT_CHARS = 5 * 1024 * 1024;
@@ -58,18 +64,20 @@ final class AppBridge {
     private final DownloadManager downloadManager;
     private final SharedPreferences preferences;
     private final BroadcastReceiver downloadReceiver;
-    private UpdateInfo pendingUpdate;
+    private UpdateManifest pendingUpdate;
     private long pendingDownloadId = -1L;
     private File pendingDownloadFile;
     private File pendingInstallFile;
     private File pendingExportFile;
     private boolean receiverRegistered;
+    private boolean verifyingDownload;
 
     AppBridge(MainActivity activity, WebView webView) {
         this.activity = activity;
         this.webView = webView;
         this.downloadManager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
         this.preferences = activity.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        restorePendingState();
         this.downloadReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -140,10 +148,10 @@ final class AppBridge {
                 String manifestUrl = findAssetUrl(release.optJSONArray("assets"), UPDATE_ASSET);
                 if (manifestUrl.isEmpty()) throw new Exception("最新 Release 缺少 update.json");
                 JSONObject manifest = readJson(manifestUrl);
-                UpdateInfo info = UpdateInfo.from(manifest, release.optString("body", ""));
-                validateUpdateUrl(info.apkUrl);
+                UpdateManifest info = UpdateManifest.parse(manifest, release.optString("body", ""));
                 pendingUpdate = info;
-                if (info.versionCode > BuildConfig.VERSION_CODE) {
+                persistManifest(info);
+                if (info.isNewerThan(BuildConfig.VERSION_CODE)) {
                     JSONObject payload = status("available", "发现新版本 " + info.versionName);
                     payload.put("versionCode", info.versionCode);
                     payload.put("versionName", info.versionName);
@@ -160,14 +168,15 @@ final class AppBridge {
 
     @JavascriptInterface
     public void downloadUpdate() {
-        UpdateInfo info = pendingUpdate;
-        if (info == null || info.versionCode <= BuildConfig.VERSION_CODE) {
+        UpdateManifest info = pendingUpdate;
+        if (info == null || !info.isNewerThan(BuildConfig.VERSION_CODE)) {
             sendUpdateResult(status("error", "没有可下载的新版本"));
             return;
         }
         activity.runOnUiThread(() -> {
             try {
-                validateUpdateUrl(info.apkUrl);
+                UpdateManifest.validateUrl(info.apkUrl);
+                cancelActiveDownload(true);
                 String filename = "YiCan-" + info.versionName + "-" + System.currentTimeMillis() + ".apk";
                 pendingDownloadFile = new File(activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), filename);
                 DownloadManager.Request request = new DownloadManager.Request(Uri.parse(info.apkUrl));
@@ -180,11 +189,36 @@ final class AppBridge {
                 pendingDownloadId = downloadManager.enqueue(request);
                 JSONObject payload = status("downloading", "新版正在后台下载，完成后会自动校验");
                 payload.put("downloadId", pendingDownloadId);
+                payload.put("progress", 0);
+                persistDownloadState("downloading", "新版正在后台下载");
                 sendUpdateResult(payload);
             } catch (Exception error) {
-                sendUpdateResult(status("error", "无法开始下载：" + safeMessage(error)));
+                updateState("error", "无法开始下载：" + safeMessage(error), true);
             }
         });
+    }
+
+    @JavascriptInterface
+    public String getUpdateState() {
+        return queryUpdateState(true).toString();
+    }
+
+    @JavascriptInterface
+    public void cancelUpdate() {
+        activity.runOnUiThread(() -> {
+            cancelActiveDownload(true);
+            updateState("cancelled", "已取消更新下载，可随时重试", true);
+        });
+    }
+
+    @JavascriptInterface
+    public void retryUpdate() {
+        downloadUpdate();
+    }
+
+    @JavascriptInterface
+    public void resumeInstall() {
+        activity.runOnUiThread(this::requestInstallPermissionOrInstall);
     }
 
     boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
@@ -215,7 +249,7 @@ final class AppBridge {
             if (Build.VERSION.SDK_INT < 26 || activity.getPackageManager().canRequestPackageInstalls()) {
                 installValidatedUpdate();
             } else {
-                sendUpdateResult(status("error", "未获得安装未知应用权限"));
+                updateState("permission", "尚未允许安装未知应用，更新包已保留", true);
             }
             return true;
         }
@@ -233,10 +267,168 @@ final class AppBridge {
         executor.shutdownNow();
     }
 
+    void onHostResume() {
+        if ("installing".equals(preferences.getString(UPDATE_STATE, ""))
+                && pendingInstallFile != null && pendingInstallFile.isFile()) {
+            persistDownloadState("verified", "安装尚未完成，可再次打开系统安装界面");
+        }
+        JSONObject state = queryUpdateState(true);
+        if (!"idle".equals(state.optString("status"))) sendUpdateResult(state);
+    }
+
+    private void restorePendingState() {
+        try {
+            pendingUpdate = UpdateManifest.fromPersisted(preferences.getString(PENDING_MANIFEST, ""));
+            if (pendingUpdate == null || !pendingUpdate.isNewerThan(BuildConfig.VERSION_CODE)) {
+                clearPersistedDownload();
+                pendingUpdate = null;
+                return;
+            }
+            pendingDownloadId = preferences.getLong(PENDING_DOWNLOAD_ID, -1L);
+            String path = preferences.getString(PENDING_DOWNLOAD_PATH, "");
+            pendingDownloadFile = safePersistedFile(path);
+            String state = preferences.getString(UPDATE_STATE, "idle");
+            if (("verified".equals(state) || "permission".equals(state) || "installing".equals(state))
+                    && pendingDownloadFile != null && pendingDownloadFile.isFile()) {
+                pendingInstallFile = pendingDownloadFile;
+            }
+        } catch (Exception ignored) {
+            clearPersistedDownload();
+            pendingUpdate = null;
+        }
+    }
+
+    private File safePersistedFile(String path) throws Exception {
+        if (path == null || path.trim().isEmpty()) return null;
+        File base = activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+        if (base == null) return null;
+        File file = new File(path);
+        String basePath = base.getCanonicalPath() + File.separator;
+        return file.getCanonicalPath().startsWith(basePath) ? file : null;
+    }
+
+    private void persistManifest(UpdateManifest manifest) {
+        preferences.edit().putString(PENDING_MANIFEST, manifest.toJson().toString()).apply();
+    }
+
+    private void persistDownloadState(String state, String message) {
+        SharedPreferences.Editor editor = preferences.edit()
+                .putString(UPDATE_STATE, state)
+                .putString(UPDATE_MESSAGE, message)
+                .putLong(PENDING_DOWNLOAD_ID, pendingDownloadId);
+        if (pendingUpdate != null) editor.putString(PENDING_MANIFEST, pendingUpdate.toJson().toString());
+        if (pendingDownloadFile != null) editor.putString(PENDING_DOWNLOAD_PATH, pendingDownloadFile.getAbsolutePath());
+        else editor.remove(PENDING_DOWNLOAD_PATH);
+        editor.apply();
+    }
+
+    private void clearPersistedDownload() {
+        preferences.edit()
+                .remove(PENDING_DOWNLOAD_ID)
+                .remove(PENDING_DOWNLOAD_PATH)
+                .remove(PENDING_MANIFEST)
+                .remove(UPDATE_STATE)
+                .remove(UPDATE_MESSAGE)
+                .apply();
+        pendingDownloadId = -1L;
+        pendingDownloadFile = null;
+        pendingInstallFile = null;
+    }
+
+    private void cancelActiveDownload(boolean deleteFiles) {
+        if (pendingDownloadId >= 0L) {
+            try {
+                downloadManager.remove(pendingDownloadId);
+            } catch (Exception ignored) {
+            }
+        }
+        pendingDownloadId = -1L;
+        if (deleteFiles) {
+            deleteFile(pendingDownloadFile);
+            if (pendingInstallFile != pendingDownloadFile) deleteFile(pendingInstallFile);
+            pendingDownloadFile = null;
+            pendingInstallFile = null;
+        }
+        preferences.edit().remove(PENDING_DOWNLOAD_ID).remove(PENDING_DOWNLOAD_PATH).apply();
+    }
+
+    private JSONObject queryUpdateState(boolean triggerVerification) {
+        String savedState = preferences.getString(UPDATE_STATE, "idle");
+        String savedMessage = preferences.getString(UPDATE_MESSAGE, "");
+        JSONObject payload = status(savedState, savedMessage);
+        addManifestFields(payload);
+        if (pendingDownloadId < 0L) return payload;
+
+        try (Cursor cursor = downloadManager.query(new DownloadManager.Query().setFilterById(pendingDownloadId))) {
+            if (cursor == null || !cursor.moveToFirst()) {
+                pendingDownloadId = -1L;
+                persistDownloadState("error", "找不到下载任务，请重试");
+                payload = status("error", "找不到下载任务，请重试");
+            } else {
+                int state = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS));
+                long downloaded = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                long total = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                int progress = total > 0 ? (int) Math.min(100L, downloaded * 100L / total) : 0;
+                if (state == DownloadManager.STATUS_SUCCESSFUL) {
+                    payload = status("verifying", "下载完成，正在验证更新包");
+                    payload.put("progress", 100);
+                    if (triggerVerification) verifyDownloadedUpdate();
+                } else if (state == DownloadManager.STATUS_FAILED) {
+                    int reason = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_REASON));
+                    String message = downloadFailureMessage(reason);
+                    cancelActiveDownload(true);
+                    persistDownloadState("error", message);
+                    payload = status("error", message);
+                } else {
+                    String message = state == DownloadManager.STATUS_PAUSED ? "下载已暂停，等待网络恢复" : "新版正在后台下载";
+                    payload = status("downloading", message);
+                    payload.put("progress", progress);
+                    payload.put("downloadedBytes", downloaded);
+                    payload.put("totalBytes", total);
+                }
+            }
+        } catch (Exception error) {
+            payload = status("error", "读取下载状态失败：" + safeMessage(error));
+        }
+        addManifestFields(payload);
+        return payload;
+    }
+
+    private void addManifestFields(JSONObject payload) {
+        if (pendingUpdate == null) return;
+        try {
+            payload.put("versionCode", pendingUpdate.versionCode);
+            payload.put("versionName", pendingUpdate.versionName);
+            payload.put("releaseNotes", pendingUpdate.releaseNotes);
+        } catch (Exception ignored) {
+        }
+    }
+
+    private void updateState(String state, String message, boolean send) {
+        persistDownloadState(state, message);
+        JSONObject payload = status(state, message);
+        addManifestFields(payload);
+        if (send) sendUpdateResult(payload);
+    }
+
+    private static String downloadFailureMessage(int reason) {
+        if (reason == DownloadManager.ERROR_INSUFFICIENT_SPACE) return "下载失败：设备空间不足";
+        if (reason == DownloadManager.ERROR_HTTP_DATA_ERROR || reason == DownloadManager.ERROR_CANNOT_RESUME) {
+            return "下载失败：网络中断，请重试";
+        }
+        if (reason >= 400 && reason < 600) return "下载失败：服务器返回 " + reason;
+        return "下载失败（代码 " + reason + "），请重试";
+    }
+
+    private static void deleteFile(File file) {
+        if (file != null && file.isFile()) file.delete();
+    }
+
     private void verifyDownloadedUpdate() {
-        UpdateInfo info = pendingUpdate;
+        UpdateManifest info = pendingUpdate;
         File file = pendingDownloadFile;
-        if (info == null || file == null) return;
+        if (info == null || file == null || verifyingDownload) return;
+        verifyingDownload = true;
         executor.execute(() -> {
             try {
                 if (!file.isFile() || file.length() == 0) throw new Exception("下载文件不存在");
@@ -248,18 +440,25 @@ final class AppBridge {
                 PackageInfo installed = getInstalledPackageInfo();
                 if (!certificateDigests(archive).equals(certificateDigests(installed))) throw new Exception("APK 签名与当前应用不一致");
                 pendingInstallFile = file;
+                pendingDownloadId = -1L;
+                persistDownloadState("verified", "更新包校验通过，准备安装");
                 sendUpdateResult(status("verified", "更新包校验通过，准备安装"));
                 activity.runOnUiThread(this::requestInstallPermissionOrInstall);
             } catch (Exception error) {
-                if (file.exists()) file.delete();
-                sendUpdateResult(status("error", "更新包不安全：" + safeMessage(error)));
+                deleteFile(file);
+                pendingDownloadId = -1L;
+                pendingDownloadFile = null;
+                pendingInstallFile = null;
+                updateState("error", "更新包不安全：" + safeMessage(error), true);
+            } finally {
+                verifyingDownload = false;
             }
         });
     }
 
     private void requestInstallPermissionOrInstall() {
         if (Build.VERSION.SDK_INT >= 26 && !activity.getPackageManager().canRequestPackageInstalls()) {
-            sendUpdateResult(status("permission", "请允许一餐安装更新，然后返回应用"));
+            updateState("permission", "请允许一餐安装更新，然后返回应用", true);
             Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
                     Uri.parse("package:" + activity.getPackageName()));
             activity.startActivityForResult(intent, INSTALL_PERMISSION_REQUEST);
@@ -279,9 +478,10 @@ final class AppBridge {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(uri, "application/vnd.android.package-archive");
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
+            persistDownloadState("installing", "请在系统界面确认覆盖安装");
             activity.startActivity(intent);
         } catch (Exception error) {
-            sendUpdateResult(status("error", "无法打开系统安装界面：" + safeMessage(error)));
+            updateState("error", "无法打开系统安装界面：" + safeMessage(error), true);
         }
     }
 
@@ -319,16 +519,6 @@ final class AppBridge {
             }
         }
         return "";
-    }
-
-    private static void validateUpdateUrl(String value) throws Exception {
-        Uri uri = Uri.parse(value);
-        String host = uri.getHost();
-        String path = uri.getPath();
-        if (!"https".equalsIgnoreCase(uri.getScheme()) || !"github.com".equalsIgnoreCase(host)
-                || path == null || !path.startsWith("/why685/yican-android/releases/download/")) {
-            throw new Exception("更新地址不受信任");
-        }
     }
 
     @SuppressWarnings("deprecation")
@@ -418,32 +608,4 @@ final class AppBridge {
         return message == null || message.trim().isEmpty() ? "未知错误" : message;
     }
 
-    private static final class UpdateInfo {
-        final int versionCode;
-        final String versionName;
-        final String apkUrl;
-        final String sha256;
-        final String releaseNotes;
-
-        UpdateInfo(int versionCode, String versionName, String apkUrl, String sha256, String releaseNotes) {
-            this.versionCode = versionCode;
-            this.versionName = versionName;
-            this.apkUrl = apkUrl;
-            this.sha256 = sha256;
-            this.releaseNotes = releaseNotes;
-        }
-
-        static UpdateInfo from(JSONObject json, String fallbackNotes) throws Exception {
-            if (json.optInt("schemaVersion") != 1) throw new Exception("不支持的更新清单版本");
-            int code = json.optInt("versionCode", 0);
-            String name = json.optString("versionName", "").trim();
-            String url = json.optString("apkUrl", "").trim();
-            String hash = json.optString("sha256", "").trim().toLowerCase(Locale.ROOT);
-            String notes = json.optString("releaseNotes", fallbackNotes).trim();
-            if (code <= 0 || name.isEmpty() || url.isEmpty() || !hash.matches("[0-9a-f]{64}")) {
-                throw new Exception("更新清单字段无效");
-            }
-            return new UpdateInfo(code, name, url, hash, notes);
-        }
-    }
 }

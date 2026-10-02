@@ -89,7 +89,7 @@
     return [ref, ...uniqueValidRefs(recent, validRefs).filter(item => item !== ref)].slice(0, RECENT_LIMIT);
   }
 
-  function createBackup(customRecipes, favorites, recent, exportedAt) {
+  function createBackup(customRecipes, favorites, recent, exportedAt, appVersion) {
     const normalized = (Array.isArray(customRecipes) ? customRecipes : []).map((recipe, index) => normalizeImportedRecipe(recipe, index, true));
     const validRefs = new Set(normalized.map(recipeRef));
     for (const ref of Array.isArray(favorites) ? favorites : []) if (String(ref).startsWith("builtin:")) validRefs.add(String(ref));
@@ -98,7 +98,7 @@
       format: BACKUP_FORMAT,
       formatVersion: BACKUP_VERSION,
       exportedAt: exportedAt || new Date().toISOString(),
-      appVersion: "1.2.0",
+      appVersion: clean(appVersion) || "unknown",
       customRecipes: normalized,
       favorites: uniqueValidRefs(favorites, validRefs),
       recent: uniqueValidRefs(recent, validRefs, RECENT_LIMIT)

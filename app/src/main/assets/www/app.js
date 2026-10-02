@@ -19,7 +19,7 @@ const customRecipes = loadCustomRecipes();
 const builtInRefs = new Set(builtInRecipes.map(Core.recipeRef));
 let favorites = Core.parseStoredArray(localStorage, Core.FAVORITES_STORAGE_KEY);
 let recent = Core.parseStoredArray(localStorage, Core.RECENT_STORAGE_KEY);
-const state = {view:"discover", mode:"dish", query:"", time:"all", activeRecipe:null};
+const state = {view:"discover", mode:"dish", query:"", time:"all", activeRecipe:null, appVersion:"unknown", updatePoll:null};
 
 const els = {
   views:[...document.querySelectorAll(".page-view")], nav:[...document.querySelectorAll("[data-view-target]")],
@@ -33,7 +33,8 @@ const els = {
   editorDialog:document.querySelector("#editor-dialog"), editorForm:document.querySelector("#editor-form"), editorStatus:document.querySelector("#editor-status"),
   importDialog:document.querySelector("#import-dialog"), importForm:document.querySelector("#import-form"), importFile:document.querySelector("#recipe-file"), importJson:document.querySelector("#recipe-json"), importStatus:document.querySelector("#import-status"),
   dataStatus:document.querySelector("#data-status"), updateStatus:document.querySelector("#update-status"), currentVersion:document.querySelector("#current-version"),
-  updateDialog:document.querySelector("#update-dialog"), updateVersion:document.querySelector("#update-version"), updateMessage:document.querySelector("#update-message"), releaseNotes:document.querySelector("#release-notes")
+  updateDialog:document.querySelector("#update-dialog"), updateVersion:document.querySelector("#update-version"), updateMessage:document.querySelector("#update-message"), releaseNotes:document.querySelector("#release-notes"),
+  updateProgress:document.querySelector("#update-progress"), cancelUpdate:document.querySelector("#cancel-update"), retryUpdate:document.querySelector("#retry-update"), installUpdate:document.querySelector("#install-update"), downloadUpdate:document.querySelector("#download-update")
 };
 
 function loadCustomRecipes() {
@@ -261,7 +262,7 @@ function importFromText(text) {
 }
 
 function exportBackup() {
-  const backup = Core.createBackup(customRecipes, favorites, recent);
+  const backup = Core.createBackup(customRecipes, favorites, recent, undefined, state.appVersion);
   const json = JSON.stringify(backup, null, 2);
   if (window.YiCanAndroid?.exportBackup) {
     window.YiCanAndroid.exportBackup(json);
@@ -297,21 +298,37 @@ window.YiCanNative = {
   },
   onUpdateResult(result) {
     els.updateStatus.textContent = result.message || "";
-    if (result.status === "available") {
+    if (result.versionName) {
       els.updateVersion.textContent = `一餐 ${result.versionName}`;
       els.updateMessage.textContent = result.message;
       els.releaseNotes.textContent = result.releaseNotes || "包含功能改进和问题修复。";
-      if (!els.updateDialog.open) els.updateDialog.showModal();
     }
-    if (["downloading","verified","permission"].includes(result.status) && els.updateDialog.open) els.updateDialog.close();
+    const downloading = result.status === "downloading" || result.status === "verifying";
+    const canRetry = ["error","cancelled"].includes(result.status) && Boolean(result.versionName);
+    els.updateProgress.hidden = !downloading;
+    els.updateProgress.value = Number(result.progress || 0);
+    els.cancelUpdate.hidden = result.status !== "downloading";
+    els.retryUpdate.hidden = !canRetry;
+    els.installUpdate.hidden = !["verified","permission","installing"].includes(result.status);
+    els.downloadUpdate.hidden = result.status !== "available";
+    if (["available","downloading","verifying","verified","permission","installing","error","cancelled"].includes(result.status) && result.versionName && !els.updateDialog.open) els.updateDialog.showModal();
+    if (downloading && !state.updatePoll) state.updatePoll = setInterval(pollUpdateState, 1000);
+    if (!downloading && state.updatePoll) { clearInterval(state.updatePoll); state.updatePoll = null; }
   }
 };
+
+function pollUpdateState() {
+  if (!window.YiCanAndroid?.getUpdateState) return;
+  try { window.YiCanNative.onUpdateResult(JSON.parse(window.YiCanAndroid.getUpdateState())); } catch (_) {}
+}
 
 function initializeAppInfo() {
   if (!window.YiCanAndroid?.getAppInfo) return;
   try {
     const info = JSON.parse(window.YiCanAndroid.getAppInfo());
     els.currentVersion.textContent = info.versionName || "1.2.0";
+    state.appVersion = info.versionName || "unknown";
+    pollUpdateState();
   } catch (_) {}
 }
 
@@ -358,7 +375,10 @@ els.importFile.addEventListener("change",async()=>{const file=els.importFile.fil
 els.importForm.addEventListener("submit",event=>{event.preventDefault();try{const result=importFromText(els.importJson.value);setImportStatus(`成功加入 ${result.added} 份菜谱${result.skipped?`，跳过 ${result.skipped} 份重复菜谱`:""}`,"success");setTimeout(()=>{els.importDialog.close();switchView("mine");},700);}catch(error){setImportStatus(error.message||"导入失败","error");}});
 document.querySelector("#export-backup").addEventListener("click",exportBackup);
 document.querySelector("#check-update").addEventListener("click",()=>checkForUpdate(true));
-document.querySelector("#download-update").addEventListener("click",()=>{if(window.YiCanAndroid?.downloadUpdate)window.YiCanAndroid.downloadUpdate();});
+els.downloadUpdate.addEventListener("click",()=>{if(window.YiCanAndroid?.downloadUpdate)window.YiCanAndroid.downloadUpdate();});
+els.cancelUpdate.addEventListener("click",()=>{if(window.YiCanAndroid?.cancelUpdate)window.YiCanAndroid.cancelUpdate();});
+els.retryUpdate.addEventListener("click",()=>{if(window.YiCanAndroid?.retryUpdate)window.YiCanAndroid.retryUpdate();});
+els.installUpdate.addEventListener("click",()=>{if(window.YiCanAndroid?.resumeInstall)window.YiCanAndroid.resumeInstall();});
 [els.dialog,els.editorDialog,els.importDialog,els.updateDialog].forEach(dialog=>dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close();}));
 
 window.recipeApp = {

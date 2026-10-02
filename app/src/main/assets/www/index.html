@@ -151,7 +151,7 @@
 
     <dialog id="update-dialog" class="recipe-dialog update-dialog">
       <button class="dialog-close light" data-close="update-dialog" aria-label="关闭更新窗口"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
-      <div class="update-content"><p class="eyebrow">发现新版本</p><h2 id="update-version">一餐新版</h2><p id="update-message"></p><div id="release-notes" class="release-notes"></div><div class="dialog-actions"><button type="button" data-close="update-dialog">稍后</button><button class="primary-action" id="download-update" type="button">下载并更新</button></div></div>
+      <div class="update-content"><p class="eyebrow">应用更新</p><h2 id="update-version">一餐新版</h2><p id="update-message"></p><progress id="update-progress" max="100" value="0" hidden></progress><div id="release-notes" class="release-notes"></div><div class="dialog-actions"><button type="button" data-close="update-dialog">稍后</button><button id="cancel-update" type="button" hidden>取消下载</button><button class="primary-action" id="retry-update" type="button" hidden>重新下载</button><button class="primary-action" id="install-update" type="button" hidden>继续安装</button><button class="primary-action" id="download-update" type="button">下载并更新</button></div></div>
     </dialog>
 
     <script src="./app-core.js"></script>

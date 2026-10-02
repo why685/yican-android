@@ -114,6 +114,12 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (appBridge != null) appBridge.onHostResume();
+    }
+
+    @Override
     protected void onDestroy() {
         if (appBridge != null) appBridge.destroy();
         if (webView != null) {
