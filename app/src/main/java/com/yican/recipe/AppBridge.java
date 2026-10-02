@@ -1,6 +1,8 @@
 package com.yican.recipe;
 
+import android.app.AlarmManager;
 import android.app.DownloadManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -62,6 +64,7 @@ final class AppBridge {
     private final WebView webView;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final DownloadManager downloadManager;
+    private final AlarmManager alarmManager;
     private final SharedPreferences preferences;
     private final BroadcastReceiver downloadReceiver;
     private UpdateManifest pendingUpdate;
@@ -76,6 +79,7 @@ final class AppBridge {
         this.activity = activity;
         this.webView = webView;
         this.downloadManager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
+        this.alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
         this.preferences = activity.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         restorePendingState();
         this.downloadReceiver = new BroadcastReceiver() {
@@ -221,6 +225,56 @@ final class AppBridge {
         activity.runOnUiThread(this::requestInstallPermissionOrInstall);
     }
 
+    @JavascriptInterface
+    public void startStepTimer(String recipeRef, int stepIndex, int seconds) {
+        activity.runOnUiThread(() -> {
+            try {
+                StepTimerState state = StepTimerState.create(recipeRef, stepIndex, seconds, System.currentTimeMillis());
+                activity.getSharedPreferences(TimerReceiver.PREFS, Context.MODE_PRIVATE).edit()
+                        .putString(TimerReceiver.TIMER_STATE, state.toJson(System.currentTimeMillis()).toString()).apply();
+                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, state.deadline, timerPendingIntent());
+                boolean notificationsAllowed = activity.ensureTimerNotificationPermission();
+                JSONObject payload = state.toJson(System.currentTimeMillis());
+                payload.put("status", "running");
+                payload.put("notificationAllowed", notificationsAllowed);
+                sendNativeStatus("timer", payload);
+            } catch (Exception error) {
+                JSONObject payload = status("error", safeMessage(error));
+                sendNativeStatus("timer", payload);
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void cancelStepTimer() {
+        activity.runOnUiThread(() -> {
+            alarmManager.cancel(timerPendingIntent());
+            activity.getSharedPreferences(TimerReceiver.PREFS, Context.MODE_PRIVATE).edit()
+                    .remove(TimerReceiver.TIMER_STATE).apply();
+            sendNativeStatus("timer", status("cancelled", "计时已暂停或重置"));
+        });
+    }
+
+    @JavascriptInterface
+    public String getStepTimerState() {
+        try {
+            StepTimerState state = StepTimerState.fromJson(activity
+                    .getSharedPreferences(TimerReceiver.PREFS, Context.MODE_PRIVATE)
+                    .getString(TimerReceiver.TIMER_STATE, ""));
+            return state == null ? "null" : state.toJson(System.currentTimeMillis()).toString();
+        } catch (Exception ignored) {
+            activity.getSharedPreferences(TimerReceiver.PREFS, Context.MODE_PRIVATE).edit()
+                    .remove(TimerReceiver.TIMER_STATE).apply();
+            return "null";
+        }
+    }
+
+    private PendingIntent timerPendingIntent() {
+        Intent intent = new Intent(activity, TimerReceiver.class);
+        return PendingIntent.getBroadcast(activity, 2201, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    }
+
     boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == EXPORT_REQUEST) {
             if (resultCode != MainActivity.RESULT_OK || data == null || data.getData() == null) {
@@ -276,6 +330,16 @@ final class AppBridge {
         if (!"idle".equals(state.optString("status"))) sendUpdateResult(state);
     }
 
+    void onNotificationPermissionResult(boolean allowed) {
+        JSONObject payload = status(allowed ? "ready" : "warning",
+                allowed ? "后台计时提醒已开启" : "通知权限未开启；前台计时可用，后台可能无法提醒");
+        try {
+            payload.put("notificationAllowed", allowed);
+        } catch (Exception ignored) {
+        }
+        sendNativeStatus("timer", payload);
+    }
+
     private void restorePendingState() {
         try {
             pendingUpdate = UpdateManifest.fromPersisted(preferences.getString(PENDING_MANIFEST, ""));
@@ -288,7 +352,7 @@ final class AppBridge {
             String path = preferences.getString(PENDING_DOWNLOAD_PATH, "");
             pendingDownloadFile = safePersistedFile(path);
             String state = preferences.getString(UPDATE_STATE, "idle");
-            if (("verified".equals(state) || "permission".equals(state) || "installing".equals(state))
+            if (UpdateDownloadPolicy.mayResumeInstall(state)
                     && pendingDownloadFile != null && pendingDownloadFile.isFile()) {
                 pendingInstallFile = pendingDownloadFile;
             }
@@ -375,7 +439,7 @@ final class AppBridge {
                     if (triggerVerification) verifyDownloadedUpdate();
                 } else if (state == DownloadManager.STATUS_FAILED) {
                     int reason = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_REASON));
-                    String message = downloadFailureMessage(reason);
+                    String message = UpdateDownloadPolicy.failureMessage(reason);
                     cancelActiveDownload(true);
                     persistDownloadState("error", message);
                     payload = status("error", message);
@@ -409,15 +473,6 @@ final class AppBridge {
         JSONObject payload = status(state, message);
         addManifestFields(payload);
         if (send) sendUpdateResult(payload);
-    }
-
-    private static String downloadFailureMessage(int reason) {
-        if (reason == DownloadManager.ERROR_INSUFFICIENT_SPACE) return "下载失败：设备空间不足";
-        if (reason == DownloadManager.ERROR_HTTP_DATA_ERROR || reason == DownloadManager.ERROR_CANNOT_RESUME) {
-            return "下载失败：网络中断，请重试";
-        }
-        if (reason >= 400 && reason < 600) return "下载失败：服务器返回 " + reason;
-        return "下载失败（代码 " + reason + "），请重试";
     }
 
     private static void deleteFile(File file) {
@@ -590,6 +645,16 @@ final class AppBridge {
 
     private void sendUpdateResult(JSONObject payload) {
         evaluate("window.YiCanNative&&window.YiCanNative.onUpdateResult(" + payload.toString() + ");");
+    }
+
+    private void sendNativeStatus(String type, JSONObject payload) {
+        JSONObject envelope = new JSONObject();
+        try {
+            envelope.put("type", type);
+            envelope.put("payload", payload);
+        } catch (Exception ignored) {
+        }
+        evaluate("window.YiCanNative&&window.YiCanNative.onNativeStatus(" + envelope.toString() + ");");
     }
 
     private void sendExportResult(boolean success, String message) {

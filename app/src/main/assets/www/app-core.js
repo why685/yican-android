@@ -8,6 +8,7 @@
   const CUSTOM_STORAGE_KEY = "yican_custom_recipes_v1";
   const FAVORITES_STORAGE_KEY = "yican_favorites_v1";
   const RECENT_STORAGE_KEY = "yican_recent_v1";
+  const TIMER_STORAGE_KEY = "yican_cooking_timer_v1";
   const BACKUP_FORMAT = "yican-backup";
   const BACKUP_VERSION = 1;
   const RECENT_LIMIT = 20;
@@ -35,9 +36,11 @@
     });
     const steps = raw.steps.map((item, stepIndex) => {
       if (typeof item === "string" && clean(item)) return [`第 ${stepIndex + 1} 步`, clean(item)];
-      if (Array.isArray(item) && item.length >= 2 && clean(item[1])) return [clean(item[0]) || `第 ${stepIndex + 1} 步`, clean(item[1])];
+      if (Array.isArray(item) && item.length >= 2 && clean(item[1])) {
+        return withDuration([clean(item[0]) || `第 ${stepIndex + 1} 步`, clean(item[1])], item[2]);
+      }
       if (item && typeof item === "object" && clean(item.description || item.content)) {
-        return [clean(item.title) || `第 ${stepIndex + 1} 步`, clean(item.description || item.content)];
+        return withDuration([clean(item.title) || `第 ${stepIndex + 1} 步`, clean(item.description || item.content)], item.durationSeconds ?? item.duration);
       }
       throw new Error(`${name} 的第 ${stepIndex + 1} 个步骤无效`);
     });
@@ -64,6 +67,33 @@
         : IMPORT_COLORS[index % IMPORT_COLORS.length],
       custom: true
     };
+  }
+
+  function withDuration(step, rawDuration) {
+    if (rawDuration == null || rawDuration === "") return step;
+    const seconds = Number.parseInt(rawDuration, 10);
+    return Number.isInteger(seconds) && seconds >= 1 && seconds <= 14400 ? [...step, seconds] : step;
+  }
+
+  function paginate(items, requestedPage, requestedPageSize) {
+    const list = Array.isArray(items) ? items : [];
+    const pageSize = Math.max(1, Math.min(100, Number.parseInt(requestedPageSize, 10) || 6));
+    const totalPages = Math.max(1, Math.ceil(list.length / pageSize));
+    const page = Math.max(1, Math.min(totalPages, Number.parseInt(requestedPage, 10) || 1));
+    const start = (page - 1) * pageSize;
+    return {items:list.slice(start, start + pageSize), page, pageSize, totalPages, totalItems:list.length};
+  }
+
+  function normalizeTimerState(raw, now = Date.now()) {
+    if (!raw || typeof raw !== "object") return null;
+    const recipeRef = clean(raw.recipeRef);
+    const stepIndex = Number.parseInt(raw.stepIndex, 10);
+    const durationSeconds = Number.parseInt(raw.durationSeconds, 10);
+    const deadline = Number(raw.deadline);
+    if (!/^(builtin|custom):\d+$/.test(recipeRef) || !Number.isInteger(stepIndex) || stepIndex < 0
+      || !Number.isInteger(durationSeconds) || durationSeconds < 1 || durationSeconds > 14400
+      || !Number.isFinite(deadline) || deadline <= 0) return null;
+    return {recipeRef, stepIndex, durationSeconds, deadline, remainingSeconds:Math.max(0, Math.ceil((deadline - now) / 1000))};
   }
 
   function recipeRef(recipe) {
@@ -189,6 +219,7 @@
     CUSTOM_STORAGE_KEY,
     FAVORITES_STORAGE_KEY,
     RECENT_STORAGE_KEY,
+    TIMER_STORAGE_KEY,
     BACKUP_FORMAT,
     BACKUP_VERSION,
     RECENT_LIMIT,
@@ -197,6 +228,8 @@
     recipeIdentity,
     uniqueValidRefs,
     addRecent,
+    paginate,
+    normalizeTimerState,
     createBackup,
     mergeBackup,
     importFromText,

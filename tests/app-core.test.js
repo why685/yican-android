@@ -66,3 +66,23 @@ test("imports traditional recipe JSON and rejects malformed JSON", () => {
   assert.equal(result.added, 1);
   assert.throws(() => core.importFromText(current, "{bad", new Set()), /JSON 格式有误/);
 });
+
+test("step durations migrate from arrays and objects without breaking legacy steps", () => {
+  const value = core.normalizeImportedRecipe(recipe({steps:["旧步骤", ["计时", "焖煮", 90], {title:"对象", description:"静置", durationSeconds:300}, ["越界", "忽略", 20000]]}));
+  assert.deepEqual(value.steps[0], ["第 1 步", "旧步骤"]);
+  assert.deepEqual(value.steps[1], ["计时", "焖煮", 90]);
+  assert.deepEqual(value.steps[2], ["对象", "静置", 300]);
+  assert.deepEqual(value.steps[3], ["越界", "忽略"]);
+});
+
+test("pagination corrects pages after filtering or deleting", () => {
+  assert.deepEqual(core.paginate([1,2,3,4,5,6,7], 2, 6).items, [7]);
+  const corrected = core.paginate([1,2], 9, 6);
+  assert.equal(corrected.page, 1);
+  assert.equal(corrected.totalPages, 1);
+});
+
+test("timer state rejects damage and calculates remaining time", () => {
+  assert.equal(core.normalizeTimerState({recipeRef:"bad", stepIndex:0, durationSeconds:10, deadline:2000}, 1000), null);
+  assert.deepEqual(core.normalizeTimerState({recipeRef:"custom:10", stepIndex:2, durationSeconds:90, deadline:5000}, 1000), {recipeRef:"custom:10", stepIndex:2, durationSeconds:90, deadline:5000, remainingSeconds:4});
+});

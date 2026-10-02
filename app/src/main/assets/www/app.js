@@ -19,7 +19,7 @@ const customRecipes = loadCustomRecipes();
 const builtInRefs = new Set(builtInRecipes.map(Core.recipeRef));
 let favorites = Core.parseStoredArray(localStorage, Core.FAVORITES_STORAGE_KEY);
 let recent = Core.parseStoredArray(localStorage, Core.RECENT_STORAGE_KEY);
-const state = {view:"discover", mode:"dish", query:"", time:"all", activeRecipe:null, appVersion:"unknown", updatePoll:null};
+const state = {view:"discover", mode:"dish", query:"", time:"all", activeRecipe:null, appVersion:"unknown", updatePoll:null, minePanel:null, editorStep:0, detailPanel:"overview", pages:{discover:1,favorites:1,recent:1,personal:1}, cooking:{ref:null,index:0,completed:new Set(),remaining:0,running:false,deadline:0,tick:null}};
 
 const els = {
   views:[...document.querySelectorAll(".page-view")], nav:[...document.querySelectorAll("[data-view-target]")],
@@ -29,6 +29,7 @@ const els = {
   favoritesGrid:document.querySelector("#favorites-grid"), favoritesEmpty:document.querySelector("#favorites-empty"),
   recentGrid:document.querySelector("#recent-grid"), recentEmpty:document.querySelector("#recent-empty"),
   personalGrid:document.querySelector("#personal-grid"), personalEmpty:document.querySelector("#personal-empty"), personalCount:document.querySelector("#personal-count"),
+  pagers:{discover:document.querySelector("#discover-pagination"),favorites:document.querySelector("#favorites-pagination"),recent:document.querySelector("#recent-pagination"),personal:document.querySelector("#personal-pagination")},
   dialog:document.querySelector("#recipe-dialog"), dialogContent:document.querySelector("#dialog-content"),
   editorDialog:document.querySelector("#editor-dialog"), editorForm:document.querySelector("#editor-form"), editorStatus:document.querySelector("#editor-status"),
   importDialog:document.querySelector("#import-dialog"), importForm:document.querySelector("#import-form"), importFile:document.querySelector("#recipe-file"), importJson:document.querySelector("#recipe-json"), importStatus:document.querySelector("#import-status"),
@@ -36,6 +37,15 @@ const els = {
   updateDialog:document.querySelector("#update-dialog"), updateVersion:document.querySelector("#update-version"), updateMessage:document.querySelector("#update-message"), releaseNotes:document.querySelector("#release-notes"),
   updateProgress:document.querySelector("#update-progress"), cancelUpdate:document.querySelector("#cancel-update"), retryUpdate:document.querySelector("#retry-update"), installUpdate:document.querySelector("#install-update"), downloadUpdate:document.querySelector("#download-update")
 };
+els.cookingDialog=document.querySelector("#cooking-dialog");
+els.cookingContent=document.querySelector("#cooking-content");
+
+function pageSize() { return matchMedia("(min-width: 900px)").matches ? 12 : 6; }
+function renderPagination(container, pageData, scope) {
+  if (!container) return;
+  container.hidden = pageData.totalPages <= 1;
+  container.innerHTML = pageData.totalPages <= 1 ? "" : `<button type="button" data-page-scope="${scope}" data-page="${pageData.page - 1}" ${pageData.page <= 1 ? "disabled" : ""}>上一页</button><span>${pageData.page} / ${pageData.totalPages}</span><button type="button" data-page-scope="${scope}" data-page="${pageData.page + 1}" ${pageData.page >= pageData.totalPages ? "disabled" : ""}>下一页</button>`;
+}
 
 function loadCustomRecipes() {
   const raw = Core.parseStoredArray(localStorage, Core.CUSTOM_STORAGE_KEY);
@@ -106,6 +116,8 @@ function cardHtml(recipe, context = "default", match = null) {
 
 function renderDiscover() {
   const results = getDiscoverResults();
+  const pageData = Core.paginate(results, state.pages.discover, pageSize());
+  state.pages.discover = pageData.page;
   const searching = Boolean(state.query.trim());
   els.count.textContent = `${results.length} 道菜谱`;
   els.grid.hidden = results.length === 0;
@@ -114,22 +126,29 @@ function renderDiscover() {
   els.title.textContent = searching ? (state.mode === "dish" ? `与“${state.query}”有关` : "这些菜你可以试试") : "家常好味道";
   els.summary.hidden = !(state.mode === "ingredient" && searching && results.length);
   if (!els.summary.hidden) els.summary.innerHTML = `已按食材匹配度排序。最高匹配 <strong>${Math.round(results[0].score * 100)}%</strong>，卡片会告诉你还缺什么。`;
-  els.grid.innerHTML = results.map(item => cardHtml(item.recipe, "default", item)).join("");
+  els.grid.innerHTML = pageData.items.map(item => cardHtml(item.recipe, "default", item)).join("");
+  renderPagination(els.pagers.discover, pageData, "discover");
 }
 
 function renderLibrary() {
   const favoriteRecipes = favorites.map(findRecipe).filter(Boolean);
-  els.favoritesGrid.innerHTML = favoriteRecipes.map(recipe => cardHtml(recipe)).join("");
+  const favoritePage = Core.paginate(favoriteRecipes, state.pages.favorites, pageSize()); state.pages.favorites=favoritePage.page;
+  els.favoritesGrid.innerHTML = favoritePage.items.map(recipe => cardHtml(recipe)).join("");
+  renderPagination(els.pagers.favorites, favoritePage, "favorites");
   els.favoritesGrid.hidden = favoriteRecipes.length === 0;
   els.favoritesEmpty.hidden = favoriteRecipes.length !== 0;
 
   const recentRecipes = recent.map(findRecipe).filter(Boolean);
-  els.recentGrid.innerHTML = recentRecipes.map(recipe => cardHtml(recipe, "compact")).join("");
+  const recentPage = Core.paginate(recentRecipes, state.pages.recent, pageSize()); state.pages.recent=recentPage.page;
+  els.recentGrid.innerHTML = recentPage.items.map(recipe => cardHtml(recipe, "compact")).join("");
+  renderPagination(els.pagers.recent, recentPage, "recent");
   els.recentGrid.hidden = recentRecipes.length === 0;
   els.recentEmpty.hidden = recentRecipes.length !== 0;
   document.querySelector("#clear-recent").hidden = recentRecipes.length === 0;
 
-  els.personalGrid.innerHTML = customRecipes.map(recipe => cardHtml(recipe, "personal")).join("");
+  const personalPage = Core.paginate(customRecipes, state.pages.personal, pageSize()); state.pages.personal=personalPage.page;
+  els.personalGrid.innerHTML = personalPage.items.map(recipe => cardHtml(recipe, "personal")).join("");
+  renderPagination(els.pagers.personal, personalPage, "personal");
   els.personalGrid.hidden = customRecipes.length === 0;
   els.personalEmpty.hidden = customRecipes.length !== 0;
   els.personalCount.textContent = `${customRecipes.length} 份`;
@@ -145,11 +164,20 @@ function renderQuickPicks() {
 function switchView(view) {
   if (!['discover','favorites','mine'].includes(view)) return;
   state.view = view;
+  if(view==="mine"){state.minePanel=null;document.querySelector("#mine-dashboard").hidden=false;document.querySelectorAll("[data-mine-panel]").forEach(panel=>panel.hidden=true);}
   if (window.location.hash !== `#${view}`) history.replaceState(null, "", `#${view}`);
   els.views.forEach(element => { const active = element.dataset.view === view; element.hidden = !active; element.classList.toggle("active", active); });
   els.nav.forEach(button => { const active = button.dataset.viewTarget === view; button.classList.toggle("active", active); if (active) button.setAttribute("aria-current", "page"); else button.removeAttribute("aria-current"); });
   window.scrollTo({top:0, behavior:"smooth"});
   renderLibrary();
+}
+
+function showMinePanel(name) {
+  state.minePanel = name || null;
+  document.querySelector("#mine-dashboard").hidden = Boolean(name);
+  document.querySelectorAll("[data-mine-panel]").forEach(panel => { panel.hidden = panel.dataset.minePanel !== name; });
+  renderLibrary();
+  window.scrollTo({top:0, behavior:"smooth"});
 }
 
 function toggleFavorite(ref) {
@@ -164,6 +192,7 @@ function openRecipe(ref) {
   const recipe = findRecipe(ref);
   if (!recipe) return;
   state.activeRecipe = Core.recipeRef(recipe);
+  state.detailPanel = "overview";
   recent = Core.addRecent(recent, state.activeRecipe, validRefs());
   sanitizeAndPersist();
   renderLibrary();
@@ -175,9 +204,18 @@ function renderRecipeDialog(recipe) {
   const ref = Core.recipeRef(recipe);
   const isFavorite = favorites.includes(ref);
   const sourceUrl = recipe.video || (!recipe.custom ? `https://search.bilibili.com/all?keyword=${encodeURIComponent(`${recipe.source} ${recipe.name}`)}` : "");
-  els.dialogContent.innerHTML = `<div class="dialog-hero" style="--dialog-a:${escapeHtml(recipe.colors[0])};--dialog-b:${escapeHtml(recipe.colors[1])}"><span class="dish-emoji" aria-hidden="true">${escapeHtml(recipe.emoji)}</span><h2>${escapeHtml(recipe.name)}</h2><p>${escapeHtml(recipe.description)}</p></div>
-    <div class="dialog-body"><div class="detail-actions"><button class="favorite-action ${isFavorite ? "active" : ""}" data-action="favorite" data-ref="${ref}">${isFavorite ? "♥ 已收藏" : "♡ 收藏"}</button>${recipe.custom ? `<button data-action="edit" data-ref="${ref}">编辑</button><button class="danger" data-action="delete" data-ref="${ref}">删除</button>` : ""}</div>
-    <div class="detail-facts"><span>约 ${recipe.time} 分钟</span><span>${escapeHtml(recipe.difficulty)}</span>${recipe.flavors.map(value => `<span>${escapeHtml(value)}</span>`).join("")}</div><h3>准备食材</h3><ul class="ingredient-list">${recipe.ingredients.map(item => `<li><span>${escapeHtml(item.name)}${item.optional ? "（可选）" : ""}</span><b>${escapeHtml(item.amount)}</b></li>`).join("")}</ul><h3>开始做饭</h3><ol class="steps">${recipe.steps.map(step => `<li><strong>${escapeHtml(step[0])}</strong><p>${escapeHtml(step[1])}</p></li>`).join("")}</ol>${sourceUrl ? `<a class="original-link" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">去 B 站看 ${escapeHtml(recipe.source)} 的原视频</a>` : `<p class="imported-note">这是一份保存在本机的个人菜谱。</p>`}</div>`;
+  const panel = state.detailPanel;
+  els.dialogContent.innerHTML = `<div class="dialog-hero compact" style="--dialog-a:${escapeHtml(recipe.colors[0])};--dialog-b:${escapeHtml(recipe.colors[1])}"><span class="dish-emoji" aria-hidden="true">${escapeHtml(recipe.emoji)}</span><h2>${escapeHtml(recipe.name)}</h2></div>
+    <div class="dialog-body"><div class="detail-actions"><button class="favorite-action ${isFavorite ? "active" : ""}" data-action="favorite" data-ref="${ref}">${isFavorite ? "♥ 已收藏" : "♡ 收藏"}</button><button class="primary-action" data-action="cook" data-ref="${ref}">开始烹饪</button>${recipe.custom ? `<button data-action="edit" data-ref="${ref}">编辑</button><button class="danger" data-action="delete" data-ref="${ref}">删除</button>` : ""}</div>
+    <div class="detail-tabs" role="tablist">${[["overview","概览"],["ingredients","食材"],["steps","步骤"]].map(([key,label])=>`<button type="button" data-detail-panel="${key}" class="${panel===key?"active":""}">${label}</button>`).join("")}</div>
+    <section class="detail-panel" ${panel!=="overview"?"hidden":""}><p>${escapeHtml(recipe.description)}</p><div class="detail-facts"><span>约 ${recipe.time} 分钟</span><span>${escapeHtml(recipe.difficulty)}</span>${recipe.flavors.map(value => `<span>${escapeHtml(value)}</span>`).join("")}</div>${sourceUrl ? `<a class="original-link" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">查看 ${escapeHtml(recipe.source)} 的来源视频</a>` : `<p class="imported-note">这是一份保存在本机的个人菜谱。</p>`}</section>
+    <section class="detail-panel" ${panel!=="ingredients"?"hidden":""}><ul class="ingredient-list">${recipe.ingredients.map(item => `<li><span>${escapeHtml(item.name)}${item.optional ? "（可选）" : ""}</span><b>${escapeHtml(item.amount)}</b></li>`).join("")}</ul></section>
+    <section class="detail-panel" ${panel!=="steps"?"hidden":""}><ol class="steps">${recipe.steps.map((step,index) => `<li><strong>${escapeHtml(step[0])}</strong>${step[2]?`<small>${formatDuration(step[2])}</small>`:""}<p>${escapeHtml(step[1])}</p><button type="button" data-action="cook-step" data-ref="${ref}" data-step-index="${index}">从这一步开始</button></li>`).join("")}</ol></section></div>`;
+}
+
+function formatDuration(seconds) {
+  const value=Math.max(0,Number(seconds)||0), minutes=Math.floor(value/60), rest=value%60;
+  return minutes ? `${minutes} 分${rest?`${rest} 秒`:""}` : `${rest} 秒`;
 }
 
 function addIngredientRow(value = {}) {
@@ -190,7 +228,7 @@ function addIngredientRow(value = {}) {
 function addStepRow(value = []) {
   const row = document.createElement("div");
   row.className = "dynamic-row step-row";
-  row.innerHTML = `<input class="step-title" maxlength="50" placeholder="步骤标题" value="${escapeHtml(value[0] || "")}"><textarea class="step-description" maxlength="500" rows="2" required placeholder="具体怎么做">${escapeHtml(value[1] || "")}</textarea><button type="button" class="remove-row" aria-label="删除步骤">×</button>`;
+  row.innerHTML = `<input class="step-title" maxlength="50" placeholder="步骤标题" value="${escapeHtml(value[0] || "")}"><textarea class="step-description" maxlength="500" rows="2" required placeholder="具体怎么做">${escapeHtml(value[1] || "")}</textarea><label class="duration-field">计时（秒，可选）<input class="step-duration" type="number" min="1" max="14400" value="${value[2] || ""}" placeholder="例如 300"></label><button type="button" class="remove-row" aria-label="删除步骤">×</button>`;
   document.querySelector("#step-rows").appendChild(row);
 }
 
@@ -210,6 +248,7 @@ function openEditor(recipe) {
   document.querySelector("#editor-description").value = recipe?.description || "";
   (recipe?.ingredients || [{}]).forEach(addIngredientRow);
   (recipe?.steps || [["",""]]).forEach(addStepRow);
+  setEditorStep(0);
   if (els.dialog.open) els.dialog.close();
   els.editorDialog.showModal();
 }
@@ -217,7 +256,11 @@ function openEditor(recipe) {
 function saveEditor() {
   const idValue = Number(document.querySelector("#editor-id").value);
   const ingredients = [...document.querySelectorAll(".ingredient-row")].map(row => ({name:row.querySelector(".ingredient-name").value, amount:row.querySelector(".ingredient-amount").value, optional:row.querySelector(".ingredient-optional").checked}));
-  const steps = [...document.querySelectorAll(".step-row")].map(row => [row.querySelector(".step-title").value, row.querySelector(".step-description").value]);
+  const steps = [...document.querySelectorAll(".step-row")].map(row => {
+    const base=[row.querySelector(".step-title").value,row.querySelector(".step-description").value];
+    const duration=row.querySelector(".step-duration").value;
+    return duration ? [...base,Number(duration)] : base;
+  });
   const raw = {id:idValue || Date.now(), name:document.querySelector("#editor-name").value, emoji:document.querySelector("#editor-emoji").value, time:document.querySelector("#editor-time").value, difficulty:document.querySelector("#editor-difficulty").value, source:document.querySelector("#editor-source").value, flavors:document.querySelector("#editor-flavors").value.split(/[，,]/), description:document.querySelector("#editor-description").value, ingredients, steps};
   const normalized = Core.normalizeImportedRecipe(raw, 0, true);
   const duplicate = customRecipes.find(item => item.id !== normalized.id && Core.recipeIdentity(item) === Core.recipeIdentity(normalized));
@@ -228,7 +271,26 @@ function saveEditor() {
   renderAll();
   els.editorDialog.close();
   switchView("mine");
+  showMinePanel("personal");
   setGlobalStatus(index >= 0 ? "菜谱已更新" : "菜谱已保存", "success");
+}
+
+function setEditorStep(index) {
+  state.editorStep=Math.max(0,Math.min(2,index));
+  document.querySelectorAll("[data-editor-panel]").forEach(panel=>{const active=Number(panel.dataset.editorPanel)===state.editorStep;panel.hidden=!active;panel.classList.toggle("active",active);});
+  document.querySelectorAll(".editor-progress span").forEach((item,i)=>item.classList.toggle("active",i===state.editorStep));
+  document.querySelector("#editor-prev").hidden=state.editorStep===0;
+  document.querySelector("#editor-next").hidden=state.editorStep===2;
+  document.querySelector("#editor-save").hidden=state.editorStep!==2;
+}
+
+function advanceEditor(direction) {
+  if (direction>0) {
+    const panel=document.querySelector(`[data-editor-panel="${state.editorStep}"]`);
+    const invalid=[...panel.querySelectorAll("input,textarea,select")].find(input=>!input.checkValidity());
+    if(invalid){invalid.reportValidity();return;}
+  }
+  setEditorStep(state.editorStep+direction);
 }
 
 function deleteRecipe(ref) {
@@ -244,12 +306,45 @@ function deleteRecipe(ref) {
   setGlobalStatus("个人菜谱已删除", "success");
 }
 
-function handleAction(action, ref) {
+function handleAction(action, ref, button) {
   if (action === "open") openRecipe(ref);
   if (action === "favorite") toggleFavorite(ref);
   if (action === "edit") openEditor(findRecipe(ref));
   if (action === "delete") deleteRecipe(ref);
+  if (action === "cook") openCooking(ref, 0);
+  if (action === "cook-step") openCooking(ref, Number(button?.dataset.stepIndex || 0));
 }
+
+function openCooking(ref, stepIndex = 0) {
+  const recipe=findRecipe(ref); if(!recipe)return;
+  state.cooking.ref=ref;
+  state.cooking.index=Math.max(0,Math.min(recipe.steps.length-1,stepIndex));
+  state.cooking.completed=new Set();
+  state.cooking.running=false;
+  state.cooking.remaining=recipe.steps[state.cooking.index][2]||0;
+  try {
+    const native=window.YiCanAndroid?.getStepTimerState?JSON.parse(window.YiCanAndroid.getStepTimerState()):null;
+    if(native?.recipeRef===ref&&native.stepIndex===state.cooking.index&&native.remainingSeconds>0){state.cooking.remaining=native.remainingSeconds;state.cooking.deadline=native.deadline;state.cooking.running=true;}
+  } catch (_) {}
+  if(els.dialog.open)els.dialog.close();
+  renderCooking();
+  if(!els.cookingDialog.open)els.cookingDialog.showModal();
+  startCookingTick();
+}
+
+function renderCooking() {
+  const recipe=findRecipe(state.cooking.ref); if(!recipe)return;
+  const index=state.cooking.index, step=recipe.steps[index], done=state.cooking.completed.has(index);
+  const seconds=state.cooking.running?Math.max(0,Math.ceil((state.cooking.deadline-Date.now())/1000)):state.cooking.remaining;
+  els.cookingContent.innerHTML=`<header><button type="button" data-cook-action="close">×</button><div><small>${escapeHtml(recipe.name)}</small><strong>第 ${index+1} / ${recipe.steps.length} 步</strong></div><button type="button" data-cook-action="complete" class="${done?"active":""}">${done?"✓ 已完成":"完成步骤"}</button></header><main><p class="cooking-kicker">${escapeHtml(step[0])}</p><h2>${escapeHtml(step[1])}</h2><div class="timer-display ${seconds===0&&state.cooking.running?"finished":""}">${formatClock(seconds)}</div><label class="manual-timer">计时秒数<input id="cooking-seconds" type="number" min="1" max="14400" value="${Math.max(1,seconds||step[2]||300)}"></label><p id="timer-note">${state.cooking.running?(seconds?"计时中；结束后只提醒，不会自动跳步":"时间到，请按自己的节奏继续"):step[2]?`建议 ${formatDuration(step[2])}`:"这一步没有预设时间，可手动输入"}</p><div class="timer-actions"><button type="button" data-cook-action="reset">重置</button><button type="button" data-cook-action="toggle" class="primary-action">${state.cooking.running?"暂停":"开始"}</button><button type="button" data-cook-action="add">＋1 分钟</button></div></main><footer><button type="button" data-cook-action="prev" ${index===0?"disabled":""}>上一步</button><button type="button" data-cook-action="next" ${index===recipe.steps.length-1?"disabled":""}>下一步</button></footer>`;
+}
+
+function formatClock(seconds){const value=Math.max(0,Math.ceil(Number(seconds)||0));return `${String(Math.floor(value/60)).padStart(2,"0")}:${String(value%60).padStart(2,"0")}`;}
+function persistCookingTimer(){const c=state.cooking;if(!c.ref){localStorage.removeItem(Core.TIMER_STORAGE_KEY);return;}localStorage.setItem(Core.TIMER_STORAGE_KEY,JSON.stringify({recipeRef:c.ref,stepIndex:c.index,deadline:c.deadline,durationSeconds:Math.max(1,c.remaining||Math.ceil((c.deadline-Date.now())/1000)||1),running:c.running}));}
+function startCookingTick(){if(state.cooking.tick)clearInterval(state.cooking.tick);state.cooking.tick=setInterval(()=>{if(!state.cooking.running)return;state.cooking.remaining=Math.max(0,Math.ceil((state.cooking.deadline-Date.now())/1000));persistCookingTimer();renderCooking();if(state.cooking.remaining===0){state.cooking.running=false;clearInterval(state.cooking.tick);state.cooking.tick=null;persistCookingTimer();}},1000);}
+function pauseCooking(){if(state.cooking.running)state.cooking.remaining=Math.max(0,Math.ceil((state.cooking.deadline-Date.now())/1000));state.cooking.running=false;window.YiCanAndroid?.cancelStepTimer?.();persistCookingTimer();}
+function changeCookingStep(delta){const recipe=findRecipe(state.cooking.ref);if(!recipe)return;pauseCooking();state.cooking.index=Math.max(0,Math.min(recipe.steps.length-1,state.cooking.index+delta));state.cooking.remaining=recipe.steps[state.cooking.index][2]||0;state.cooking.deadline=0;renderCooking();}
+function handleCookingAction(action){const recipe=findRecipe(state.cooking.ref);if(!recipe)return;if(action==="close"){pauseCooking();els.cookingDialog.close();return;}if(action==="prev")changeCookingStep(-1);if(action==="next")changeCookingStep(1);if(action==="complete"){state.cooking.completed.has(state.cooking.index)?state.cooking.completed.delete(state.cooking.index):state.cooking.completed.add(state.cooking.index);renderCooking();}if(action==="reset"){pauseCooking();state.cooking.remaining=recipe.steps[state.cooking.index][2]||0;state.cooking.deadline=0;persistCookingTimer();renderCooking();}if(action==="add"){const current=state.cooking.running?Math.max(0,Math.ceil((state.cooking.deadline-Date.now())/1000)):Number(document.querySelector("#cooking-seconds")?.value||state.cooking.remaining||0);state.cooking.remaining=Math.min(14400,current+60);if(state.cooking.running){state.cooking.deadline=Date.now()+state.cooking.remaining*1000;window.YiCanAndroid?.startStepTimer?.(state.cooking.ref,state.cooking.index,state.cooking.remaining);}persistCookingTimer();renderCooking();}if(action==="toggle"){if(state.cooking.running){pauseCooking();renderCooking();}else{const seconds=Math.max(1,Math.min(14400,Number(document.querySelector("#cooking-seconds")?.value||state.cooking.remaining||recipe.steps[state.cooking.index][2]||300)));state.cooking.remaining=seconds;state.cooking.deadline=Date.now()+seconds*1000;state.cooking.running=true;persistCookingTimer();window.YiCanAndroid?.startStepTimer?.(state.cooking.ref,state.cooking.index,seconds);startCookingTick();renderCooking();}}}
 
 function importFromText(text) {
   const result = Core.importFromText({customRecipes, favorites, recent}, text, builtInRefs);
@@ -314,6 +409,14 @@ window.YiCanNative = {
     if (["available","downloading","verifying","verified","permission","installing","error","cancelled"].includes(result.status) && result.versionName && !els.updateDialog.open) els.updateDialog.showModal();
     if (downloading && !state.updatePoll) state.updatePoll = setInterval(pollUpdateState, 1000);
     if (!downloading && state.updatePoll) { clearInterval(state.updatePoll); state.updatePoll = null; }
+  },
+  onNativeStatus(event) {
+    if(event?.type!=="timer")return;
+    const payload=event.payload||{};
+    if(payload.notificationAllowed===false)document.querySelector("#timer-note")?.replaceChildren(document.createTextNode("前台计时可用；未开启通知，后台可能无法提醒"));
+  },
+  onTimerOpen(recipeRef, stepIndex) {
+    openCooking(recipeRef, Number(stepIndex)||0);
   }
 };
 
@@ -326,7 +429,7 @@ function initializeAppInfo() {
   if (!window.YiCanAndroid?.getAppInfo) return;
   try {
     const info = JSON.parse(window.YiCanAndroid.getAppInfo());
-    els.currentVersion.textContent = info.versionName || "1.2.0";
+    els.currentVersion.textContent = info.versionName || "1.3.0";
     state.appVersion = info.versionName || "unknown";
     pollUpdateState();
   } catch (_) {}
@@ -342,13 +445,19 @@ function registerRecipeTools() {
 
 document.addEventListener("click", event => {
   const actionButton = event.target.closest("[data-action]");
-  if (actionButton) handleAction(actionButton.dataset.action, actionButton.dataset.ref);
+  if (actionButton) handleAction(actionButton.dataset.action, actionButton.dataset.ref, actionButton);
+  const detailButton=event.target.closest("[data-detail-panel]");
+  if(detailButton){state.detailPanel=detailButton.dataset.detailPanel;const recipe=findRecipe(state.activeRecipe);if(recipe)renderRecipeDialog(recipe);}
+  const mineButton=event.target.closest("[data-mine-target]");if(mineButton)showMinePanel(mineButton.dataset.mineTarget);
+  if(event.target.closest("[data-mine-back]"))showMinePanel(null);
+  const pageButton=event.target.closest("[data-page-scope]");if(pageButton&&!pageButton.disabled){state.pages[pageButton.dataset.pageScope]=Number(pageButton.dataset.page);renderAll();window.scrollTo({top:0,behavior:"smooth"});}
+  const cookButton=event.target.closest("[data-cook-action]");if(cookButton)handleCookingAction(cookButton.dataset.cookAction);
   const viewButton = event.target.closest("[data-view-target], [data-go]");
   if (viewButton) switchView(viewButton.dataset.viewTarget || viewButton.dataset.go);
   const closeButton = event.target.closest("[data-close]");
   if (closeButton) document.querySelector(`#${closeButton.dataset.close}`)?.close();
   const queryButton = event.target.closest("[data-query]");
-  if (queryButton) { els.input.value=queryButton.dataset.query; state.query=queryButton.dataset.query; renderDiscover(); document.querySelector("#results-title").scrollIntoView({behavior:"smooth"}); }
+  if (queryButton) { els.input.value=queryButton.dataset.query; state.query=queryButton.dataset.query; state.pages.discover=1; renderDiscover(); document.querySelector("#results-title").scrollIntoView({behavior:"smooth"}); }
   if (event.target.classList.contains("remove-row")) {
     const container = event.target.closest("#ingredient-rows, #step-rows");
     if (container && container.children.length > 1) event.target.closest(".dynamic-row").remove();
@@ -360,16 +469,18 @@ document.querySelector("#brand-home").addEventListener("click", () => switchView
 document.querySelectorAll(".mode-tab").forEach(tab => tab.addEventListener("click", () => {
   state.mode=tab.dataset.mode;state.query="";els.input.value="";els.input.placeholder=state.mode==="dish"?"例如：番茄炒蛋":"输入食材，用空格或逗号分开";
   document.querySelectorAll(".mode-tab").forEach(item=>{const active=item===tab;item.classList.toggle("active",active);item.setAttribute("aria-selected",String(active));});
-  renderQuickPicks();renderDiscover();els.input.focus();
+  state.pages.discover=1;renderQuickPicks();renderDiscover();els.input.focus();
 }));
-els.form.addEventListener("submit", event => {event.preventDefault();state.query=els.input.value.trim();renderDiscover();document.querySelector("#results-title").scrollIntoView({behavior:"smooth"});});
-els.time.addEventListener("change",()=>{state.time=els.time.value;renderDiscover();});
-document.querySelector("#reset-button").addEventListener("click",()=>{state.query="";state.time="all";els.input.value="";els.time.value="all";renderDiscover();});
+els.form.addEventListener("submit", event => {event.preventDefault();state.query=els.input.value.trim();state.pages.discover=1;renderDiscover();document.querySelector("#results-title").scrollIntoView({behavior:"smooth"});});
+els.time.addEventListener("change",()=>{state.time=els.time.value;state.pages.discover=1;renderDiscover();});
+document.querySelector("#reset-button").addEventListener("click",()=>{state.query="";state.time="all";state.pages.discover=1;els.input.value="";els.time.value="all";renderDiscover();});
 document.querySelector("#new-recipe").addEventListener("click",()=>openEditor(null));
 document.querySelector("#add-ingredient").addEventListener("click",()=>addIngredientRow());
 document.querySelector("#add-step").addEventListener("click",()=>addStepRow());
+document.querySelector("#editor-prev").addEventListener("click",()=>advanceEditor(-1));
+document.querySelector("#editor-next").addEventListener("click",()=>advanceEditor(1));
 els.editorForm.addEventListener("submit",event=>{event.preventDefault();try{saveEditor();}catch(error){els.editorStatus.textContent=error.message||"无法保存菜谱";els.editorStatus.className="import-status error";}});
-document.querySelector("#clear-recent").addEventListener("click",()=>{if(!recent.length||!window.confirm("确定清空最近浏览吗？"))return;recent=[];sanitizeAndPersist();renderLibrary();});
+document.querySelector("#clear-recent").addEventListener("click",()=>{if(!recent.length||!window.confirm("确定清空最近浏览吗？"))return;recent=[];state.pages.recent=1;sanitizeAndPersist();renderLibrary();});
 document.querySelector("#open-import").addEventListener("click",()=>{els.importForm.reset();setImportStatus("");els.importDialog.showModal();});
 els.importFile.addEventListener("change",async()=>{const file=els.importFile.files?.[0];if(!file)return;if(file.size>5*1024*1024){setImportStatus("文件不能超过 5 MB","error");return;}try{els.importJson.value=await file.text();setImportStatus(`已读取 ${file.name}，请确认导入`,"success");}catch(_){setImportStatus("无法读取这个文件","error");}});
 els.importForm.addEventListener("submit",event=>{event.preventDefault();try{const result=importFromText(els.importJson.value);setImportStatus(`成功加入 ${result.added} 份菜谱${result.skipped?`，跳过 ${result.skipped} 份重复菜谱`:""}`,"success");setTimeout(()=>{els.importDialog.close();switchView("mine");},700);}catch(error){setImportStatus(error.message||"导入失败","error");}});
@@ -386,7 +497,7 @@ window.recipeApp = {
   searchByIngredients(ingredients){state.mode="ingredient";state.query=Array.isArray(ingredients)?ingredients.join(" "):ingredients||"";switchView("discover");renderDiscover();return getDiscoverResults().map(item=>({name:item.recipe.name,match:Math.round(item.score*100),missing:item.missing}));},
   openRecipe,
   importRecipes(data){return importFromText(typeof data==="string"?data:JSON.stringify(data));},
-  handleBack(){const open=[els.updateDialog,els.importDialog,els.editorDialog,els.dialog].find(dialog=>dialog.open);if(open){open.close();return "handled";}if(state.view!=="discover"){switchView("discover");return "handled";}return "none";}
+  handleBack(){if(els.cookingDialog.open){pauseCooking();els.cookingDialog.close();return "handled";}const open=[els.updateDialog,els.importDialog,els.editorDialog,els.dialog].find(dialog=>dialog.open);if(open){open.close();return "handled";}if(state.view==="mine"&&state.minePanel){showMinePanel(null);return "handled";}if(state.view!=="discover"){switchView("discover");return "handled";}return "none";}
 };
 
 sanitizeAndPersist();

@@ -2,7 +2,7 @@
 
 一餐是一款离线可用的 Android 菜谱 App。它支持按菜名或食材搜索、收藏、最近浏览、个人菜谱管理、完整数据备份，以及通过 GitHub Releases 检查并安装更新。
 
-## 1.2.1 功能
+## 1.3.0 功能
 
 - “发现 / 收藏 / 我的”三栏导航。
 - 按菜名、口味或已有食材搜索，并按烹饪时间筛选。
@@ -11,6 +11,9 @@
 - 每 24 小时自动检查一次 `why685/yican-android` 的最新 Release，也可手动检查。
 - 下载后校验 SHA-256、包名、版本号和签名证书，再交给 Android 系统覆盖安装。
 - 下载支持进度显示、取消、重试和重启恢复；安装中断后可继续安装。
+- 首页与列表使用固定内容区和分页，手机每页 6 条、宽屏每页 12 条。
+- “我的”使用四个一屏入口；详情使用概览、食材、步骤分面；编辑器使用三步向导。
+- 全屏烹饪模式支持逐步操作、完成标记和前后台计时提醒。
 
 应用继续使用 `com.yican.recipe` 和 `yican_custom_recipes_v1`，使用相同签名覆盖安装时会保留 1.1.0 的已导入菜谱。
 
@@ -32,11 +35,11 @@ node --test tests/app-core.test.js
 
 ## 发布更新
 
-创建标签格式为 `v1.2.1` 的 GitHub Release，并上传：
+创建标签格式为 `v1.3.0` 的 GitHub Release，并上传：
 
-- `YiCan-1.2.1.apk`
-- `YiCan-1.2.1.apk.sha256`
-- `YiCan-Android-Source-1.2.1.zip`
+- `YiCan-1.3.0.apk`
+- `YiCan-1.3.0.apk.sha256`
+- `YiCan-Android-Source-1.3.0.zip`
 - `update.json`
 
 `update.json` 格式：
@@ -44,9 +47,9 @@ node --test tests/app-core.test.js
 ```json
 {
   "schemaVersion": 1,
-  "versionCode": 4,
-  "versionName": "1.2.1",
-  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.2.1/YiCan-1.2.1.apk",
+  "versionCode": 5,
+  "versionName": "1.3.0",
+  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.3.0/YiCan-1.3.0.apk",
   "sha256": "APK_SHA256",
   "releaseNotes": "版本说明"
 }
@@ -56,4 +59,4 @@ node --test tests/app-core.test.js
 
 ## 菜谱 JSON
 
-传统导入格式的必填字段为 `name`、`ingredients` 和 `steps`；可选字段包括 `time`、`difficulty`、`description`、`flavors`、`source`、`video` 和 `emoji`。完整备份由应用自动生成，恢复时合并并去重，不覆盖现有个人数据。
+传统导入格式的必填字段为 `name`、`ingredients` 和 `steps`；可选字段包括 `time`、`difficulty`、`description`、`flavors`、`source`、`video` 和 `emoji`。步骤支持 `[标题, 描述, durationSeconds?]`，时长范围为 1–14,400 秒；旧字符串、二元素数组和对象步骤仍可导入。完整备份继续使用 `formatVersion: 1`，恢复时合并并去重，不覆盖现有个人数据。

@@ -59,6 +59,7 @@
           <div id="ingredient-summary" class="ingredient-summary" hidden></div>
           <p class="source-disclaimer">内置菜谱根据两位 UP 主的公开教学内容整理；个人菜谱与偏好只保存在本机。</p>
           <div id="recipe-grid" class="recipe-grid"></div>
+          <div id="discover-pagination" class="pagination" aria-label="发现分页"></div>
           <div id="discover-empty" class="empty-state" hidden><span aria-hidden="true">🥣</span><h3>还没有找到合适的菜谱</h3><p>试试减少关键词，或换一种食材组合。</p><button id="reset-button" type="button">看看全部菜谱</button></div>
         </section>
       </section>
@@ -67,36 +68,25 @@
         <div class="section-shell">
           <div class="page-heading"><p class="eyebrow">随时再做</p><h1>我的收藏</h1><p>把喜欢的味道留在手边。</p></div>
           <div id="favorites-grid" class="recipe-grid"></div>
+          <div id="favorites-pagination" class="pagination" aria-label="收藏分页"></div>
           <div id="favorites-empty" class="empty-state" hidden><span aria-hidden="true">♡</span><h3>还没有收藏</h3><p>打开任意菜谱，点一下收藏即可。</p><button type="button" data-go="discover">去发现菜谱</button></div>
         </div>
       </section>
 
       <section class="page-view library-view" id="view-mine" data-view="mine" hidden>
         <div class="section-shell">
-          <div class="page-heading mine-heading"><div><p class="eyebrow">只属于你的菜谱本</p><h1>我的</h1><p>个人菜谱、浏览记录和本机数据都在这里。</p></div><button class="primary-action" id="new-recipe" type="button">＋ 新建菜谱</button></div>
+          <div class="page-heading mine-heading"><div><p class="eyebrow">本机菜谱本</p><h1>我的</h1><p>选择一项进入，首页不再堆叠长列表。</p></div></div>
+          <div id="mine-dashboard" class="mine-dashboard">
+            <button type="button" data-mine-target="personal"><span>🍳</span><strong>个人菜谱</strong><small id="personal-count">0 份</small></button>
+            <button type="button" data-mine-target="recent"><span>◷</span><strong>最近浏览</strong><small>最多 20 条</small></button>
+            <button type="button" data-mine-target="data"><span>⇅</span><strong>数据管理</strong><small>备份与恢复</small></button>
+            <button type="button" data-mine-target="update"><span>↻</span><strong>应用更新</strong><small>当前 <b id="current-version">1.3.0</b></small></button>
+          </div>
 
-          <section class="dashboard-card update-card" aria-labelledby="update-title">
-            <div><p class="eyebrow">应用更新</p><h2 id="update-title">一餐 <span id="current-version">1.2.0</span></h2><p id="update-status" role="status">每天自动检查一次，也可以随时手动检查。</p></div>
-            <button class="secondary-action" id="check-update" type="button">检查更新</button>
-          </section>
-
-          <section class="mine-section" aria-labelledby="recent-title">
-            <div class="subhead"><div><p class="eyebrow">最近翻过</p><h2 id="recent-title">最近浏览</h2></div><button class="text-button" id="clear-recent" type="button">清空记录</button></div>
-            <div id="recent-grid" class="recipe-grid compact-grid"></div>
-            <p id="recent-empty" class="inline-empty" hidden>打开过的菜谱会出现在这里。</p>
-          </section>
-
-          <section class="mine-section" aria-labelledby="personal-title">
-            <div class="subhead"><div><p class="eyebrow">本机保存</p><h2 id="personal-title">个人菜谱</h2></div><span id="personal-count" class="muted-count"></span></div>
-            <div id="personal-grid" class="recipe-grid"></div>
-            <p id="personal-empty" class="inline-empty" hidden>还没有个人菜谱，可以新建或导入一份。</p>
-          </section>
-
-          <section class="data-actions" aria-label="数据管理">
-            <button id="open-import" type="button"><strong>导入与恢复</strong><span>支持传统菜谱 JSON 和完整备份</span></button>
-            <button id="export-backup" type="button"><strong>导出完整备份</strong><span>包含个人菜谱、收藏和最近浏览</span></button>
-          </section>
-          <p id="data-status" class="global-status" role="status" aria-live="polite"></p>
+          <section class="mine-panel" data-mine-panel="personal" hidden><div class="subhead"><button class="text-button" data-mine-back type="button">← 返回</button><h2 id="personal-title">个人菜谱</h2><button class="primary-action" id="new-recipe" type="button">＋ 新建</button></div><div id="personal-grid" class="recipe-grid"></div><div id="personal-pagination" class="pagination"></div><p id="personal-empty" class="inline-empty" hidden>还没有个人菜谱，可以新建或导入一份。</p></section>
+          <section class="mine-panel" data-mine-panel="recent" hidden><div class="subhead"><button class="text-button" data-mine-back type="button">← 返回</button><h2 id="recent-title">最近浏览</h2><button class="text-button" id="clear-recent" type="button">清空</button></div><div id="recent-grid" class="recipe-grid compact-grid"></div><div id="recent-pagination" class="pagination"></div><p id="recent-empty" class="inline-empty" hidden>打开过的菜谱会出现在这里。</p></section>
+          <section class="mine-panel" data-mine-panel="data" hidden><div class="subhead"><button class="text-button" data-mine-back type="button">← 返回</button><h2>数据管理</h2></div><div class="data-actions"><button id="open-import" type="button"><strong>导入与恢复</strong><span>传统 JSON 或完整备份</span></button><button id="export-backup" type="button"><strong>导出完整备份</strong><span>菜谱、收藏和最近浏览</span></button></div><p id="data-status" class="global-status" role="status" aria-live="polite"></p></section>
+          <section class="mine-panel" data-mine-panel="update" hidden><div class="subhead"><button class="text-button" data-mine-back type="button">← 返回</button><h2 id="update-title">应用更新</h2></div><div class="dashboard-card update-card"><div><p id="update-status" role="status">每天自动检查一次，也可以随时手动检查。</p></div><button class="secondary-action" id="check-update" type="button">检查更新</button></div></section>
         </div>
       </section>
     </main>
@@ -117,7 +107,8 @@
       <form id="editor-form" class="editor-form">
         <p class="eyebrow">我的菜谱</p><h2 id="editor-title">新建菜谱</h2>
         <input type="hidden" id="editor-id" />
-        <div class="form-grid">
+        <div class="editor-progress"><span class="active">1 基本信息</span><span>2 食材</span><span>3 步骤</span></div>
+        <section class="editor-panel active" data-editor-panel="0"><div class="form-grid">
           <label class="wide">菜名<input id="editor-name" maxlength="60" required placeholder="例如：青椒炒蛋" /></label>
           <label>表情<input id="editor-emoji" maxlength="8" value="🍽️" /></label>
           <label>用时（分钟）<input id="editor-time" type="number" min="1" max="1440" value="20" required /></label>
@@ -125,12 +116,16 @@
           <label>来源<input id="editor-source" maxlength="40" value="我的菜谱" /></label>
           <label class="wide">口味标签<input id="editor-flavors" maxlength="100" placeholder="用逗号分开，例如：快手，下饭" /></label>
           <label class="wide">一句介绍<textarea id="editor-description" maxlength="240" rows="3" placeholder="这道菜有什么特别之处？"></textarea></label>
-        </div>
-        <div class="dynamic-section"><div class="dynamic-head"><h3>食材</h3><button type="button" id="add-ingredient">＋ 添加</button></div><div id="ingredient-rows"></div></div>
-        <div class="dynamic-section"><div class="dynamic-head"><h3>步骤</h3><button type="button" id="add-step">＋ 添加</button></div><div id="step-rows"></div></div>
+        </div></section>
+        <section class="editor-panel" data-editor-panel="1" hidden><div class="dynamic-section"><div class="dynamic-head"><h3>食材</h3><button type="button" id="add-ingredient">＋ 添加</button></div><div id="ingredient-rows"></div></div></section>
+        <section class="editor-panel" data-editor-panel="2" hidden><div class="dynamic-section"><div class="dynamic-head"><h3>步骤与计时</h3><button type="button" id="add-step">＋ 添加</button></div><div id="step-rows"></div></div></section>
         <p id="editor-status" class="import-status" role="status"></p>
-        <button class="import-submit" type="submit">保存菜谱</button>
+        <div class="editor-actions"><button id="editor-prev" type="button" hidden>上一步</button><button class="primary-action" id="editor-next" type="button">下一步</button><button class="import-submit" id="editor-save" type="submit" hidden>保存菜谱</button></div>
       </form>
+    </dialog>
+
+    <dialog id="cooking-dialog" class="cooking-dialog">
+      <div id="cooking-content" class="cooking-content"></div>
     </dialog>
 
     <dialog id="import-dialog" class="recipe-dialog import-dialog">
