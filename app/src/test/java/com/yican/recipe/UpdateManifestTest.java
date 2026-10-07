@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import org.json.JSONObject;
+import org.json.JSONArray;
 import org.junit.Test;
 
 public class UpdateManifestTest {
@@ -25,6 +26,8 @@ public class UpdateManifestTest {
         assertEquals(4, restored.versionCode);
         assertEquals("1.2.1", restored.versionName);
         assertEquals("修复说明", restored.releaseNotes);
+        assertEquals(1, restored.downloadSourceCount());
+        assertTrue(restored.downloadUrl(0).startsWith("https://github.com/"));
         assertTrue(restored.isNewerThan(3));
         assertFalse(restored.isNewerThan(4));
     }
@@ -40,5 +43,18 @@ public class UpdateManifestTest {
         assertThrows(Exception.class, () -> UpdateManifest.validateUrl("http://github.com/why685/yican-android/releases/download/v1/a.apk"));
         assertThrows(Exception.class, () -> UpdateManifest.validateUrl("https://example.com/why685/yican-android/releases/download/v1/a.apk"));
         assertThrows(Exception.class, () -> UpdateManifest.validateUrl("https://github.com/other/repo/releases/download/v1/a.apk"));
+        assertThrows(Exception.class, () -> UpdateManifest.validateUrl("https://gh-proxy.org/https://github.com/other/repo/releases/download/v1/a.apk"));
+    }
+
+    @Test
+    public void parsesAcceleratorFirstAndGithubFallback() throws Exception {
+        JSONObject json = validManifest().put("apkUrls", new JSONArray()
+                .put("https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.2.1/YiCan-1.2.1.apk")
+                .put("https://github.com/why685/yican-android/releases/download/v1.2.1/YiCan-1.2.1.apk"));
+        UpdateManifest manifest = UpdateManifest.parse(json, "");
+        UpdateManifest restored = UpdateManifest.fromPersisted(manifest.toJson().toString());
+        assertEquals(2, restored.downloadSourceCount());
+        assertTrue(restored.downloadUrl(0).startsWith("https://gh-proxy.org/"));
+        assertTrue(restored.downloadUrl(1).startsWith("https://github.com/"));
     }
 }

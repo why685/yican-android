@@ -54,9 +54,13 @@ final class AppBridge {
     private static final String PENDING_MANIFEST = "pending_manifest";
     private static final String PENDING_DOWNLOAD_ID = "pending_download_id";
     private static final String PENDING_DOWNLOAD_PATH = "pending_download_path";
+    private static final String PENDING_DOWNLOAD_SOURCE = "pending_download_source";
+    private static final String PENDING_DOWNLOAD_BYTES = "pending_download_bytes";
+    private static final String PENDING_DOWNLOAD_PROGRESS_AT = "pending_download_progress_at";
     private static final String UPDATE_STATE = "update_state";
     private static final String UPDATE_MESSAGE = "update_message";
     private static final long CHECK_INTERVAL_MS = 24L * 60L * 60L * 1000L;
+    private static final long DOWNLOAD_STALL_MS = 30L * 1000L;
     private static final int JSON_LIMIT_BYTES = 2 * 1024 * 1024;
     private static final int BACKUP_LIMIT_CHARS = 5 * 1024 * 1024;
 
@@ -69,6 +73,9 @@ final class AppBridge {
     private final BroadcastReceiver downloadReceiver;
     private UpdateManifest pendingUpdate;
     private long pendingDownloadId = -1L;
+    private int pendingDownloadSource;
+    private long pendingDownloadedBytes;
+    private long pendingDownloadProgressAt;
     private File pendingDownloadFile;
     private File pendingInstallFile;
     private File pendingExportFile;
@@ -87,7 +94,7 @@ final class AppBridge {
             public void onReceive(Context context, Intent intent) {
                 if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(intent.getAction())
                         && intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1L) == pendingDownloadId) {
-                    verifyDownloadedUpdate();
+                    sendUpdateResult(queryUpdateState(true));
                 }
             }
         };
@@ -177,29 +184,56 @@ final class AppBridge {
             sendUpdateResult(status("error", "没有可下载的新版本"));
             return;
         }
+        pendingDownloadSource = 0;
+        startDownloadSource(true, true);
+    }
+
+    private void startDownloadSource(boolean deleteExisting, boolean send) {
+        UpdateManifest info = pendingUpdate;
+        if (info == null || pendingDownloadSource < 0 || pendingDownloadSource >= info.downloadSourceCount()) {
+            updateState("error", "没有可用的更新下载线路", send);
+            return;
+        }
         activity.runOnUiThread(() -> {
             try {
-                UpdateManifest.validateUrl(info.apkUrl);
-                cancelActiveDownload(true);
+                String downloadUrl = info.downloadUrl(pendingDownloadSource);
+                UpdateManifest.validateUrl(downloadUrl);
+                cancelActiveDownload(deleteExisting);
+                File directory = activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+                if (directory == null) throw new Exception("无法访问下载目录");
                 String filename = "YiCan-" + info.versionName + "-" + System.currentTimeMillis() + ".apk";
-                pendingDownloadFile = new File(activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), filename);
-                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(info.apkUrl));
+                pendingDownloadFile = new File(directory, filename);
+                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(downloadUrl));
                 request.setTitle("一餐 " + info.versionName);
-                request.setDescription("正在下载安全更新");
+                request.setDescription("正在通过" + downloadSourceLabel(downloadUrl) + "下载安全更新");
                 request.setMimeType("application/vnd.android.package-archive");
                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                 request.setAllowedOverMetered(true);
                 request.setDestinationInExternalFilesDir(activity, Environment.DIRECTORY_DOWNLOADS, filename);
                 pendingDownloadId = downloadManager.enqueue(request);
-                JSONObject payload = status("downloading", "新版正在后台下载，完成后会自动校验");
+                pendingDownloadedBytes = 0L;
+                pendingDownloadProgressAt = System.currentTimeMillis();
+                String message = "正在通过" + downloadSourceLabel(downloadUrl) + "下载，完成后会自动校验";
+                JSONObject payload = status("downloading", message);
                 payload.put("downloadId", pendingDownloadId);
                 payload.put("progress", 0);
-                persistDownloadState("downloading", "新版正在后台下载");
-                sendUpdateResult(payload);
+                addDownloadSourceFields(payload);
+                persistDownloadState("downloading", message);
+                if (send) sendUpdateResult(payload);
             } catch (Exception error) {
-                updateState("error", "无法开始下载：" + safeMessage(error), true);
+                if (!switchToNextDownloadSource("线路连接失败", send)) {
+                    updateState("error", "无法开始下载：" + safeMessage(error), send);
+                }
             }
         });
+    }
+
+    private static String downloadSourceLabel(String value) {
+        try {
+            return "gh-proxy.org".equalsIgnoreCase(new URL(value).getHost()) ? "加速线路" : "GitHub 备用线路";
+        } catch (Exception ignored) {
+            return "安全线路";
+        }
     }
 
     @JavascriptInterface
@@ -349,6 +383,10 @@ final class AppBridge {
                 return;
             }
             pendingDownloadId = preferences.getLong(PENDING_DOWNLOAD_ID, -1L);
+            pendingDownloadSource = Math.max(0, preferences.getInt(PENDING_DOWNLOAD_SOURCE, 0));
+            if (pendingDownloadSource >= pendingUpdate.downloadSourceCount()) pendingDownloadSource = 0;
+            pendingDownloadedBytes = Math.max(0L, preferences.getLong(PENDING_DOWNLOAD_BYTES, 0L));
+            pendingDownloadProgressAt = preferences.getLong(PENDING_DOWNLOAD_PROGRESS_AT, System.currentTimeMillis());
             String path = preferences.getString(PENDING_DOWNLOAD_PATH, "");
             pendingDownloadFile = safePersistedFile(path);
             String state = preferences.getString(UPDATE_STATE, "idle");
@@ -379,7 +417,10 @@ final class AppBridge {
         SharedPreferences.Editor editor = preferences.edit()
                 .putString(UPDATE_STATE, state)
                 .putString(UPDATE_MESSAGE, message)
-                .putLong(PENDING_DOWNLOAD_ID, pendingDownloadId);
+                .putLong(PENDING_DOWNLOAD_ID, pendingDownloadId)
+                .putInt(PENDING_DOWNLOAD_SOURCE, pendingDownloadSource)
+                .putLong(PENDING_DOWNLOAD_BYTES, pendingDownloadedBytes)
+                .putLong(PENDING_DOWNLOAD_PROGRESS_AT, pendingDownloadProgressAt);
         if (pendingUpdate != null) editor.putString(PENDING_MANIFEST, pendingUpdate.toJson().toString());
         if (pendingDownloadFile != null) editor.putString(PENDING_DOWNLOAD_PATH, pendingDownloadFile.getAbsolutePath());
         else editor.remove(PENDING_DOWNLOAD_PATH);
@@ -390,11 +431,17 @@ final class AppBridge {
         preferences.edit()
                 .remove(PENDING_DOWNLOAD_ID)
                 .remove(PENDING_DOWNLOAD_PATH)
+                .remove(PENDING_DOWNLOAD_SOURCE)
+                .remove(PENDING_DOWNLOAD_BYTES)
+                .remove(PENDING_DOWNLOAD_PROGRESS_AT)
                 .remove(PENDING_MANIFEST)
                 .remove(UPDATE_STATE)
                 .remove(UPDATE_MESSAGE)
                 .apply();
         pendingDownloadId = -1L;
+        pendingDownloadSource = 0;
+        pendingDownloadedBytes = 0L;
+        pendingDownloadProgressAt = 0L;
         pendingDownloadFile = null;
         pendingInstallFile = null;
     }
@@ -425,14 +472,19 @@ final class AppBridge {
 
         try (Cursor cursor = downloadManager.query(new DownloadManager.Query().setFilterById(pendingDownloadId))) {
             if (cursor == null || !cursor.moveToFirst()) {
-                pendingDownloadId = -1L;
-                persistDownloadState("error", "找不到下载任务，请重试");
-                payload = status("error", "找不到下载任务，请重试");
+                if (switchToNextDownloadSource("当前线路未能建立下载任务", true)) {
+                    payload = status("downloading", "当前线路不可用，正在切换备用线路");
+                } else {
+                    pendingDownloadId = -1L;
+                    persistDownloadState("error", "找不到下载任务，请重试");
+                    payload = status("error", "找不到下载任务，请重试");
+                }
             } else {
                 int state = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS));
                 long downloaded = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
                 long total = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
                 int progress = total > 0 ? (int) Math.min(100L, downloaded * 100L / total) : 0;
+                updateDownloadProgress(downloaded);
                 if (state == DownloadManager.STATUS_SUCCESSFUL) {
                     payload = status("verifying", "下载完成，正在验证更新包");
                     payload.put("progress", 100);
@@ -440,9 +492,20 @@ final class AppBridge {
                 } else if (state == DownloadManager.STATUS_FAILED) {
                     int reason = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_REASON));
                     String message = UpdateDownloadPolicy.failureMessage(reason);
-                    cancelActiveDownload(true);
-                    persistDownloadState("error", message);
-                    payload = status("error", message);
+                    if (switchToNextDownloadSource(message, true)) {
+                        payload = status("downloading", message + "，正在切换备用线路");
+                    } else {
+                        cancelActiveDownload(true);
+                        persistDownloadState("error", message);
+                        payload = status("error", message);
+                    }
+                } else if (downloadHasStalled()) {
+                    if (switchToNextDownloadSource("当前线路 30 秒无下载进度", true)) {
+                        payload = status("downloading", "当前线路响应较慢，正在切换备用线路");
+                    } else {
+                        payload = status("downloading", "下载暂时没有进度，正在等待 GitHub 响应");
+                        payload.put("progress", progress);
+                    }
                 } else {
                     String message = state == DownloadManager.STATUS_PAUSED ? "下载已暂停，等待网络恢复" : "新版正在后台下载";
                     payload = status("downloading", message);
@@ -455,7 +518,52 @@ final class AppBridge {
             payload = status("error", "读取下载状态失败：" + safeMessage(error));
         }
         addManifestFields(payload);
+        addDownloadSourceFields(payload);
         return payload;
+    }
+
+    private void updateDownloadProgress(long downloaded) {
+        if (downloaded <= pendingDownloadedBytes) return;
+        pendingDownloadedBytes = downloaded;
+        pendingDownloadProgressAt = System.currentTimeMillis();
+        preferences.edit()
+                .putLong(PENDING_DOWNLOAD_BYTES, pendingDownloadedBytes)
+                .putLong(PENDING_DOWNLOAD_PROGRESS_AT, pendingDownloadProgressAt)
+                .apply();
+    }
+
+    private boolean downloadHasStalled() {
+        return pendingDownloadProgressAt > 0L
+                && System.currentTimeMillis() - pendingDownloadProgressAt >= DOWNLOAD_STALL_MS
+                && pendingUpdate != null
+                && pendingDownloadSource + 1 < pendingUpdate.downloadSourceCount();
+    }
+
+    private boolean switchToNextDownloadSource(String reason, boolean send) {
+        if (pendingUpdate == null || pendingDownloadSource + 1 >= pendingUpdate.downloadSourceCount()) return false;
+        cancelActiveDownload(true);
+        pendingDownloadSource++;
+        pendingDownloadedBytes = 0L;
+        pendingDownloadProgressAt = System.currentTimeMillis();
+        String message = reason + "，正在切换到第 " + (pendingDownloadSource + 1) + " 条线路";
+        persistDownloadState("downloading", message);
+        if (send) {
+            JSONObject payload = status("downloading", message);
+            addManifestFields(payload);
+            addDownloadSourceFields(payload);
+            sendUpdateResult(payload);
+        }
+        startDownloadSource(true, send);
+        return true;
+    }
+
+    private void addDownloadSourceFields(JSONObject payload) {
+        if (pendingUpdate == null) return;
+        try {
+            payload.put("downloadSource", pendingDownloadSource + 1);
+            payload.put("downloadSourceCount", pendingUpdate.downloadSourceCount());
+        } catch (Exception ignored) {
+        }
     }
 
     private void addManifestFields(JSONObject payload) {
