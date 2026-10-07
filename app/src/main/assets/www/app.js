@@ -1,4 +1,4 @@
-const builtInRecipes = [
+const legacyBuiltInRecipes = [
   {id:1,name:"番茄炒蛋",emoji:"🍅",time:12,difficulty:"简单",flavors:["家常","下饭"],source:"特厨隋坡",description:"酸甜多汁，鸡蛋蓬松，是十几分钟就能上桌的家常菜。",ingredients:[{name:"番茄",amount:"2个"},{name:"鸡蛋",amount:"3个"},{name:"葱",amount:"1根",optional:true},{name:"盐",amount:"适量"},{name:"糖",amount:"少许",optional:true}],steps:[["炒鸡蛋","鸡蛋加少许盐打散，热锅热油炒至蓬松后盛出。"],["炒番茄","原锅放番茄块，中火炒出汁水。"],["合炒","倒回鸡蛋，加盐和少许糖翻匀，撒葱花出锅。"]],colors:["#e67d38","#c64332"]},
   {id:2,name:"宫保鸡丁",emoji:"🍗",time:28,difficulty:"适中",flavors:["川味","下饭"],source:"老饭骨",description:"鸡肉滑嫩、花生酥香，酸甜微辣的经典川味。",ingredients:[{name:"鸡胸肉",amount:"250克"},{name:"花生",amount:"50克"},{name:"黄瓜",amount:"半根"},{name:"干辣椒",amount:"6个"},{name:"生抽",amount:"1勺"},{name:"醋",amount:"1勺"}],steps:[["腌鸡丁","鸡肉切丁，加生抽和淀粉抓匀，腌10分钟。"],["爆香","锅中放油，下干辣椒小火炒香。"],["快速合炒","加入鸡丁炒熟，再放黄瓜、料汁和花生，大火收汁。"]],colors:["#7e2b22","#d47735"]},
   {id:3,name:"青椒肉丝",emoji:"🫑",time:20,difficulty:"简单",flavors:["快手","下饭"],source:"特厨隋坡",description:"青椒清脆，肉丝嫩滑，厨房新手也容易成功。",ingredients:[{name:"猪里脊",amount:"200克"},{name:"青椒",amount:"2个"},{name:"蒜",amount:"2瓣"},{name:"生抽",amount:"1勺"},{name:"淀粉",amount:"1小勺"}],steps:[["处理食材","里脊和青椒切丝，肉丝用生抽、淀粉腌制。"],["滑炒肉丝","热锅放油，将肉丝快速炒至变色后盛出。"],["合炒调味","爆香蒜末，炒青椒至断生，加入肉丝和盐翻匀。"]],colors:["#426a3e","#85a93a"]},
@@ -11,6 +11,11 @@ const builtInRecipes = [
   {id:10,name:"冬瓜排骨汤",emoji:"🥣",time:65,difficulty:"简单",flavors:["汤羹","清淡"],source:"老饭骨",description:"汤清味鲜，冬瓜软嫩，简单调味就很舒服。",ingredients:[{name:"排骨",amount:"400克"},{name:"冬瓜",amount:"500克"},{name:"姜",amount:"3片"},{name:"葱",amount:"1根"},{name:"盐",amount:"适量"}],steps:[["排骨焯水","排骨冷水下锅，煮开后撇去浮沫。"],["炖煮汤底","排骨、姜片加足量热水，小火炖40分钟。"],["加入冬瓜","放冬瓜再炖15分钟，加盐，撒葱花。"]],colors:["#61897f","#99b79a"]},
   {id:11,name:"酸辣土豆丝",emoji:"🥔",time:15,difficulty:"简单",flavors:["酸辣","素食"],source:"特厨隋坡",description:"清爽脆嫩、酸辣开胃，关键是泡去淀粉和大火快炒。",ingredients:[{name:"土豆",amount:"2个"},{name:"青椒",amount:"1个"},{name:"干辣椒",amount:"3个"},{name:"醋",amount:"1勺"},{name:"蒜",amount:"2瓣"}],steps:[["处理土豆","土豆切细丝，多冲洗几遍后泡入清水。"],["爆香配料","热油爆香蒜末和干辣椒。"],["大火快炒","沥干土豆丝，大火炒至断生，沿锅边淋醋并加盐。"]],colors:["#d5a83c","#7d9d43"]},
   {id:12,name:"紫菜蛋花汤",emoji:"🍵",time:8,difficulty:"简单",flavors:["汤羹","快手"],source:"特厨隋坡",description:"清鲜暖胃，八分钟上桌，是忙碌晚餐的好搭档。",ingredients:[{name:"紫菜",amount:"1小把"},{name:"鸡蛋",amount:"1个"},{name:"虾皮",amount:"少许",optional:true},{name:"葱",amount:"1根"},{name:"盐",amount:"适量"}],steps:[["煮汤底","锅中加水烧开，放入紫菜和虾皮。"],["淋蛋液","蛋液沿筷子缓慢淋入沸水，静置几秒。"],["调味","轻轻推散蛋花，加盐，撒葱花即可。"]],colors:["#536d59","#a38555"]}
+];
+const detailedRecipeIds = new Set((window.SUIPO_RECIPES || []).map(recipe => recipe.id));
+const builtInRecipes = [
+  ...legacyBuiltInRecipes.filter(recipe => !detailedRecipeIds.has(recipe.id)),
+  ...(window.SUIPO_RECIPES || [])
 ];
 
 const Core = window.YiCanCore;
@@ -204,13 +209,24 @@ function renderRecipeDialog(recipe) {
   const ref = Core.recipeRef(recipe);
   const isFavorite = favorites.includes(ref);
   const sourceUrl = recipe.video || (!recipe.custom ? `https://search.bilibili.com/all?keyword=${encodeURIComponent(`${recipe.source} ${recipe.name}`)}` : "");
+  const seekableVideo = /bilibili\.com\/video\//i.test(sourceUrl);
   const panel = state.detailPanel;
   els.dialogContent.innerHTML = `<div class="dialog-hero compact" style="--dialog-a:${escapeHtml(recipe.colors[0])};--dialog-b:${escapeHtml(recipe.colors[1])}"><span class="dish-emoji" aria-hidden="true">${escapeHtml(recipe.emoji)}</span><h2>${escapeHtml(recipe.name)}</h2></div>
     <div class="dialog-body"><div class="detail-actions"><button class="favorite-action ${isFavorite ? "active" : ""}" data-action="favorite" data-ref="${ref}">${isFavorite ? "♥ 已收藏" : "♡ 收藏"}</button><button class="primary-action" data-action="cook" data-ref="${ref}">开始烹饪</button>${recipe.custom ? `<button data-action="edit" data-ref="${ref}">编辑</button><button class="danger" data-action="delete" data-ref="${ref}">删除</button>` : ""}</div>
     <div class="detail-tabs" role="tablist">${[["overview","概览"],["ingredients","食材"],["steps","步骤"]].map(([key,label])=>`<button type="button" data-detail-panel="${key}" class="${panel===key?"active":""}">${label}</button>`).join("")}</div>
     <section class="detail-panel" ${panel!=="overview"?"hidden":""}><p>${escapeHtml(recipe.description)}</p><div class="detail-facts"><span>约 ${recipe.time} 分钟</span><span>${escapeHtml(recipe.difficulty)}</span>${recipe.flavors.map(value => `<span>${escapeHtml(value)}</span>`).join("")}</div>${sourceUrl ? `<a class="original-link" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">查看 ${escapeHtml(recipe.source)} 的来源视频</a>` : `<p class="imported-note">这是一份保存在本机的个人菜谱。</p>`}</section>
-    <section class="detail-panel" ${panel!=="ingredients"?"hidden":""}><ul class="ingredient-list">${recipe.ingredients.map(item => `<li><span>${escapeHtml(item.name)}${item.optional ? "（可选）" : ""}</span><b>${escapeHtml(item.amount)}</b></li>`).join("")}</ul></section>
-    <section class="detail-panel" ${panel!=="steps"?"hidden":""}><ol class="steps">${recipe.steps.map((step,index) => `<li><strong>${escapeHtml(step[0])}</strong>${step[2]?`<small>${formatDuration(step[2])}</small>`:""}<p>${escapeHtml(step[1])}</p><button type="button" data-action="cook-step" data-ref="${ref}" data-step-index="${index}">从这一步开始</button></li>`).join("")}</ol></section></div>`;
+    <section class="detail-panel" ${panel!=="ingredients"?"hidden":""}><ul class="ingredient-list">${recipe.ingredients.map(item => `<li><span>${escapeHtml(item.name)}${item.optional ? "（可选）" : ""}</span>${item.amount?`<b>${escapeHtml(item.amount)}</b>`:""}</li>`).join("")}</ul></section>
+    <section class="detail-panel" ${panel!=="steps"?"hidden":""}><ol class="steps">${recipe.steps.map((step,index) => `<li><div class="step-heading"><strong>${escapeHtml(step[0])}</strong><span class="step-meta">${step[3]!=null?(seekableVideo?`<a href="${escapeHtml(videoAt(sourceUrl,step[3]))}" target="_blank" rel="noopener">视频 ${formatTimestamp(step[3])}</a>`:`<span>视频 ${formatTimestamp(step[3])}</span>`):""}${step[2]?`<small>建议 ${formatDuration(step[2])}</small>`:""}</span></div><p>${escapeHtml(step[1])}</p><button type="button" data-action="cook-step" data-ref="${ref}" data-step-index="${index}">从这一步开始</button></li>`).join("")}</ol>${recipe.tips?.length?`<aside class="recipe-tips"><strong>Tips</strong><ul>${recipe.tips.map(tip=>`<li>${escapeHtml(tip)}</li>`).join("")}</ul></aside>`:""}</section></div>`;
+}
+
+function formatTimestamp(seconds) {
+  const value=Math.max(0,Number(seconds)||0), hours=Math.floor(value/3600), minutes=Math.floor((value%3600)/60), rest=value%60;
+  return hours ? `${hours}:${String(minutes).padStart(2,"0")}:${String(rest).padStart(2,"0")}` : `${String(minutes).padStart(2,"0")}:${String(rest).padStart(2,"0")}`;
+}
+
+function videoAt(url, seconds) {
+  try { const target=new URL(url); target.searchParams.set("t",String(Math.max(0,Number(seconds)||0))); return target.toString(); }
+  catch (_) { return url; }
 }
 
 function formatDuration(seconds) {
@@ -429,7 +445,7 @@ function initializeAppInfo() {
   if (!window.YiCanAndroid?.getAppInfo) return;
   try {
     const info = JSON.parse(window.YiCanAndroid.getAppInfo());
-    els.currentVersion.textContent = info.versionName || "1.3.1";
+    els.currentVersion.textContent = info.versionName || "1.4.0";
     state.appVersion = info.versionName || "unknown";
     pollUpdateState();
   } catch (_) {}

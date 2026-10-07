@@ -57,7 +57,7 @@
             <div class="result-tools"><span id="result-count" aria-live="polite"></span><select id="time-filter" aria-label="按烹饪时间筛选"><option value="all">全部时间</option><option value="15">15 分钟内</option><option value="30">30 分钟内</option><option value="60">60 分钟内</option></select></div>
           </div>
           <div id="ingredient-summary" class="ingredient-summary" hidden></div>
-          <p class="source-disclaimer">内置菜谱根据两位 UP 主的公开教学内容整理；个人菜谱与偏好只保存在本机。</p>
+          <p class="source-disclaimer">内置菜谱按公开教学视频及末尾配方卡整理；精确克数可点击来源视频复核，个人数据只保存在本机。</p>
           <div id="recipe-grid" class="recipe-grid"></div>
           <div id="discover-pagination" class="pagination" aria-label="发现分页"></div>
           <div id="discover-empty" class="empty-state" hidden><span aria-hidden="true">🥣</span><h3>还没有找到合适的菜谱</h3><p>试试减少关键词，或换一种食材组合。</p><button id="reset-button" type="button">看看全部菜谱</button></div>
@@ -80,7 +80,7 @@
             <button type="button" data-mine-target="personal"><span>🍳</span><strong>个人菜谱</strong><small id="personal-count">0 份</small></button>
             <button type="button" data-mine-target="recent"><span>◷</span><strong>最近浏览</strong><small>最多 20 条</small></button>
             <button type="button" data-mine-target="data"><span>⇅</span><strong>数据管理</strong><small>备份与恢复</small></button>
-            <button type="button" data-mine-target="update"><span>↻</span><strong>应用更新</strong><small>当前 <b id="current-version">1.3.1</b></small></button>
+            <button type="button" data-mine-target="update"><span>↻</span><strong>应用更新</strong><small>当前 <b id="current-version">1.4.0</b></small></button>
           </div>
 
           <section class="mine-panel" data-mine-panel="personal" hidden><div class="subhead"><button class="text-button" data-mine-back type="button">← 返回</button><h2 id="personal-title">个人菜谱</h2><button class="primary-action" id="new-recipe" type="button">＋ 新建</button></div><div id="personal-grid" class="recipe-grid"></div><div id="personal-pagination" class="pagination"></div><p id="personal-empty" class="inline-empty" hidden>还没有个人菜谱，可以新建或导入一份。</p></section>
@@ -150,6 +150,7 @@
     </dialog>
 
     <script src="./app-core.js"></script>
+    <script src="./recipes-suipo.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>

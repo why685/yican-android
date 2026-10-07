@@ -37,10 +37,14 @@
     const steps = raw.steps.map((item, stepIndex) => {
       if (typeof item === "string" && clean(item)) return [`第 ${stepIndex + 1} 步`, clean(item)];
       if (Array.isArray(item) && item.length >= 2 && clean(item[1])) {
-        return withDuration([clean(item[0]) || `第 ${stepIndex + 1} 步`, clean(item[1])], item[2]);
+        return withStepMeta([clean(item[0]) || `第 ${stepIndex + 1} 步`, clean(item[1])], item[2], item[3]);
       }
       if (item && typeof item === "object" && clean(item.description || item.content)) {
-        return withDuration([clean(item.title) || `第 ${stepIndex + 1} 步`, clean(item.description || item.content)], item.durationSeconds ?? item.duration);
+        return withStepMeta(
+          [clean(item.title) || `第 ${stepIndex + 1} 步`, clean(item.description || item.content)],
+          item.durationSeconds ?? item.duration,
+          item.videoTimestampSeconds ?? item.videoTimestamp ?? item.timestamp
+        );
       }
       throw new Error(`${name} 的第 ${stepIndex + 1} 个步骤无效`);
     });
@@ -58,9 +62,11 @@
       difficulty: clean(raw.difficulty || "简单").slice(0, 12),
       flavors: flavors.length ? flavors : ["我的菜谱"],
       source: clean(raw.source || "我的菜谱").slice(0, 40),
-      description: clean(raw.description || "保存在本机的个人菜谱").slice(0, 240),
+      description: clean(raw.description || "保存在本机的个人菜谱").slice(0, 500),
       ingredients,
       steps,
+      tips: (Array.isArray(raw.tips) ? raw.tips : (clean(raw.tips) ? [raw.tips] : []))
+        .slice(0, 12).map(value => clean(value).slice(0, 300)).filter(Boolean),
       video: typeof raw.video === "string" && /^https:\/\//i.test(raw.video) ? raw.video : "",
       colors: Array.isArray(raw.colors) && raw.colors.length >= 2
         ? [clean(raw.colors[0]), clean(raw.colors[1])]
@@ -73,6 +79,27 @@
     if (rawDuration == null || rawDuration === "") return step;
     const seconds = Number.parseInt(rawDuration, 10);
     return Number.isInteger(seconds) && seconds >= 1 && seconds <= 14400 ? [...step, seconds] : step;
+  }
+
+  function parseTimestamp(rawTimestamp) {
+    if (rawTimestamp == null || rawTimestamp === "") return null;
+    if (typeof rawTimestamp === "string" && rawTimestamp.includes(":")) {
+      const parts = rawTimestamp.split(":").map(value => Number.parseInt(value, 10));
+      if (parts.some(value => !Number.isInteger(value) || value < 0) || parts.length < 2 || parts.length > 3) return null;
+      const seconds = parts.reduce((total, value) => total * 60 + value, 0);
+      return seconds <= 86400 ? seconds : null;
+    }
+    const seconds = Number.parseInt(rawTimestamp, 10);
+    return Number.isInteger(seconds) && seconds >= 0 && seconds <= 86400 ? seconds : null;
+  }
+
+  function withStepMeta(step, rawDuration, rawTimestamp) {
+    const timed = withDuration(step, rawDuration);
+    const timestamp = parseTimestamp(rawTimestamp);
+    if (timestamp == null) return timed;
+    if (timed.length < 3) timed.push(null);
+    timed.push(timestamp);
+    return timed;
   }
 
   function paginate(items, requestedPage, requestedPageSize) {

@@ -75,6 +75,19 @@ test("step durations migrate from arrays and objects without breaking legacy ste
   assert.deepEqual(value.steps[3], ["越界", "忽略"]);
 });
 
+test("video timestamps and tips survive normalization without becoming timer durations", () => {
+  const value = core.normalizeImportedRecipe(recipe({
+    tips:["冻猪肘可劈开方便入味"],
+    steps:[
+      ["焯水", "烧开后打去浮沫", null, "00:40"],
+      {title:"压制", description:"关小火压制", durationSeconds:5400, videoTimestamp:"03:12"}
+    ]
+  }));
+  assert.deepEqual(value.steps[0], ["焯水", "烧开后打去浮沫", null, 40]);
+  assert.deepEqual(value.steps[1], ["压制", "关小火压制", 5400, 192]);
+  assert.deepEqual(value.tips, ["冻猪肘可劈开方便入味"]);
+});
+
 test("pagination corrects pages after filtering or deleting", () => {
   assert.deepEqual(core.paginate([1,2,3,4,5,6,7], 2, 6).items, [7]);
   const corrected = core.paginate([1,2], 9, 6);
