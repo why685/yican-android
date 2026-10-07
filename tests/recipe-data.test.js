@@ -36,3 +36,16 @@ test("red braised elbow matches the supplied ingredient and timestamp cards", ()
   assert.deepEqual(Array.from(recipe.steps, step => step[3]), [12, 40, 53, 177, 192, 259]);
   assert.ok(recipe.tips.some(value => value.includes("冻猪肘")));
 });
+
+test("catalog steps do not contain known OCR fragments or broken glyphs", () => {
+  const serialized = JSON.stringify(recipes);
+  for (const fragment of ["囗", "□", "�", "自糖", "自醋", "耗油", "隋卡做", "蒯", "遁始", "产勾"]) {
+    assert.equal(serialized.includes(fragment), false, `unexpected OCR fragment: ${fragment}`);
+  }
+  for (const recipe of recipes) {
+    for (const step of recipe.steps) {
+      assert.ok(String(step[1] || "").trim().length >= 4, `${recipe.name} contains an incomplete step`);
+      assert.equal(String(step[1]).includes("()"), false, `${recipe.name} contains an empty OCR marker`);
+    }
+  }
+});
