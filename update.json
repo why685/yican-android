@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "versionCode": 11,
+  "versionName": "1.5.1",
+  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.5.1/YiCan-1.5.1.apk",
+  "apkUrls": [
+    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.5.1/YiCan-1.5.1.apk",
+    "https://github.com/why685/yican-android/releases/download/v1.5.1/YiCan-1.5.1.apk"
+  ],
+  "sha256": "e8159d2c1cb95545d881da434af8a86a59d02b3d3d2f427dd6c4331353be23a1",
+  "releaseNotes": "修复 GitHub API 连接超时时无法检查更新的问题；新增加速清单、jsDelivr、GitHub 固定清单和 API 多级备用线路。"
+}

@@ -47,7 +47,6 @@ final class AppBridge {
     static final int EXPORT_REQUEST = 1002;
     static final int INSTALL_PERMISSION_REQUEST = 1003;
 
-    private static final String RELEASE_API = "https://api.github.com/repos/why685/yican-android/releases/latest";
     private static final String UPDATE_ASSET = "update.json";
     private static final String PREFS = "yican_native_v1";
     private static final String LAST_UPDATE_CHECK = "last_update_check";
@@ -151,15 +150,11 @@ final class AppBridge {
     public void checkForUpdate(boolean manual) {
         long now = System.currentTimeMillis();
         if (!manual && now - preferences.getLong(LAST_UPDATE_CHECK, 0L) < CHECK_INTERVAL_MS) return;
-        preferences.edit().putLong(LAST_UPDATE_CHECK, now).apply();
         if (manual) sendUpdateResult(status("checking", "正在检查新版本…"));
         executor.execute(() -> {
             try {
-                JSONObject release = readJson(RELEASE_API);
-                String manifestUrl = findAssetUrl(release.optJSONArray("assets"), UPDATE_ASSET);
-                if (manifestUrl.isEmpty()) throw new Exception("最新 Release 缺少 update.json");
-                JSONObject manifest = readJson(manifestUrl);
-                UpdateManifest info = UpdateManifest.parse(manifest, release.optString("body", ""));
+                UpdateManifest info = fetchLatestManifest();
+                preferences.edit().putLong(LAST_UPDATE_CHECK, System.currentTimeMillis()).apply();
                 pendingUpdate = info;
                 persistManifest(info);
                 if (info.isNewerThan(BuildConfig.VERSION_CODE)) {
@@ -175,6 +170,27 @@ final class AppBridge {
                 if (manual) sendUpdateResult(status("error", "检查更新失败：" + safeMessage(error)));
             }
         });
+    }
+
+    private UpdateManifest fetchLatestManifest() throws Exception {
+        Exception lastError = null;
+        for (String source : UpdateSources.manifestUrls(System.currentTimeMillis())) {
+            try {
+                return UpdateManifest.parse(readJson(source), "");
+            } catch (Exception error) {
+                lastError = error;
+            }
+        }
+        try {
+            JSONObject release = readJson(UpdateSources.RELEASE_API);
+            String manifestUrl = findAssetUrl(release.optJSONArray("assets"), UPDATE_ASSET);
+            if (manifestUrl.isEmpty()) throw new Exception("最新 Release 缺少 update.json");
+            return UpdateManifest.parse(readJson(manifestUrl), release.optString("body", ""));
+        } catch (Exception error) {
+            lastError = error;
+        }
+        String detail = lastError == null ? "未知网络错误" : safeMessage(lastError);
+        throw new Exception("所有更新线路均不可用，请检查网络后重试（" + detail + "）");
     }
 
     @JavascriptInterface
@@ -650,11 +666,12 @@ final class AppBridge {
 
     private JSONObject readJson(String url) throws Exception {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-        connection.setConnectTimeout(10_000);
-        connection.setReadTimeout(15_000);
+        connection.setConnectTimeout(6_000);
+        connection.setReadTimeout(12_000);
         connection.setInstanceFollowRedirects(true);
         connection.setRequestProperty("Accept", "application/vnd.github+json, application/json");
         connection.setRequestProperty("User-Agent", "YiCan-Android/" + BuildConfig.VERSION_NAME);
+        connection.setRequestProperty("Cache-Control", "no-cache");
         int code = connection.getResponseCode();
         if (code < 200 || code >= 300) throw new Exception("服务器返回 " + code);
         try (InputStream input = new BufferedInputStream(connection.getInputStream())) {
