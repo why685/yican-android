@@ -24,7 +24,7 @@ const customRecipes = loadCustomRecipes();
 const builtInRefs = new Set(builtInRecipes.map(Core.recipeRef));
 let favorites = Core.parseStoredArray(localStorage, Core.FAVORITES_STORAGE_KEY);
 let recent = Core.parseStoredArray(localStorage, Core.RECENT_STORAGE_KEY);
-const state = {view:"discover", mode:"dish", query:"", time:"all", activeRecipe:null, appVersion:"unknown", updatePoll:null, minePanel:null, editorStep:0, detailPanel:"overview", pages:{discover:1,favorites:1,recent:1,personal:1}, cooking:{ref:null,index:0,completed:new Set(),remaining:0,running:false,deadline:0,tick:null}};
+const state = {view:"discover", returnView:"discover", query:"", time:"all", activeRecipe:null, appVersion:"unknown", updatePoll:null, editorStep:0, detailPanel:"overview", pages:{discover:1,favorites:1,recent:1,personal:1}, cooking:{ref:null,index:0,completed:new Set(),remaining:0,running:false,deadline:0,tick:null}};
 
 const els = {
   views:[...document.querySelectorAll(".page-view")], nav:[...document.querySelectorAll("[data-view-target]")],
@@ -35,7 +35,7 @@ const els = {
   recentGrid:document.querySelector("#recent-grid"), recentEmpty:document.querySelector("#recent-empty"),
   personalGrid:document.querySelector("#personal-grid"), personalEmpty:document.querySelector("#personal-empty"), personalCount:document.querySelector("#personal-count"),
   pagers:{discover:document.querySelector("#discover-pagination"),favorites:document.querySelector("#favorites-pagination"),recent:document.querySelector("#recent-pagination"),personal:document.querySelector("#personal-pagination")},
-  dialog:document.querySelector("#recipe-dialog"), dialogContent:document.querySelector("#dialog-content"),
+  recipeContent:document.querySelector("#recipe-page-content"),
   editorDialog:document.querySelector("#editor-dialog"), editorForm:document.querySelector("#editor-form"), editorStatus:document.querySelector("#editor-status"),
   importDialog:document.querySelector("#import-dialog"), importForm:document.querySelector("#import-form"), importFile:document.querySelector("#recipe-file"), importJson:document.querySelector("#recipe-json"), importStatus:document.querySelector("#import-status"),
   dataStatus:document.querySelector("#data-status"), updateStatus:document.querySelector("#update-status"), currentVersion:document.querySelector("#current-version"),
@@ -77,24 +77,8 @@ function sanitizeAndPersist() {
   localStorage.setItem(Core.RECENT_STORAGE_KEY, JSON.stringify(recent));
 }
 
-function normalizeQuery(value) {
-  return String(value || "").trim().toLowerCase().replace(/[，、；;\s]+/g, ",").split(",").filter(Boolean);
-}
-
 function getDiscoverResults() {
-  let list = allRecipes().map(recipe => ({recipe, score:0, missing:[]}));
-  const terms = normalizeQuery(state.query);
-  if (terms.length) {
-    if (state.mode === "dish") {
-      list = list.filter(({recipe}) => terms.some(term => recipe.name.toLowerCase().includes(term) || recipe.flavors.some(tag => tag.toLowerCase().includes(term))));
-    } else {
-      list = list.map(item => {
-        const required = item.recipe.ingredients.filter(ingredient => !ingredient.optional).map(ingredient => ingredient.name.toLowerCase());
-        const matched = required.filter(name => terms.some(term => name.includes(term) || term.includes(name)));
-        return {...item, score:required.length ? matched.length / required.length : 0, missing:required.filter(name => !matched.includes(name))};
-      }).filter(item => item.score > 0).sort((a,b) => b.score - a.score || a.recipe.time - b.recipe.time);
-    }
-  }
+  let list = Core.searchRecipesByKeyword(allRecipes(), state.query);
   if (state.time !== "all") list = list.filter(({recipe}) => recipe.time <= Number(state.time));
   return list;
 }
@@ -102,12 +86,10 @@ function getDiscoverResults() {
 function cardHtml(recipe, context = "default", match = null) {
   const ref = Core.recipeRef(recipe);
   const isFavorite = favorites.includes(ref);
-  const badge = match && state.mode === "ingredient" && state.query
-    ? (match.missing.length ? `<span class="match-badge missing">还缺 ${match.missing.length} 样</span>` : `<span class="match-badge">食材齐全</span>`)
+  const badge = match && state.query && match.matches?.length
+    ? `<span class="match-badge">${escapeHtml(match.matches.slice(0,2).join(" · "))}</span>`
     : `<span class="match-badge">${escapeHtml(recipe.difficulty)}</span>`;
-  const tags = match && state.mode === "ingredient" && state.query
-    ? (match.missing.length ? match.missing.slice(0,3).map(name => `<span class="tag">缺 ${escapeHtml(name)}</span>`).join("") : `<span class="tag">现在就能做</span>`)
-    : recipe.flavors.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
+  const tags = recipe.flavors.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
   const actions = context === "personal"
     ? `<div class="card-actions"><button data-action="edit" data-ref="${ref}">编辑</button><button class="danger" data-action="delete" data-ref="${ref}">删除</button></div>`
     : "";
@@ -128,9 +110,9 @@ function renderDiscover() {
   els.grid.hidden = results.length === 0;
   els.empty.hidden = results.length !== 0;
   els.kicker.textContent = searching ? "搜索结果" : "为你推荐";
-  els.title.textContent = searching ? (state.mode === "dish" ? `与“${state.query}”有关` : "这些菜你可以试试") : "家常好味道";
-  els.summary.hidden = !(state.mode === "ingredient" && searching && results.length);
-  if (!els.summary.hidden) els.summary.innerHTML = `已按食材匹配度排序。最高匹配 <strong>${Math.round(results[0].score * 100)}%</strong>，卡片会告诉你还缺什么。`;
+  els.title.textContent = searching ? `与“${state.query}”有关` : "家常好味道";
+  els.summary.hidden = !(searching && results.length);
+  if (!els.summary.hidden) els.summary.textContent = "关键词会同时匹配菜名、食材、口味、介绍和做法，结果已按相关度排序。";
   els.grid.innerHTML = pageData.items.map(item => cardHtml(item.recipe, "default", item)).join("");
   renderPagination(els.pagers.discover, pageData, "discover");
 }
@@ -162,27 +144,25 @@ function renderLibrary() {
 function renderAll() { renderDiscover(); renderLibrary(); }
 
 function renderQuickPicks() {
-  const picks = state.mode === "dish" ? ["番茄炒蛋","快手","汤羹"] : ["鸡蛋 番茄","土豆 青椒","鸡蛋 米饭"];
+  const picks = ["番茄","鸡蛋","下饭","快手","汤"];
   els.quick.innerHTML = picks.map(item => `<button type="button" data-query="${item}">${item}</button>`).join("");
 }
 
 function switchView(view) {
-  if (!['discover','favorites','mine'].includes(view)) return;
+  const validViews = ['discover','favorites','mine','personal','recent','data','update','recipe'];
+  if (!validViews.includes(view) || (view === "recipe" && !state.activeRecipe)) return;
   state.view = view;
-  if(view==="mine"){state.minePanel=null;document.querySelector("#mine-dashboard").hidden=false;document.querySelectorAll("[data-mine-panel]").forEach(panel=>panel.hidden=true);}
   if (window.location.hash !== `#${view}`) history.replaceState(null, "", `#${view}`);
   els.views.forEach(element => { const active = element.dataset.view === view; element.hidden = !active; element.classList.toggle("active", active); });
-  els.nav.forEach(button => { const active = button.dataset.viewTarget === view; button.classList.toggle("active", active); if (active) button.setAttribute("aria-current", "page"); else button.removeAttribute("aria-current"); });
+  const navView = ["personal","recent","data","update"].includes(view) ? "mine" : view === "recipe" ? (["favorites"].includes(state.returnView) ? "favorites" : ["mine","personal","recent","data","update"].includes(state.returnView) ? "mine" : "discover") : view;
+  els.nav.forEach(button => { const active = button.dataset.viewTarget === navView; button.classList.toggle("active", active); if (active) button.setAttribute("aria-current", "page"); else button.removeAttribute("aria-current"); });
   window.scrollTo({top:0, behavior:"smooth"});
   renderLibrary();
 }
 
-function showMinePanel(name) {
-  state.minePanel = name || null;
-  document.querySelector("#mine-dashboard").hidden = Boolean(name);
-  document.querySelectorAll("[data-mine-panel]").forEach(panel => { panel.hidden = panel.dataset.minePanel !== name; });
-  renderLibrary();
-  window.scrollTo({top:0, behavior:"smooth"});
+function goBackPage() {
+  if (state.view === "recipe") switchView(state.returnView || "discover");
+  else if (["personal","recent","data","update"].includes(state.view)) switchView("mine");
 }
 
 function toggleFavorite(ref) {
@@ -190,33 +170,34 @@ function toggleFavorite(ref) {
   favorites = favorites.includes(ref) ? favorites.filter(item => item !== ref) : [ref, ...favorites];
   sanitizeAndPersist();
   renderAll();
-  if (state.activeRecipe === ref && els.dialog.open) renderRecipeDialog(findRecipe(ref));
+  if (state.activeRecipe === ref && state.view === "recipe") renderRecipePage(findRecipe(ref));
 }
 
 function openRecipe(ref) {
   const recipe = findRecipe(ref);
   if (!recipe) return;
+  state.returnView = state.view === "recipe" ? state.returnView : state.view;
   state.activeRecipe = Core.recipeRef(recipe);
   state.detailPanel = "overview";
   recent = Core.addRecent(recent, state.activeRecipe, validRefs());
   sanitizeAndPersist();
   renderLibrary();
-  renderRecipeDialog(recipe);
-  if (!els.dialog.open) els.dialog.showModal();
+  renderRecipePage(recipe);
+  switchView("recipe");
 }
 
-function renderRecipeDialog(recipe) {
+function renderRecipePage(recipe) {
   const ref = Core.recipeRef(recipe);
   const isFavorite = favorites.includes(ref);
   const sourceUrl = recipe.video || (!recipe.custom ? `https://search.bilibili.com/all?keyword=${encodeURIComponent(`${recipe.source} ${recipe.name}`)}` : "");
   const seekableVideo = /bilibili\.com\/video\//i.test(sourceUrl);
   const panel = state.detailPanel;
-  els.dialogContent.innerHTML = `<div class="dialog-hero compact" style="--dialog-a:${escapeHtml(recipe.colors[0])};--dialog-b:${escapeHtml(recipe.colors[1])}"><span class="dish-emoji" aria-hidden="true">${escapeHtml(recipe.emoji)}</span><h2>${escapeHtml(recipe.name)}</h2></div>
+  els.recipeContent.innerHTML = `<article class="recipe-page"><div class="dialog-hero compact" style="--dialog-a:${escapeHtml(recipe.colors[0])};--dialog-b:${escapeHtml(recipe.colors[1])}"><span class="dish-emoji" aria-hidden="true">${escapeHtml(recipe.emoji)}</span><h2>${escapeHtml(recipe.name)}</h2></div>
     <div class="dialog-body"><div class="detail-actions"><button class="favorite-action ${isFavorite ? "active" : ""}" data-action="favorite" data-ref="${ref}">${isFavorite ? "♥ 已收藏" : "♡ 收藏"}</button><button class="primary-action" data-action="cook" data-ref="${ref}">开始烹饪</button>${recipe.custom ? `<button data-action="edit" data-ref="${ref}">编辑</button><button class="danger" data-action="delete" data-ref="${ref}">删除</button>` : ""}</div>
     <div class="detail-tabs" role="tablist">${[["overview","概览"],["ingredients","食材"],["steps","步骤"]].map(([key,label])=>`<button type="button" data-detail-panel="${key}" class="${panel===key?"active":""}">${label}</button>`).join("")}</div>
     <section class="detail-panel" ${panel!=="overview"?"hidden":""}><p>${escapeHtml(recipe.description)}</p><div class="detail-facts"><span>约 ${recipe.time} 分钟</span><span>${escapeHtml(recipe.difficulty)}</span>${recipe.flavors.map(value => `<span>${escapeHtml(value)}</span>`).join("")}</div>${sourceUrl ? `<a class="original-link" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">查看 ${escapeHtml(recipe.source)} 的来源视频</a>` : `<p class="imported-note">这是一份保存在本机的个人菜谱。</p>`}</section>
     <section class="detail-panel" ${panel!=="ingredients"?"hidden":""}><ul class="ingredient-list">${recipe.ingredients.map(item => `<li><span>${escapeHtml(item.name)}${item.optional ? "（可选）" : ""}</span>${item.amount?`<b>${escapeHtml(item.amount)}</b>`:""}</li>`).join("")}</ul></section>
-    <section class="detail-panel" ${panel!=="steps"?"hidden":""}><ol class="steps">${recipe.steps.map((step,index) => `<li><div class="step-heading"><strong>${escapeHtml(step[0])}</strong><span class="step-meta">${step[3]!=null?(seekableVideo?`<a href="${escapeHtml(videoAt(sourceUrl,step[3]))}" target="_blank" rel="noopener">视频 ${formatTimestamp(step[3])}</a>`:`<span>视频 ${formatTimestamp(step[3])}</span>`):""}${step[2]?`<small>建议 ${formatDuration(step[2])}</small>`:""}</span></div><p>${escapeHtml(step[1])}</p><button type="button" data-action="cook-step" data-ref="${ref}" data-step-index="${index}">从这一步开始</button></li>`).join("")}</ol>${recipe.tips?.length?`<aside class="recipe-tips"><strong>Tips</strong><ul>${recipe.tips.map(tip=>`<li>${escapeHtml(tip)}</li>`).join("")}</ul></aside>`:""}</section></div>`;
+    <section class="detail-panel" ${panel!=="steps"?"hidden":""}><ol class="steps">${recipe.steps.map((step,index) => `<li><div class="step-heading"><strong>${escapeHtml(step[0])}</strong><span class="step-meta">${step[3]!=null?(seekableVideo?`<a href="${escapeHtml(videoAt(sourceUrl,step[3]))}" target="_blank" rel="noopener">视频 ${formatTimestamp(step[3])}</a>`:`<span>视频 ${formatTimestamp(step[3])}</span>`):""}${step[2]?`<small>建议 ${formatDuration(step[2])}</small>`:""}</span></div><p>${escapeHtml(step[1])}</p><button type="button" data-action="cook-step" data-ref="${ref}" data-step-index="${index}">从这一步开始</button></li>`).join("")}</ol>${recipe.tips?.length?`<aside class="recipe-tips"><strong>Tips</strong><ul>${recipe.tips.map(tip=>`<li>${escapeHtml(tip)}</li>`).join("")}</ul></aside>`:""}</section></div></article>`;
 }
 
 function formatTimestamp(seconds) {
@@ -265,7 +246,6 @@ function openEditor(recipe) {
   (recipe?.ingredients || [{}]).forEach(addIngredientRow);
   (recipe?.steps || [["",""]]).forEach(addStepRow);
   setEditorStep(0);
-  if (els.dialog.open) els.dialog.close();
   els.editorDialog.showModal();
 }
 
@@ -286,8 +266,7 @@ function saveEditor() {
   sanitizeAndPersist();
   renderAll();
   els.editorDialog.close();
-  switchView("mine");
-  showMinePanel("personal");
+  switchView("personal");
   setGlobalStatus(index >= 0 ? "菜谱已更新" : "菜谱已保存", "success");
 }
 
@@ -317,8 +296,8 @@ function deleteRecipe(ref) {
   favorites = favorites.filter(item => item !== ref);
   recent = recent.filter(item => item !== ref);
   sanitizeAndPersist();
-  if (els.dialog.open) els.dialog.close();
   renderAll();
+  if (state.view === "recipe") switchView("personal");
   setGlobalStatus("个人菜谱已删除", "success");
 }
 
@@ -342,7 +321,6 @@ function openCooking(ref, stepIndex = 0) {
     const native=window.YiCanAndroid?.getStepTimerState?JSON.parse(window.YiCanAndroid.getStepTimerState()):null;
     if(native?.recipeRef===ref&&native.stepIndex===state.cooking.index&&native.remainingSeconds>0){state.cooking.remaining=native.remainingSeconds;state.cooking.deadline=native.deadline;state.cooking.running=true;}
   } catch (_) {}
-  if(els.dialog.open)els.dialog.close();
   renderCooking();
   if(!els.cookingDialog.open)els.cookingDialog.showModal();
   startCookingTick();
@@ -445,7 +423,7 @@ function initializeAppInfo() {
   if (!window.YiCanAndroid?.getAppInfo) return;
   try {
     const info = JSON.parse(window.YiCanAndroid.getAppInfo());
-    els.currentVersion.textContent = info.versionName || "1.4.2";
+    els.currentVersion.textContent = info.versionName || "1.5.0";
     state.appVersion = info.versionName || "unknown";
     pollUpdateState();
   } catch (_) {}
@@ -455,17 +433,16 @@ function registerRecipeTools() {
   const context = document.modelContext;
   if (!context?.registerTool) return;
   const register = tool => { try { Promise.resolve(context.registerTool(tool)).catch(() => {}); } catch (_) {} };
-  register({name:"search_recipes_by_name",title:"按菜名找菜谱",description:"在一餐中按菜名或口味关键词搜索菜谱。",inputSchema:{type:"object",properties:{query:{type:"string",minLength:1}},required:["query"],additionalProperties:false},annotations:{readOnlyHint:true,untrustedContentHint:false},execute(input){ if(!input?.query?.trim()) throw new Error("query 必须是非空字符串"); state.mode="dish";state.query=input.query.trim();els.input.value=state.query;switchView("discover");renderDiscover();return {count:getDiscoverResults().length,recipes:getDiscoverResults().map(item=>item.recipe.name)}; }});
-  register({name:"search_recipes_by_ingredients",title:"按食材找菜谱",description:"根据已有食材搜索菜谱，返回匹配度和缺少的食材。",inputSchema:{type:"object",properties:{ingredients:{type:"array",items:{type:"string",minLength:1},minItems:1}},required:["ingredients"],additionalProperties:false},annotations:{readOnlyHint:true,untrustedContentHint:false},execute(input){ if(!Array.isArray(input?.ingredients)||!input.ingredients.length) throw new Error("ingredients 必须是非空数组");state.mode="ingredient";state.query=input.ingredients.join(" ");els.input.value=state.query;switchView("discover");renderDiscover();return {count:getDiscoverResults().length,recipes:getDiscoverResults().map(item=>({name:item.recipe.name,match:Math.round(item.score*100),missing:item.missing}))}; }});
+  register({name:"search_recipes",title:"关键词搜索菜谱",description:"在一餐中同时搜索菜名、食材、口味、介绍和做法。",inputSchema:{type:"object",properties:{query:{type:"string",minLength:1}},required:["query"],additionalProperties:false},annotations:{readOnlyHint:true,untrustedContentHint:false},execute(input){ if(!input?.query?.trim()) throw new Error("query 必须是非空字符串");state.query=input.query.trim();els.input.value=state.query;state.pages.discover=1;switchView("discover");renderDiscover();return {count:getDiscoverResults().length,recipes:getDiscoverResults().map(item=>({name:item.recipe.name,matches:item.matches}))}; }});
 }
 
 document.addEventListener("click", event => {
   const actionButton = event.target.closest("[data-action]");
   if (actionButton) handleAction(actionButton.dataset.action, actionButton.dataset.ref, actionButton);
   const detailButton=event.target.closest("[data-detail-panel]");
-  if(detailButton){state.detailPanel=detailButton.dataset.detailPanel;const recipe=findRecipe(state.activeRecipe);if(recipe)renderRecipeDialog(recipe);}
-  const mineButton=event.target.closest("[data-mine-target]");if(mineButton)showMinePanel(mineButton.dataset.mineTarget);
-  if(event.target.closest("[data-mine-back]"))showMinePanel(null);
+  if(detailButton){state.detailPanel=detailButton.dataset.detailPanel;const recipe=findRecipe(state.activeRecipe);if(recipe)renderRecipePage(recipe);}
+  const mineButton=event.target.closest("[data-mine-target]");if(mineButton)switchView(mineButton.dataset.mineTarget);
+  if(event.target.closest("[data-page-back]"))goBackPage();
   const pageButton=event.target.closest("[data-page-scope]");if(pageButton&&!pageButton.disabled){state.pages[pageButton.dataset.pageScope]=Number(pageButton.dataset.page);renderAll();window.scrollTo({top:0,behavior:"smooth"});}
   const cookButton=event.target.closest("[data-cook-action]");if(cookButton)handleCookingAction(cookButton.dataset.cookAction);
   const viewButton = event.target.closest("[data-view-target], [data-go]");
@@ -482,11 +459,6 @@ document.addEventListener("click", event => {
 
 els.nav.forEach(button => button.addEventListener("click", () => switchView(button.dataset.viewTarget)));
 document.querySelector("#brand-home").addEventListener("click", () => switchView("discover"));
-document.querySelectorAll(".mode-tab").forEach(tab => tab.addEventListener("click", () => {
-  state.mode=tab.dataset.mode;state.query="";els.input.value="";els.input.placeholder=state.mode==="dish"?"例如：番茄炒蛋":"输入食材，用空格或逗号分开";
-  document.querySelectorAll(".mode-tab").forEach(item=>{const active=item===tab;item.classList.toggle("active",active);item.setAttribute("aria-selected",String(active));});
-  state.pages.discover=1;renderQuickPicks();renderDiscover();els.input.focus();
-}));
 els.form.addEventListener("submit", event => {event.preventDefault();state.query=els.input.value.trim();state.pages.discover=1;renderDiscover();document.querySelector("#results-title").scrollIntoView({behavior:"smooth"});});
 els.time.addEventListener("change",()=>{state.time=els.time.value;state.pages.discover=1;renderDiscover();});
 document.querySelector("#reset-button").addEventListener("click",()=>{state.query="";state.time="all";state.pages.discover=1;els.input.value="";els.time.value="all";renderDiscover();});
@@ -499,21 +471,22 @@ els.editorForm.addEventListener("submit",event=>{event.preventDefault();try{save
 document.querySelector("#clear-recent").addEventListener("click",()=>{if(!recent.length||!window.confirm("确定清空最近浏览吗？"))return;recent=[];state.pages.recent=1;sanitizeAndPersist();renderLibrary();});
 document.querySelector("#open-import").addEventListener("click",()=>{els.importForm.reset();setImportStatus("");els.importDialog.showModal();});
 els.importFile.addEventListener("change",async()=>{const file=els.importFile.files?.[0];if(!file)return;if(file.size>5*1024*1024){setImportStatus("文件不能超过 5 MB","error");return;}try{els.importJson.value=await file.text();setImportStatus(`已读取 ${file.name}，请确认导入`,"success");}catch(_){setImportStatus("无法读取这个文件","error");}});
-els.importForm.addEventListener("submit",event=>{event.preventDefault();try{const result=importFromText(els.importJson.value);setImportStatus(`成功加入 ${result.added} 份菜谱${result.skipped?`，跳过 ${result.skipped} 份重复菜谱`:""}`,"success");setTimeout(()=>{els.importDialog.close();switchView("mine");},700);}catch(error){setImportStatus(error.message||"导入失败","error");}});
+els.importForm.addEventListener("submit",event=>{event.preventDefault();try{const result=importFromText(els.importJson.value);setImportStatus(`成功加入 ${result.added} 份菜谱${result.skipped?`，跳过 ${result.skipped} 份重复菜谱`:""}`,"success");setTimeout(()=>{els.importDialog.close();switchView("data");},700);}catch(error){setImportStatus(error.message||"导入失败","error");}});
 document.querySelector("#export-backup").addEventListener("click",exportBackup);
 document.querySelector("#check-update").addEventListener("click",()=>checkForUpdate(true));
 els.downloadUpdate.addEventListener("click",()=>{if(window.YiCanAndroid?.downloadUpdate)window.YiCanAndroid.downloadUpdate();});
 els.cancelUpdate.addEventListener("click",()=>{if(window.YiCanAndroid?.cancelUpdate)window.YiCanAndroid.cancelUpdate();});
 els.retryUpdate.addEventListener("click",()=>{if(window.YiCanAndroid?.retryUpdate)window.YiCanAndroid.retryUpdate();});
 els.installUpdate.addEventListener("click",()=>{if(window.YiCanAndroid?.resumeInstall)window.YiCanAndroid.resumeInstall();});
-[els.dialog,els.editorDialog,els.importDialog,els.updateDialog].forEach(dialog=>dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close();}));
+[els.editorDialog,els.importDialog,els.updateDialog].forEach(dialog=>dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close();}));
 
 window.recipeApp = {
-  searchDish(query){state.mode="dish";state.query=query||"";switchView("discover");renderDiscover();return getDiscoverResults().map(item=>item.recipe.name);},
-  searchByIngredients(ingredients){state.mode="ingredient";state.query=Array.isArray(ingredients)?ingredients.join(" "):ingredients||"";switchView("discover");renderDiscover();return getDiscoverResults().map(item=>({name:item.recipe.name,match:Math.round(item.score*100),missing:item.missing}));},
+  search(query){state.query=query||"";state.pages.discover=1;switchView("discover");renderDiscover();return getDiscoverResults().map(item=>({name:item.recipe.name,matches:item.matches}));},
+  searchDish(query){return this.search(query).map(item=>item.name);},
+  searchByIngredients(ingredients){return this.search(Array.isArray(ingredients)?ingredients.join(" "):ingredients||"");},
   openRecipe,
   importRecipes(data){return importFromText(typeof data==="string"?data:JSON.stringify(data));},
-  handleBack(){if(els.cookingDialog.open){pauseCooking();els.cookingDialog.close();return "handled";}const open=[els.updateDialog,els.importDialog,els.editorDialog,els.dialog].find(dialog=>dialog.open);if(open){open.close();return "handled";}if(state.view==="mine"&&state.minePanel){showMinePanel(null);return "handled";}if(state.view!=="discover"){switchView("discover");return "handled";}return "none";}
+  handleBack(){if(els.cookingDialog.open){pauseCooking();els.cookingDialog.close();return "handled";}const open=[els.updateDialog,els.importDialog,els.editorDialog].find(dialog=>dialog.open);if(open){open.close();return "handled";}if(state.view==="recipe"||["personal","recent","data","update"].includes(state.view)){goBackPage();return "handled";}if(state.view!=="discover"){switchView("discover");return "handled";}return "none";}
 };
 
 sanitizeAndPersist();
@@ -521,5 +494,5 @@ renderQuickPicks();
 renderAll();
 initializeAppInfo();
 registerRecipeTools();
-if (["discover","favorites","mine"].includes(location.hash.slice(1))) switchView(location.hash.slice(1));
+if (["discover","favorites","mine","personal","recent","data","update"].includes(location.hash.slice(1))) switchView(location.hash.slice(1));
 setTimeout(()=>checkForUpdate(false),1200);

@@ -95,6 +95,30 @@ test("pagination corrects pages after filtering or deleting", () => {
   assert.equal(corrected.totalPages, 1);
 });
 
+test("keyword search covers names, ingredients, flavors and cooking steps", () => {
+  const recipes = [
+    recipe({name:"家常炒蛋", flavors:["快手"], steps:[["准备", "把鸡蛋打散"], ["炒制", "大火快速翻炒"]]}),
+    recipe({id:11, name:"清炖排骨", ingredients:[{name:"排骨", amount:"500克"}], flavors:["清淡"], steps:[["炖煮", "小火慢炖至软烂"]]}),
+    recipe({id:12, name:"凉拌黄瓜", ingredients:[{name:"黄瓜", amount:"2根"}], flavors:["清爽"], steps:[["调味", "加入蒜末和香醋拌匀"]]})
+  ];
+  assert.equal(core.searchRecipesByKeyword(recipes, "炒蛋")[0].recipe.name, "家常炒蛋");
+  assert.equal(core.searchRecipesByKeyword(recipes, "排骨")[0].recipe.name, "清炖排骨");
+  assert.equal(core.searchRecipesByKeyword(recipes, "清爽")[0].recipe.name, "凉拌黄瓜");
+  assert.equal(core.searchRecipesByKeyword(recipes, "慢炖")[0].recipe.name, "清炖排骨");
+});
+
+test("keyword search requires every entered term and reports matching fields", () => {
+  const recipes = [
+    recipe({name:"青椒炒蛋", flavors:["快手"], ingredients:[{name:"青椒", amount:"2个"},{name:"鸡蛋", amount:"3个"}]}),
+    recipe({id:11, name:"番茄炒蛋", flavors:["家常"], ingredients:[{name:"番茄", amount:"2个"},{name:"鸡蛋", amount:"3个"}]})
+  ];
+  const results = core.searchRecipesByKeyword(recipes, "青椒 鸡蛋");
+  assert.equal(results.length, 1);
+  assert.equal(results[0].recipe.name, "青椒炒蛋");
+  assert.ok(results[0].matches.includes("菜名"));
+  assert.ok(results[0].matches.includes("食材"));
+});
+
 test("timer state rejects damage and calculates remaining time", () => {
   assert.equal(core.normalizeTimerState({recipeRef:"bad", stepIndex:0, durationSeconds:10, deadline:2000}, 1000), null);
   assert.deepEqual(core.normalizeTimerState({recipeRef:"custom:10", stepIndex:2, durationSeconds:90, deadline:5000}, 1000), {recipeRef:"custom:10", stepIndex:2, durationSeconds:90, deadline:5000, remainingSeconds:4});

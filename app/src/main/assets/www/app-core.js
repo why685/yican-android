@@ -102,6 +102,44 @@
     return timed;
   }
 
+  function keywordTerms(query) {
+    return clean(query).toLowerCase().split(/[\s，、,；;]+/).filter(Boolean);
+  }
+
+  function searchRecipesByKeyword(recipes, query) {
+    const list = Array.isArray(recipes) ? recipes : [];
+    const terms = keywordTerms(query);
+    if (!terms.length) return list.map(recipe => ({recipe, score:0, matches:[]}));
+    return list.map(recipe => {
+      const fields = [
+        {label:"菜名", weight:100, values:[recipe.name]},
+        {label:"食材", weight:70, values:(recipe.ingredients || []).flatMap(item => [item?.name, item?.amount])},
+        {label:"口味", weight:55, values:recipe.flavors || []},
+        {label:"做法", weight:40, values:(recipe.steps || []).flatMap(step => Array.isArray(step) ? [step[0], step[1]] : [step?.title, step?.description, step?.content])},
+        {label:"介绍", weight:30, values:[recipe.description]},
+        {label:"提示", weight:25, values:recipe.tips || []},
+        {label:"来源", weight:15, values:[recipe.source]}
+      ].map(field => ({...field, values:field.values.map(value => clean(value).toLowerCase()).filter(Boolean)}));
+      let score = 0;
+      const matches = new Set();
+      for (const term of terms) {
+        let best = 0;
+        let bestLabel = "";
+        for (const field of fields) {
+          for (const value of field.values) {
+            if (!value.includes(term)) continue;
+            const candidate = field.weight + (value === term ? 20 : value.startsWith(term) ? 8 : 0);
+            if (candidate > best) { best = candidate; bestLabel = field.label; }
+          }
+        }
+        if (!best) return null;
+        score += best;
+        matches.add(bestLabel);
+      }
+      return {recipe, score, matches:[...matches]};
+    }).filter(Boolean).sort((a, b) => b.score - a.score || Number(a.recipe.time || 0) - Number(b.recipe.time || 0) || clean(a.recipe.name).localeCompare(clean(b.recipe.name), "zh-CN"));
+  }
+
   function paginate(items, requestedPage, requestedPageSize) {
     const list = Array.isArray(items) ? items : [];
     const pageSize = Math.max(1, Math.min(100, Number.parseInt(requestedPageSize, 10) || 6));
@@ -255,6 +293,8 @@
     recipeIdentity,
     uniqueValidRefs,
     addRecent,
+    keywordTerms,
+    searchRecipesByKeyword,
     paginate,
     normalizeTimerState,
     createBackup,

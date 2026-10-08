@@ -67,9 +67,6 @@ h1 { margin: 0; font-family: "Songti SC", "STSong", serif; font-size: clamp(3rem
 .source-note a:hover { border-color: var(--red); }
 .source-note i { font-style: normal; color: #b8aea4; }
 .search-panel { max-width: 650px; }
-.mode-tabs { display: flex; gap: 22px; margin-bottom: 13px; }
-.mode-tab { padding: 3px 0 9px; color: var(--muted); background: transparent; border: 0; border-bottom: 2px solid transparent; font-size: .94rem; font-weight: 700; }
-.mode-tab.active { color: var(--red); border-color: var(--red); }
 .search-form { min-height: 64px; display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; padding: 7px 7px 7px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); }
 .search-icon { width: 22px; color: var(--muted); }
 .search-icon svg, .dialog-close svg { width: 100%; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
@@ -174,6 +171,13 @@ body { padding-bottom: calc(82px + env(safe-area-inset-bottom)); }
 .page-view[hidden] { display: none !important; }
 .library-view { min-height: calc(100vh - 95px); padding: 32px 28px 80px; }
 .section-shell { width: min(1184px, 100%); margin: 0 auto; }
+.secondary-view .section-shell, .detail-view .section-shell { min-height: 100%; }
+.page-subhead, .recipe-page-head { align-items: center; padding: 18px 0 26px; }
+.page-subhead h1 { margin: 0; font: 700 clamp(2rem,5vw,3.5rem)/1.15 "Songti SC","STSong",serif; }
+.recipe-page-head { margin: 0; }
+.recipe-page { overflow: hidden; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); }
+.detail-view .dialog-hero { min-height: 180px; }
+.detail-view .detail-panel { max-height: none; overflow: visible; }
 .page-heading { padding: 38px 0 46px; }
 .page-heading h1 { font-size: clamp(2.7rem, 7vw, 4.8rem); }
 .page-heading > p:last-child, .mine-heading > div > p:last-child { margin: 12px 0 0; color: var(--muted); }
@@ -313,8 +317,6 @@ body { padding-bottom: calc(82px + env(safe-area-inset-bottom)); }
 .mine-dashboard button > span { font-size: 1.8rem; }
 .mine-dashboard strong { font: 700 1.3rem "Songti SC","STSong",serif; }
 .mine-dashboard small { color: var(--muted); }
-.mine-panel { max-height: calc(100dvh - 210px); overflow: auto; padding-bottom: 90px; }
-.mine-panel .subhead { position: sticky; top: 0; z-index: 3; padding: 10px 0 14px; background: var(--paper); align-items: center; }
 .detail-tabs { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin: 12px 0 18px; padding: 5px; border-radius: 12px; background: #f4eee6; }
 .detail-tabs button { padding: 9px; border: 0; border-radius: 9px; color: var(--muted); background: transparent; }
 .detail-tabs button.active { color: white; background: var(--red); }
@@ -371,8 +373,6 @@ body { padding-bottom: calc(82px + env(safe-area-inset-bottom)); }
   #view-discover .search-copy h1 br { display: none; }
   #view-discover .eyebrow { display: none; }
   #view-discover .search-panel { margin-top: 5px; }
-  #view-discover .mode-tabs { gap: 18px; margin-bottom: 6px; }
-  #view-discover .mode-tab { padding: 2px 0 5px; font-size: .84rem; }
   #view-discover .search-form { min-height: 46px; grid-template-columns: 18px 1fr auto; gap: 7px; padding: 5px 6px 5px 10px; border-radius: 14px; }
   #view-discover .search-icon { width: 18px; }
   #view-discover .search-form input { font-size: .9rem; }
@@ -412,11 +412,15 @@ body { padding-bottom: calc(82px + env(safe-area-inset-bottom)); }
   .page-heading p { margin-top: 4px !important; font-size: .82rem; }
   .mine-dashboard { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
   .mine-dashboard button { min-height: 125px; padding: 16px; }
-  .mine-panel { max-height: calc(100dvh - 145px); }
+  .page-subhead, .recipe-page-head { padding: 8px 0 14px; }
+  .page-subhead h1 { font-size: 1.55rem; }
+  .page-subhead .primary-action { padding: 8px 11px; }
+  .recipe-page { border: 0; border-radius: 18px; }
+  .detail-view .dialog-hero { min-height: 118px; }
   .dialog-body { padding-top: 18px; }
   .detail-actions { overflow-x: auto; }
   .detail-actions button { white-space: nowrap; }
-  .detail-panel { max-height: 44vh; }
+  .recipe-dialog .detail-panel { max-height: 44vh; }
   .editor-form { height: calc(100dvh - 32px); padding-top: 28px; }
   .step-row { grid-template-columns: 1fr 34px; }
   .step-row .duration-field { grid-column: 1 / -1; grid-row: 3; }
