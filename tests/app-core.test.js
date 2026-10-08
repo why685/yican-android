@@ -119,6 +119,27 @@ test("keyword search requires every entered term and reports matching fields", (
   assert.ok(results[0].matches.includes("食材"));
 });
 
+test("classifies recipes into meat or vegetarian and infers main ingredients", () => {
+  const meat = core.classifyRecipe(recipe({name:"土豆炖牛肉", ingredients:[{name:"牛腩"},{name:"土豆"}]}));
+  assert.equal(meat.category, "荤");
+  assert.ok(meat.mainIngredients.includes("牛肉"));
+  const vegetarian = core.classifyRecipe(recipe({name:"番茄炒蛋", ingredients:[{name:"番茄"},{name:"鸡蛋"}]}));
+  assert.equal(vegetarian.category, "素");
+  assert.ok(vegetarian.mainIngredients.includes("番茄"));
+  assert.ok(vegetarian.mainIngredients.includes("鸡蛋"));
+  assert.equal(core.classifyRecipe(recipe({name:"鱼香茄子", ingredients:[{name:"茄子"}]})).category, "素");
+});
+
+test("backup round-trip preserves local edits to built-in recipes", () => {
+  const override = core.normalizeRecipeOverride(recipe({id:7, name:"我的土豆炖牛肉", category:"荤", mainIngredients:["牛肉","土豆"]}));
+  const backup = core.createBackup([], ["builtin:7"], [], undefined, "1.6.0", [override]);
+  const restored = core.mergeBackup({customRecipes:[], recipeOverrides:[], favorites:[], recent:[]}, backup, new Set(["builtin:7"]));
+  assert.equal(restored.recipeOverrides.length, 1);
+  assert.equal(restored.overridesAdded, 1);
+  assert.equal(restored.recipeOverrides[0].name, "我的土豆炖牛肉");
+  assert.deepEqual(restored.recipeOverrides[0].mainIngredients, ["牛肉","土豆"]);
+});
+
 test("timer state rejects damage and calculates remaining time", () => {
   assert.equal(core.normalizeTimerState({recipeRef:"bad", stepIndex:0, durationSeconds:10, deadline:2000}, 1000), null);
   assert.deepEqual(core.normalizeTimerState({recipeRef:"custom:10", stepIndex:2, durationSeconds:90, deadline:5000}, 1000), {recipeRef:"custom:10", stepIndex:2, durationSeconds:90, deadline:5000, remainingSeconds:4});

@@ -9,6 +9,7 @@
   const FAVORITES_STORAGE_KEY = "yican_favorites_v1";
   const RECENT_STORAGE_KEY = "yican_recent_v1";
   const TIMER_STORAGE_KEY = "yican_cooking_timer_v1";
+  const OVERRIDES_STORAGE_KEY = "yican_recipe_overrides_v1";
   const BACKUP_FORMAT = "yican-backup";
   const BACKUP_VERSION = 1;
   const RECENT_LIMIT = 20;
@@ -16,6 +17,57 @@
 
   function clean(value) {
     return String(value == null ? "" : value).trim();
+  }
+
+  const MEAT_GROUPS = [
+    ["猪肉", /猪|五花肉|里脊|通脊|排骨|肘子|猪蹄|猪手|大肠|肥肠|猪肝|腰花|肉馅|肉丸|肉丝|酥肉|腐乳肉|红烧肉|扣肉|回锅肉|咕佬肉|樱桃肉|焖肉/],
+    ["牛肉", /牛肉|牛腩|牛肋|牛板腱|肥牛|牛外脊/],
+    ["羊肉", /羊肉|羊排|羊腿|羊外脊/],
+    ["鸡肉", /鸡/],
+    ["鸭肉", /鸭肉|整鸭|老鸭/],
+    ["鱼类", /鱼|鳜鱼|桂鱼|鲤鱼|鲫鱼|鲈鱼|带鱼|黄鱼|鱼头/],
+    ["虾类", /虾|虾仁|小龙虾/],
+    ["蟹类", /蟹|螃蟹/],
+    ["海鲜", /鲍鱼|海参|海蜇|鱿鱼|贝|蛤|蚌/]
+  ];
+  const MAIN_GROUPS = [
+    ["豆制品", /豆腐|豆干|干豆腐|腐竹|豆皮/], ["鸡蛋", /鸡蛋|蛋花|炒蛋|荷包蛋|茶叶蛋|咸蛋|皮蛋|松花蛋|金钱蛋/],
+    ["土豆", /土豆|洋芋/], ["番茄", /番茄|西红柿/], ["茄子", /茄子/], ["白菜", /白菜|娃娃菜|莲花白|菜心/],
+    ["辣椒", /青椒|尖椒|辣椒|椒/], ["黄瓜", /黄瓜/], ["萝卜", /萝卜/], ["菌菇", /蘑菇|香菇|金针菇|菌/],
+    ["面食", /面条|炒面|拌面|疙瘩|馒头|面粉|菜蟒/], ["米类", /米饭|大米|糯米|黄米|焖饭|炒饭|粽子|锅巴/],
+    ["豆芽", /豆芽/], ["冬瓜", /冬瓜/], ["韭菜", /韭菜/], ["菠菜", /菠菜/], ["西兰花", /西兰花/],
+    ["绿豆", /绿豆/], ["卷心菜", /圆白菜|卷心菜/], ["笋", /鲜笋|冬笋|青笋|莴笋/], ["大蒜", /腊八蒜/]
+  ];
+  const NON_MAIN = /^(水|油|食用油|葱油|盐|糖|白糖|冰糖|味精|鸡精|淀粉|生粉|面粉|葱|姜|蒜|花椒|大料|八角|酱油|生抽|老抽|醋|料酒|花雕酒|胡椒粉|调料|用量详见来源视频)$/;
+
+  function classifyRecipe(recipe) {
+    const ingredients = Array.isArray(recipe?.ingredients) ? recipe.ingredients : [];
+    const names = [clean(recipe?.name), ...ingredients.map(item => clean(typeof item === "string" ? item : item?.name))].filter(Boolean);
+    const combined = names.join(" ").replace(/鸡精/g, "").replace(/鸡蛋|鸭蛋|鹌鹑蛋|咸蛋|皮蛋|松花蛋/g, "蛋").replace(/鱼香/g, "");
+    const detectedMeat = MEAT_GROUPS.filter(([, pattern]) => pattern.test(combined)).map(([label]) => label);
+    const requestedCategory = clean(recipe?.category);
+    const category = requestedCategory === "荤" || requestedCategory === "素" ? requestedCategory : (detectedMeat.length ? "荤" : "素");
+    const explicit = (Array.isArray(recipe?.mainIngredients) ? recipe.mainIngredients : clean(recipe?.mainIngredients).split(/[，,、]/))
+      .map(clean).filter(Boolean).filter((value, index, values) => values.indexOf(value) === index).slice(0, 6);
+    if (explicit.length) return {category, mainIngredients:explicit};
+
+    const inferred = [];
+    const add = value => { if (value && !inferred.includes(value)) inferred.push(value); };
+    if (category === "荤") detectedMeat.forEach(add);
+    for (const value of [names[0], ...names.slice(1,5)]) {
+      const group = MAIN_GROUPS.find(([, pattern]) => pattern.test(value));
+      if (group) add(group[0]);
+      if (inferred.length >= 2) break;
+    }
+    if (!inferred.length) {
+      for (const item of ingredients) {
+        const value = clean(typeof item === "string" ? item : item?.name).replace(/[（(].*$/, "").replace(/^[:：]/, "").trim();
+        if (!value || NON_MAIN.test(value) || /详见|配料|调料|腌制|和面/.test(value)) continue;
+        add(value.slice(0, 10));
+        if (inferred.length >= 2) break;
+      }
+    }
+    return {category, mainIngredients:inferred.length ? inferred.slice(0, 2) : ["其他"]};
   }
 
   function normalizeImportedRecipe(raw, index = 0, preserveId = false) {
@@ -54,7 +106,7 @@
       : ["我的菜谱"];
     const savedId = Number(raw.id);
     const id = preserveId && Number.isSafeInteger(savedId) && savedId > 0 ? savedId : Date.now() + index;
-    return {
+    const normalized = {
       id,
       name,
       emoji: clean(raw.emoji || "🍽️").slice(0, 8),
@@ -73,6 +125,17 @@
         : IMPORT_COLORS[index % IMPORT_COLORS.length],
       custom: true
     };
+    Object.assign(normalized, classifyRecipe({...normalized, category:raw.category, mainIngredients:raw.mainIngredients}));
+    return normalized;
+  }
+
+  function normalizeRecipeOverride(raw, index = 0) {
+    const normalized = normalizeImportedRecipe(raw, index, true);
+    if (!Number.isSafeInteger(Number(raw?.id)) || Number(raw.id) <= 0) throw new Error("修改菜谱缺少有效 ID");
+    normalized.id = Number(raw.id);
+    normalized.custom = false;
+    normalized.override = true;
+    return normalized;
   }
 
   function withDuration(step, rawDuration) {
@@ -184,8 +247,9 @@
     return [ref, ...uniqueValidRefs(recent, validRefs).filter(item => item !== ref)].slice(0, RECENT_LIMIT);
   }
 
-  function createBackup(customRecipes, favorites, recent, exportedAt, appVersion) {
+  function createBackup(customRecipes, favorites, recent, exportedAt, appVersion, recipeOverrides) {
     const normalized = (Array.isArray(customRecipes) ? customRecipes : []).map((recipe, index) => normalizeImportedRecipe(recipe, index, true));
+    const normalizedOverrides = (Array.isArray(recipeOverrides) ? recipeOverrides : []).map(normalizeRecipeOverride);
     const validRefs = new Set(normalized.map(recipeRef));
     for (const ref of Array.isArray(favorites) ? favorites : []) if (String(ref).startsWith("builtin:")) validRefs.add(String(ref));
     for (const ref of Array.isArray(recent) ? recent : []) if (String(ref).startsWith("builtin:")) validRefs.add(String(ref));
@@ -195,6 +259,7 @@
       exportedAt: exportedAt || new Date().toISOString(),
       appVersion: clean(appVersion) || "unknown",
       customRecipes: normalized,
+      recipeOverrides: normalizedOverrides,
       favorites: uniqueValidRefs(favorites, validRefs),
       recent: uniqueValidRefs(recent, validRefs, RECENT_LIMIT)
     };
@@ -241,7 +306,16 @@
       ...(backup.recent || []).map(mapRef),
       ...(current.recent || [])
     ], validRefs, RECENT_LIMIT);
-    return {customRecipes: resultRecipes, favorites, recent, added, skipped};
+    const currentOverrides = (current.recipeOverrides || []).map(normalizeRecipeOverride);
+    const overridesById = new Map(currentOverrides.map(recipe => [recipe.id, recipe]));
+    let overridesAdded = 0;
+    for (const raw of Array.isArray(backup.recipeOverrides) ? backup.recipeOverrides : []) {
+      const normalized = normalizeRecipeOverride(raw);
+      if (!(builtinRefs || new Set()).has(`builtin:${normalized.id}`) || overridesById.has(normalized.id)) continue;
+      overridesById.set(normalized.id, normalized);
+      overridesAdded += 1;
+    }
+    return {customRecipes: resultRecipes, recipeOverrides:[...overridesById.values()], favorites, recent, added, skipped, overridesAdded};
   }
 
   function importLegacy(current, value, builtinRefs) {
@@ -285,10 +359,13 @@
     FAVORITES_STORAGE_KEY,
     RECENT_STORAGE_KEY,
     TIMER_STORAGE_KEY,
+    OVERRIDES_STORAGE_KEY,
     BACKUP_FORMAT,
     BACKUP_VERSION,
     RECENT_LIMIT,
     normalizeImportedRecipe,
+    normalizeRecipeOverride,
+    classifyRecipe,
     recipeRef,
     recipeIdentity,
     uniqueValidRefs,

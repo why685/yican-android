@@ -50,7 +50,7 @@
         <section class="results-section" aria-labelledby="results-title">
           <div class="results-head">
             <div><p class="eyebrow" id="result-kicker">为你推荐</p><h2 id="results-title">家常好味道</h2></div>
-            <div class="result-tools"><span id="result-count" aria-live="polite"></span><select id="time-filter" aria-label="按烹饪时间筛选"><option value="all">全部时间</option><option value="15">15 分钟内</option><option value="30">30 分钟内</option><option value="60">60 分钟内</option></select></div>
+            <div class="result-tools"><span id="result-count" aria-live="polite"></span><select id="category-filter" aria-label="按荤素大类筛选"><option value="all">全部分类</option><option value="荤">荤</option><option value="素">素</option></select><select id="ingredient-filter" aria-label="按主要食材筛选"><option value="all">全部食材</option></select><select id="time-filter" aria-label="按烹饪时间筛选"><option value="all">全部时间</option><option value="15">15 分钟内</option><option value="30">30 分钟内</option><option value="60">60 分钟内</option></select></div>
           </div>
           <div id="ingredient-summary" class="ingredient-summary" hidden></div>
           <p class="source-disclaimer">内置菜谱按公开教学视频及末尾配方卡整理；精确克数可点击来源视频复核，个人数据只保存在本机。</p>
@@ -76,7 +76,7 @@
             <button type="button" data-mine-target="personal"><span>🍳</span><strong>个人菜谱</strong><small id="personal-count">0 份</small></button>
             <button type="button" data-mine-target="recent"><span>◷</span><strong>最近浏览</strong><small>最多 20 条</small></button>
             <button type="button" data-mine-target="data"><span>⇅</span><strong>数据管理</strong><small>备份与恢复</small></button>
-            <button type="button" data-mine-target="update"><span>↻</span><strong>应用更新</strong><small>当前 <b id="current-version">1.5.1</b></small></button>
+            <button type="button" data-mine-target="update"><span>↻</span><strong>应用更新</strong><small>当前 <b id="current-version">1.6.0</b></small></button>
           </div>
 
         </div>
@@ -113,14 +113,18 @@
       <button class="dialog-close light" data-close="editor-dialog" aria-label="关闭编辑窗口"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
       <form id="editor-form" class="editor-form">
         <p class="eyebrow">我的菜谱</p><h2 id="editor-title">新建菜谱</h2>
+        <input type="hidden" id="editor-ref" />
         <input type="hidden" id="editor-id" />
+        <p id="editor-origin-note" class="editor-origin-note"></p>
         <div class="editor-progress"><span class="active">1 基本信息</span><span>2 食材</span><span>3 步骤</span></div>
         <section class="editor-panel active" data-editor-panel="0"><div class="form-grid">
           <label class="wide">菜名<input id="editor-name" maxlength="60" required placeholder="例如：青椒炒蛋" /></label>
           <label>表情<input id="editor-emoji" maxlength="8" value="🍽️" /></label>
           <label>用时（分钟）<input id="editor-time" type="number" min="1" max="1440" value="20" required /></label>
           <label>难度<select id="editor-difficulty"><option>简单</option><option>适中</option><option>进阶</option></select></label>
+          <label>大类<select id="editor-category"><option value="荤">荤</option><option value="素">素</option></select></label>
           <label>来源<input id="editor-source" maxlength="40" value="我的菜谱" /></label>
+          <label class="wide">主要食材分类<input id="editor-main-ingredients" maxlength="100" placeholder="用逗号分开，例如：猪肉，土豆" /></label>
           <label class="wide">口味标签<input id="editor-flavors" maxlength="100" placeholder="用逗号分开，例如：快手，下饭" /></label>
           <label class="wide">一句介绍<textarea id="editor-description" maxlength="240" rows="3" placeholder="这道菜有什么特别之处？"></textarea></label>
         </div></section>

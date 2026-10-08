@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "versionCode": 11,
-  "versionName": "1.5.1",
-  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.5.1/YiCan-1.5.1.apk",
+  "versionCode": 12,
+  "versionName": "1.6.0",
+  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.6.0/YiCan-1.6.0.apk",
   "apkUrls": [
-    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.5.1/YiCan-1.5.1.apk",
-    "https://github.com/why685/yican-android/releases/download/v1.5.1/YiCan-1.5.1.apk"
+    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.6.0/YiCan-1.6.0.apk",
+    "https://github.com/why685/yican-android/releases/download/v1.6.0/YiCan-1.6.0.apk"
   ],
-  "sha256": "e8159d2c1cb95545d881da434af8a86a59d02b3d3d2f427dd6c4331353be23a1",
-  "releaseNotes": "修复 GitHub API 连接超时时无法检查更新的问题；新增加速清单、jsDelivr、GitHub 固定清单和 API 多级备用线路。"
+  "sha256": "7a4892a334dc014a91f02c3d84feb40de63d76306eaf4d42ed29630e63b4d15a",
+  "releaseNotes": "菜谱详情页新增修改与恢复原版；增加荤素大类和主要食材小类筛选，个人菜谱也可手动分类，修改内容随完整备份保存。"
 }

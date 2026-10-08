@@ -3,6 +3,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
+const core = require("../app/src/main/assets/www/app-core.js");
 
 const source = fs.readFileSync(path.join(__dirname, "../app/src/main/assets/www/recipes-suipo.js"), "utf8");
 const context = {window:{}};
@@ -47,5 +48,14 @@ test("catalog steps do not contain known OCR fragments or broken glyphs", () => 
       assert.ok(String(step[1] || "").trim().length >= 4, `${recipe.name} contains an incomplete step`);
       assert.equal(String(step[1]).includes("()"), false, `${recipe.name} contains an empty OCR marker`);
     }
+  }
+});
+
+test("every catalog recipe has a meat or vegetarian category and useful main ingredients", () => {
+  for (const recipe of recipes) {
+    const classification = core.classifyRecipe(recipe);
+    assert.ok(["荤", "素"].includes(classification.category), recipe.name);
+    assert.ok(classification.mainIngredients.length > 0, recipe.name);
+    assert.ok(!classification.mainIngredients.includes("其他"), `${recipe.name} needs a specific main ingredient`);
   }
 });
