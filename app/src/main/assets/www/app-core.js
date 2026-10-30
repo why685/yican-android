@@ -10,6 +10,7 @@
   const RECENT_STORAGE_KEY = "yican_recent_v1";
   const TIMER_STORAGE_KEY = "yican_cooking_timer_v1";
   const OVERRIDES_STORAGE_KEY = "yican_recipe_overrides_v1";
+  const EDITOR_DRAFTS_STORAGE_KEY = "yican_recipe_editor_drafts_v1";
   const BACKUP_FORMAT = "yican-backup";
   const BACKUP_VERSION = 1;
   const RECENT_LIMIT = 20;
@@ -17,6 +18,58 @@
 
   function clean(value) {
     return String(value == null ? "" : value).trim();
+  }
+
+  function normalizeBaseServings(value) {
+    const number = Number(value);
+    if (!Number.isFinite(number)) return 1;
+    return Math.max(0.5, Math.min(50, Math.round(number * 2) / 2));
+  }
+
+  function formatScaledNumber(value) {
+    if (!Number.isFinite(value)) return "";
+    const rounded = Math.abs(value - Math.round(value)) < 0.0001
+      ? Math.round(value)
+      : Number(value.toFixed(Math.abs(value) < 10 ? 2 : 1));
+    return String(rounded);
+  }
+
+  function scaleAmount(amount, ratio) {
+    const source = clean(amount);
+    const multiplier = Number(ratio);
+    if (!source || !Number.isFinite(multiplier) || multiplier <= 0 || Math.abs(multiplier - 1) < 0.0001) return source;
+    return source.replace(/\d+(?:\.\d+)?\s*(?:[-–~至到]\s*\d+(?:\.\d+)?|\/\s*\d+)|\d+(?:\.\d+)?|半/g, (token, offset, whole) => {
+      const before = whole[offset - 1] || "";
+      const after = whole[offset + token.length] || "";
+      if (before === ":" || after === ":" || /[%℃°]/.test(after)) return token;
+      if (token === "半") return formatScaledNumber(0.5 * multiplier);
+      const range = token.match(/^(\d+(?:\.\d+)?)\s*([-–~至到])\s*(\d+(?:\.\d+)?)$/);
+      if (range) return `${formatScaledNumber(Number(range[1]) * multiplier)}${range[2]}${formatScaledNumber(Number(range[3]) * multiplier)}`;
+      const fraction = token.match(/^(\d+)\s*\/\s*(\d+)$/);
+      if (fraction && Number(fraction[2])) return formatScaledNumber((Number(fraction[1]) / Number(fraction[2])) * multiplier);
+      return formatScaledNumber(Number(token) * multiplier);
+    });
+  }
+
+  function normalizeEditorDraft(raw) {
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
+    const ref = clean(raw.ref) || "new";
+    if (ref !== "new" && !/^(builtin|custom):\d+$/.test(ref)) return null;
+    if (!raw.snapshot || typeof raw.snapshot !== "object" || Array.isArray(raw.snapshot)) return null;
+    const updatedAt = clean(raw.updatedAt) || new Date().toISOString();
+    return {ref, updatedAt, snapshot:raw.snapshot};
+  }
+
+  function parseEditorDrafts(storage) {
+    let value;
+    try { value = JSON.parse(storage.getItem(EDITOR_DRAFTS_STORAGE_KEY) || "{}"); } catch (_) { return {}; }
+    if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+    const result = {};
+    for (const [key, raw] of Object.entries(value)) {
+      const draft = normalizeEditorDraft(raw);
+      if (draft && key === draft.ref) result[key] = draft;
+    }
+    return result;
   }
 
   const MEAT_GROUPS = [
@@ -115,6 +168,7 @@
       flavors: flavors.length ? flavors : ["我的菜谱"],
       source: clean(raw.source || "我的菜谱").slice(0, 40),
       description: clean(raw.description || "保存在本机的个人菜谱").slice(0, 500),
+      baseServings: normalizeBaseServings(raw.baseServings),
       ingredients,
       steps,
       tips: (Array.isArray(raw.tips) ? raw.tips : (clean(raw.tips) ? [raw.tips] : []))
@@ -360,11 +414,16 @@
     RECENT_STORAGE_KEY,
     TIMER_STORAGE_KEY,
     OVERRIDES_STORAGE_KEY,
+    EDITOR_DRAFTS_STORAGE_KEY,
     BACKUP_FORMAT,
     BACKUP_VERSION,
     RECENT_LIMIT,
     normalizeImportedRecipe,
     normalizeRecipeOverride,
+    normalizeBaseServings,
+    scaleAmount,
+    normalizeEditorDraft,
+    parseEditorDrafts,
     classifyRecipe,
     recipeRef,
     recipeIdentity,

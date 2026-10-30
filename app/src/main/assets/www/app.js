@@ -26,7 +26,7 @@ const recipeOverrides = loadRecipeOverrides();
 const builtInRefs = new Set(builtInRecipes.map(Core.recipeRef));
 let favorites = Core.parseStoredArray(localStorage, Core.FAVORITES_STORAGE_KEY);
 let recent = Core.parseStoredArray(localStorage, Core.RECENT_STORAGE_KEY);
-const state = {view:"discover", returnView:"discover", query:"", time:"all", category:"all", ingredient:"all", activeRecipe:null, appVersion:"unknown", updatePoll:null, editorStep:0, detailPanel:"overview", pages:{discover:1,favorites:1,recent:1,personal:1}, cooking:{ref:null,index:0,completed:new Set(),remaining:0,running:false,deadline:0,tick:null}};
+const state = {view:"discover", returnView:"discover", query:"", time:"all", category:"all", ingredient:"all", activeRecipe:null, appVersion:"unknown", updatePoll:null, editorStep:0, editorReturnView:"personal", editorDraftKey:"", editorDraftTimer:null, editorDraftPaused:false, editorDirty:false, detailPanel:"overview", targetServings:1, pages:{discover:1,favorites:1,recent:1,personal:1}, cooking:{ref:null,index:0,completed:new Set(),remaining:0,running:false,deadline:0,tick:null}};
 
 const els = {
   views:[...document.querySelectorAll(".page-view")], nav:[...document.querySelectorAll("[data-view-target]")],
@@ -38,7 +38,7 @@ const els = {
   personalGrid:document.querySelector("#personal-grid"), personalEmpty:document.querySelector("#personal-empty"), personalCount:document.querySelector("#personal-count"),
   pagers:{discover:document.querySelector("#discover-pagination"),favorites:document.querySelector("#favorites-pagination"),recent:document.querySelector("#recent-pagination"),personal:document.querySelector("#personal-pagination")},
   recipeContent:document.querySelector("#recipe-page-content"),
-  editorDialog:document.querySelector("#editor-dialog"), editorForm:document.querySelector("#editor-form"), editorStatus:document.querySelector("#editor-status"),
+  editorForm:document.querySelector("#editor-form"), editorStatus:document.querySelector("#editor-status"), editorDraftStatus:document.querySelector("#editor-draft-status"), editorDraftBanner:document.querySelector("#editor-draft-banner"),
   importDialog:document.querySelector("#import-dialog"), importForm:document.querySelector("#import-form"), importFile:document.querySelector("#recipe-file"), importJson:document.querySelector("#recipe-json"), importStatus:document.querySelector("#import-status"),
   dataStatus:document.querySelector("#data-status"), updateStatus:document.querySelector("#update-status"), currentVersion:document.querySelector("#current-version"),
   updateDialog:document.querySelector("#update-dialog"), updateVersion:document.querySelector("#update-version"), updateMessage:document.querySelector("#update-message"), releaseNotes:document.querySelector("#release-notes"),
@@ -182,12 +182,13 @@ function renderQuickPicks() {
 }
 
 function switchView(view) {
-  const validViews = ['discover','favorites','mine','personal','recent','data','update','recipe'];
+  const validViews = ['discover','favorites','mine','personal','recent','data','update','recipe','editor'];
   if (!validViews.includes(view) || (view === "recipe" && !state.activeRecipe)) return;
   state.view = view;
+  document.body.classList.toggle("editing", view === "editor");
   if (window.location.hash !== `#${view}`) history.replaceState(null, "", `#${view}`);
   els.views.forEach(element => { const active = element.dataset.view === view; element.hidden = !active; element.classList.toggle("active", active); });
-  const navView = ["personal","recent","data","update"].includes(view) ? "mine" : view === "recipe" ? (["favorites"].includes(state.returnView) ? "favorites" : ["mine","personal","recent","data","update"].includes(state.returnView) ? "mine" : "discover") : view;
+  const navView = ["personal","recent","data","update","editor"].includes(view) ? "mine" : view === "recipe" ? (["favorites"].includes(state.returnView) ? "favorites" : ["mine","personal","recent","data","update"].includes(state.returnView) ? "mine" : "discover") : view;
   els.nav.forEach(button => { const active = button.dataset.viewTarget === navView; button.classList.toggle("active", active); if (active) button.setAttribute("aria-current", "page"); else button.removeAttribute("aria-current"); });
   window.scrollTo({top:0, behavior:"smooth"});
   renderLibrary();
@@ -195,6 +196,7 @@ function switchView(view) {
 
 function goBackPage() {
   if (state.view === "recipe") switchView(state.returnView || "discover");
+  else if (state.view === "editor") leaveEditor();
   else if (["personal","recent","data","update"].includes(state.view)) switchView("mine");
 }
 
@@ -212,6 +214,7 @@ function openRecipe(ref) {
   state.returnView = state.view === "recipe" ? state.returnView : state.view;
   state.activeRecipe = Core.recipeRef(recipe);
   state.detailPanel = "overview";
+  state.targetServings = Core.normalizeBaseServings(recipe.baseServings);
   recent = Core.addRecent(recent, state.activeRecipe, validRefs());
   sanitizeAndPersist();
   renderLibrary();
@@ -225,11 +228,16 @@ function renderRecipePage(recipe) {
   const sourceUrl = recipe.video || (!recipe.custom ? `https://search.bilibili.com/all?keyword=${encodeURIComponent(`${recipe.source} ${recipe.name}`)}` : "");
   const seekableVideo = /bilibili\.com\/video\//i.test(sourceUrl);
   const panel = state.detailPanel;
-  els.recipeContent.innerHTML = `<article class="recipe-page"><div class="dialog-hero compact" style="--dialog-a:${escapeHtml(recipe.colors[0])};--dialog-b:${escapeHtml(recipe.colors[1])}"><span class="dish-emoji" aria-hidden="true">${escapeHtml(recipe.emoji)}</span><h2>${escapeHtml(recipe.name)}</h2></div>
-    <div class="dialog-body"><div class="detail-actions"><button class="favorite-action ${isFavorite ? "active" : ""}" data-action="favorite" data-ref="${ref}">${isFavorite ? "♥ 已收藏" : "♡ 收藏"}</button><button class="primary-action" data-action="cook" data-ref="${ref}">开始烹饪</button><button data-action="edit" data-ref="${ref}">修改</button>${recipe.override?`<button data-action="restore" data-ref="${ref}">恢复原版</button>`:""}${recipe.custom ? `<button class="danger" data-action="delete" data-ref="${ref}">删除</button>` : ""}</div>
+  const baseServings = Core.normalizeBaseServings(recipe.baseServings);
+  const targetServings = Math.max(.5, Math.min(50, Number(state.targetServings) || baseServings));
+  state.targetServings = targetServings;
+  const ratio = targetServings / baseServings;
+  const displayServings = Number.isInteger(targetServings) ? targetServings : Number(targetServings.toFixed(1));
+  els.recipeContent.innerHTML = `<article class="recipe-page"><div class="dialog-hero compact" style="--dialog-a:${escapeHtml(recipe.colors[0])};--dialog-b:${escapeHtml(recipe.colors[1])}"><span class="dish-emoji" aria-hidden="true">${escapeHtml(recipe.emoji)}</span><div><p>${escapeHtml(recipe.source)}</p><h2>${escapeHtml(recipe.name)}</h2></div></div>
+    <div class="dialog-body"><div class="detail-actions"><button class="favorite-action ${isFavorite ? "active" : ""}" data-action="favorite" data-ref="${ref}">${isFavorite ? "♥ 已收藏" : "♡ 收藏"}</button><button class="primary-action" data-action="cook" data-ref="${ref}">开始烹饪</button><button data-action="edit" data-ref="${ref}">修改</button>${recipe.override || recipe.custom ? `<details class="detail-more"><summary>更多</summary><div>${recipe.override?`<button data-action="restore" data-ref="${ref}">恢复原版</button>`:""}${recipe.custom ? `<button class="danger" data-action="delete" data-ref="${ref}">删除</button>` : ""}</div></details>` : ""}</div>
     <div class="detail-tabs" role="tablist">${[["overview","概览"],["ingredients","食材"],["steps","步骤"]].map(([key,label])=>`<button type="button" data-detail-panel="${key}" class="${panel===key?"active":""}">${label}</button>`).join("")}</div>
-    <section class="detail-panel" ${panel!=="overview"?"hidden":""}><p>${escapeHtml(recipe.description)}</p><div class="detail-facts"><span>约 ${recipe.time} 分钟</span><span>${escapeHtml(recipe.difficulty)}</span><span>${escapeHtml(recipe.category)}</span>${recipe.mainIngredients.map(value => `<span>${escapeHtml(value)}</span>`).join("")}${recipe.flavors.map(value => `<span>${escapeHtml(value)}</span>`).join("")}</div>${sourceUrl ? `<a class="original-link" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">查看 ${escapeHtml(recipe.source)} 的来源视频</a>` : `<p class="imported-note">这是一份保存在本机的个人菜谱。</p>`}</section>
-    <section class="detail-panel" ${panel!=="ingredients"?"hidden":""}><ul class="ingredient-list">${recipe.ingredients.map(item => `<li><span>${escapeHtml(item.name)}${item.optional ? "（可选）" : ""}</span>${item.amount?`<b>${escapeHtml(item.amount)}</b>`:""}</li>`).join("")}</ul></section>
+    <section class="detail-panel" ${panel!=="overview"?"hidden":""}><p>${escapeHtml(recipe.description)}</p><div class="detail-facts"><span>约 ${recipe.time} 分钟</span><span>${escapeHtml(recipe.difficulty)}</span><span>${escapeHtml(recipe.category)}</span><span>原配方 ${baseServings} 份</span>${recipe.mainIngredients.map(value => `<span>${escapeHtml(value)}</span>`).join("")}${recipe.flavors.map(value => `<span>${escapeHtml(value)}</span>`).join("")}</div>${sourceUrl ? `<a class="original-link" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">查看 ${escapeHtml(recipe.source)} 的来源视频</a>` : `<p class="imported-note">这是一份保存在本机的个人菜谱。</p>`}</section>
+    <section class="detail-panel" ${panel!=="ingredients"?"hidden":""}><div class="serving-control"><div><strong>${displayServings} 份</strong><small>原配方 ${baseServings} 份 · 当前 ${Number(ratio.toFixed(2))} 倍</small></div><div class="serving-presets">${[[.5,"半份"],[1,"原配方"],[1.5,"1.5 倍"],[2,"双份"]].map(([value,label])=>`<button type="button" data-serving-ratio="${value}" class="${Math.abs(ratio-value)<.001?"active":""}">${label}</button>`).join("")}</div><div class="serving-stepper"><button type="button" data-serving-action="minus" aria-label="减少半份">−</button><span>${displayServings} 份</span><button type="button" data-serving-action="plus" aria-label="增加半份">＋</button></div></div><ul class="ingredient-list">${recipe.ingredients.map(item => `<li><span>${escapeHtml(item.name)}${item.optional ? "（可选）" : ""}</span>${item.amount?`<b>${escapeHtml(Core.scaleAmount(item.amount,ratio))}</b>`:""}</li>`).join("")}</ul></section>
     <section class="detail-panel" ${panel!=="steps"?"hidden":""}><ol class="steps">${recipe.steps.map((step,index) => `<li><div class="step-heading"><strong>${escapeHtml(step[0])}</strong><span class="step-meta">${step[3]!=null?(seekableVideo?`<a href="${escapeHtml(videoAt(sourceUrl,step[3]))}" target="_blank" rel="noopener">视频 ${formatTimestamp(step[3])}</a>`:`<span>视频 ${formatTimestamp(step[3])}</span>`):""}${step[2]?`<small>建议 ${formatDuration(step[2])}</small>`:""}</span></div><p>${escapeHtml(step[1])}</p><button type="button" data-action="cook-step" data-ref="${ref}" data-step-index="${index}">从这一步开始</button></li>`).join("")}</ol>${recipe.tips?.length?`<aside class="recipe-tips"><strong>Tips</strong><ul>${recipe.tips.map(tip=>`<li>${escapeHtml(tip)}</li>`).join("")}</ul></aside>`:""}</section></div></article>`;
 }
 
@@ -251,18 +259,89 @@ function formatDuration(seconds) {
 function addIngredientRow(value = {}) {
   const row = document.createElement("div");
   row.className = "dynamic-row ingredient-row";
-  row.innerHTML = `<input class="ingredient-name" maxlength="50" required placeholder="食材名称" value="${escapeHtml(value.name || "")}"><input class="ingredient-amount" maxlength="40" placeholder="用量" value="${escapeHtml(value.amount || "")}"><label class="check-label"><input class="ingredient-optional" type="checkbox" ${value.optional ? "checked" : ""}>可选</label><button type="button" class="remove-row" aria-label="删除食材">×</button>`;
+  row.innerHTML = `<input class="ingredient-name" maxlength="50" required placeholder="食材名称" value="${escapeHtml(value.name || "")}"><input class="ingredient-amount" maxlength="80" placeholder="用量，如 200克" value="${escapeHtml(value.amount || "")}"><label class="check-label"><input class="ingredient-optional" type="checkbox" ${value.optional ? "checked" : ""}>可选</label><div class="row-tools"><button type="button" data-row-action="up" title="上移">↑</button><button type="button" data-row-action="down" title="下移">↓</button><button type="button" data-row-action="duplicate" title="复制">⧉</button><button type="button" class="danger" data-row-action="remove" title="删除">×</button></div>`;
   document.querySelector("#ingredient-rows").appendChild(row);
+  return row;
 }
 
 function addStepRow(value = []) {
+  const duration = Number(value[2]) || 0;
   const row = document.createElement("div");
   row.className = "dynamic-row step-row";
-  row.innerHTML = `<input class="step-title" maxlength="50" placeholder="步骤标题" value="${escapeHtml(value[0] || "")}"><textarea class="step-description" maxlength="500" rows="2" required placeholder="具体怎么做">${escapeHtml(value[1] || "")}</textarea><label class="duration-field">计时（秒，可选）<input class="step-duration" type="number" min="1" max="14400" value="${value[2] || ""}" placeholder="例如 300"></label><button type="button" class="remove-row" aria-label="删除步骤">×</button>`;
+  row.innerHTML = `<input class="step-title" maxlength="50" placeholder="步骤标题" value="${escapeHtml(value[0] || "")}"><textarea class="step-description" maxlength="800" rows="2" required placeholder="具体怎么做">${escapeHtml(value[1] || "")}</textarea><label class="duration-field">分钟<input class="step-minutes" type="number" min="0" max="240" value="${duration ? Math.floor(duration/60) : ""}" placeholder="0"></label><label class="duration-field">秒钟<input class="step-seconds" type="number" min="0" max="59" value="${duration ? duration%60 : ""}" placeholder="0"></label><label class="duration-field">视频时间点<input class="step-timestamp" inputmode="numeric" maxlength="8" value="${value[3] != null ? formatTimestamp(value[3]) : ""}" placeholder="03:12"></label><div class="row-tools"><button type="button" data-row-action="up" title="上移">↑</button><button type="button" data-row-action="down" title="下移">↓</button><button type="button" data-row-action="duplicate" title="复制">⧉</button><button type="button" class="danger" data-row-action="remove" title="删除">×</button></div>`;
   document.querySelector("#step-rows").appendChild(row);
+  return row;
 }
 
-function openEditor(recipe) {
+function editorDraftKey(recipe) { return recipe ? Core.recipeRef(recipe) : "new"; }
+function getEditorDrafts() { return Core.parseEditorDrafts(localStorage); }
+function writeEditorDrafts(drafts) { localStorage.setItem(Core.EDITOR_DRAFTS_STORAGE_KEY, JSON.stringify(drafts)); }
+function removeEditorDraft(key = state.editorDraftKey) {
+  const drafts = getEditorDrafts();
+  if (drafts[key]) { delete drafts[key]; writeEditorDrafts(drafts); }
+}
+
+function parseEditorTimestamp(value) {
+  const raw=String(value||"").trim();
+  if(!raw)return null;
+  const parts=raw.split(":").map(item=>Number(item));
+  if(parts.length<2||parts.length>3||parts.some(item=>!Number.isInteger(item)||item<0))throw new Error("视频时间点请填写为 03:12 或 1:03:12");
+  const seconds=parts.reduce((total,item)=>total*60+item,0);
+  if(seconds>86400)throw new Error("视频时间点不能超过 24 小时");
+  return seconds;
+}
+
+function readIngredientRows() {
+  return [...document.querySelectorAll(".ingredient-row")].map(row => ({name:row.querySelector(".ingredient-name").value,amount:row.querySelector(".ingredient-amount").value,optional:row.querySelector(".ingredient-optional").checked}));
+}
+
+function readStepRows(validate = false) {
+  return [...document.querySelectorAll(".step-row")].map(row => {
+    const minutes=Number(row.querySelector(".step-minutes").value||0), seconds=Number(row.querySelector(".step-seconds").value||0);
+    const duration=minutes*60+seconds;
+    if(validate&&(minutes<0||seconds<0||seconds>59||duration>14400))throw new Error("单步计时必须在 1 秒到 240 分钟内");
+    let timestamp=null;
+    try { timestamp=parseEditorTimestamp(row.querySelector(".step-timestamp").value); } catch(error) { if(validate)throw error; }
+    const result=[row.querySelector(".step-title").value,row.querySelector(".step-description").value];
+    if(duration||timestamp!=null)result.push(duration||null);
+    if(timestamp!=null){if(result.length<3)result.push(null);result.push(timestamp);}
+    return result;
+  });
+}
+
+function collectEditorSnapshot() {
+  return {editorStep:state.editorStep,id:document.querySelector("#editor-id").value,name:document.querySelector("#editor-name").value,emoji:document.querySelector("#editor-emoji").value,time:document.querySelector("#editor-time").value,difficulty:document.querySelector("#editor-difficulty").value,category:document.querySelector("#editor-category").value,baseServings:document.querySelector("#editor-base-servings").value,source:document.querySelector("#editor-source").value,video:document.querySelector("#editor-video").value,mainIngredients:document.querySelector("#editor-main-ingredients").value,flavors:document.querySelector("#editor-flavors").value,description:document.querySelector("#editor-description").value,tips:document.querySelector("#editor-tips").value,ingredients:readIngredientRows(),steps:readStepRows(false)};
+}
+
+function applyEditorSnapshot(snapshot) {
+  if(!snapshot||typeof snapshot!=="object")return;
+  const values={"editor-id":snapshot.id,"editor-name":snapshot.name,"editor-emoji":snapshot.emoji,"editor-time":snapshot.time,"editor-difficulty":snapshot.difficulty,"editor-category":snapshot.category,"editor-base-servings":snapshot.baseServings,"editor-source":snapshot.source,"editor-video":snapshot.video,"editor-main-ingredients":snapshot.mainIngredients,"editor-flavors":snapshot.flavors,"editor-description":snapshot.description,"editor-tips":snapshot.tips};
+  Object.entries(values).forEach(([id,value])=>{const field=document.querySelector(`#${id}`);if(field&&value!=null)field.value=value;});
+  document.querySelector("#ingredient-rows").innerHTML="";
+  document.querySelector("#step-rows").innerHTML="";
+  (Array.isArray(snapshot.ingredients)&&snapshot.ingredients.length?snapshot.ingredients:[{}]).forEach(addIngredientRow);
+  (Array.isArray(snapshot.steps)&&snapshot.steps.length?snapshot.steps:[["",""]]).forEach(addStepRow);
+  setEditorStep(Number(snapshot.editorStep)||0);
+}
+
+function persistEditorDraft() {
+  if(state.editorDraftPaused||!state.editorDraftKey)return;
+  const drafts=getEditorDrafts();
+  drafts[state.editorDraftKey]={ref:state.editorDraftKey,updatedAt:new Date().toISOString(),snapshot:collectEditorSnapshot()};
+  writeEditorDrafts(drafts);
+  state.editorDirty=false;
+  els.editorDraftStatus.textContent="草稿已自动保存";
+}
+
+function markEditorDirty() {
+  if(state.editorDraftPaused)return;
+  state.editorDirty=true;
+  els.editorDraftStatus.textContent="正在保存…";
+  clearTimeout(state.editorDraftTimer);
+  state.editorDraftTimer=setTimeout(persistEditorDraft,500);
+}
+
+function populateEditor(recipe) {
   els.editorForm.reset();
   els.editorStatus.textContent = "";
   document.querySelector("#ingredient-rows").innerHTML = "";
@@ -277,26 +356,65 @@ function openEditor(recipe) {
   document.querySelector("#editor-difficulty").value = recipe?.difficulty || "简单";
   document.querySelector("#editor-source").value = recipe?.source || "我的菜谱";
   document.querySelector("#editor-category").value = recipe?.category || "素";
+  document.querySelector("#editor-base-servings").value = Core.normalizeBaseServings(recipe?.baseServings);
+  document.querySelector("#editor-video").value = recipe?.video || "";
   document.querySelector("#editor-main-ingredients").value = recipe?.mainIngredients?.join("，") || "";
   document.querySelector("#editor-flavors").value = recipe?.flavors?.join("，") || "";
   document.querySelector("#editor-description").value = recipe?.description || "";
+  document.querySelector("#editor-tips").value = recipe?.tips?.join("\n") || "";
   (recipe?.ingredients || [{}]).forEach(addIngredientRow);
   (recipe?.steps || [["",""]]).forEach(addStepRow);
   setEditorStep(0);
-  els.editorDialog.showModal();
+}
+
+function openEditor(recipe) {
+  state.editorReturnView=state.view;
+  if(state.view!=="recipe")state.returnView=state.view;
+  state.editorDraftKey=editorDraftKey(recipe);
+  state.editorDraftPaused=false;
+  state.editorDirty=false;
+  clearTimeout(state.editorDraftTimer);
+  populateEditor(recipe);
+  const draft=getEditorDrafts()[state.editorDraftKey];
+  state.editorDraftPaused=Boolean(draft);
+  els.editorDraftBanner.hidden=!draft;
+  els.editorForm.classList.toggle("draft-paused",Boolean(draft));
+  els.editorDraftStatus.textContent=draft?"有未完成草稿":"尚未修改";
+  switchView("editor");
+}
+
+function resumeEditorDraft() {
+  const draft=getEditorDrafts()[state.editorDraftKey];
+  if(draft)applyEditorSnapshot(draft.snapshot);
+  state.editorDraftPaused=false;
+  els.editorDraftBanner.hidden=true;
+  els.editorForm.classList.remove("draft-paused");
+  els.editorDraftStatus.textContent="已恢复草稿";
+}
+
+function discardEditorDraft() {
+  const existing=state.editorDraftKey==="new"?null:findRecipe(state.editorDraftKey);
+  removeEditorDraft();
+  state.editorDraftPaused=false;
+  els.editorDraftBanner.hidden=true;
+  els.editorForm.classList.remove("draft-paused");
+  populateEditor(existing);
+  els.editorDraftStatus.textContent="草稿已丢弃";
+}
+
+function leaveEditor() {
+  clearTimeout(state.editorDraftTimer);
+  if(state.editorDirty&&!state.editorDraftPaused)persistEditorDraft();
+  switchView(state.editorReturnView==="recipe"&&state.activeRecipe?"recipe":state.editorReturnView||"personal");
 }
 
 function saveEditor() {
   const editingRef = document.querySelector("#editor-ref").value;
   const idValue = Number(document.querySelector("#editor-id").value);
-  const ingredients = [...document.querySelectorAll(".ingredient-row")].map(row => ({name:row.querySelector(".ingredient-name").value, amount:row.querySelector(".ingredient-amount").value, optional:row.querySelector(".ingredient-optional").checked}));
-  const steps = [...document.querySelectorAll(".step-row")].map(row => {
-    const base=[row.querySelector(".step-title").value,row.querySelector(".step-description").value];
-    const duration=row.querySelector(".step-duration").value;
-    return duration ? [...base,Number(duration)] : base;
-  });
+  const ingredients = readIngredientRows();
+  const steps = readStepRows(true);
   const existing = editingRef ? findRecipe(editingRef) : null;
-  const raw = {...(existing || {}), id:idValue || Date.now(), name:document.querySelector("#editor-name").value, emoji:document.querySelector("#editor-emoji").value, time:document.querySelector("#editor-time").value, difficulty:document.querySelector("#editor-difficulty").value, category:document.querySelector("#editor-category").value, mainIngredients:document.querySelector("#editor-main-ingredients").value.split(/[，,、]/), source:document.querySelector("#editor-source").value, flavors:document.querySelector("#editor-flavors").value.split(/[，,]/), description:document.querySelector("#editor-description").value, ingredients, steps};
+  const raw = {...(existing || {}), id:idValue || Date.now(), name:document.querySelector("#editor-name").value, emoji:document.querySelector("#editor-emoji").value, time:document.querySelector("#editor-time").value, difficulty:document.querySelector("#editor-difficulty").value, category:document.querySelector("#editor-category").value, baseServings:document.querySelector("#editor-base-servings").value, mainIngredients:document.querySelector("#editor-main-ingredients").value.split(/[，,、]/), source:document.querySelector("#editor-source").value, video:document.querySelector("#editor-video").value, flavors:document.querySelector("#editor-flavors").value.split(/[，,]/), description:document.querySelector("#editor-description").value, tips:document.querySelector("#editor-tips").value.split(/\r?\n/), ingredients, steps};
   if (editingRef.startsWith("builtin:")) {
     const base = builtInRecipes.find(recipe => recipe.id === Number(editingRef.split(":")[1]));
     if (!base) throw new Error("找不到要修改的内置菜谱");
@@ -305,8 +423,8 @@ function saveEditor() {
     if (overrideIndex >= 0) recipeOverrides.splice(overrideIndex,1,normalized); else recipeOverrides.push(normalized);
     sanitizeAndPersist();
     renderAll();
-    els.editorDialog.close();
-    openRecipe(`builtin:${base.id}`);
+    removeEditorDraft();
+    finishEditorSave(`builtin:${base.id}`);
     return;
   }
   const normalized = Core.normalizeImportedRecipe(raw, 0, true);
@@ -316,15 +434,26 @@ function saveEditor() {
   if (index >= 0) customRecipes.splice(index, 1, normalized); else customRecipes.unshift(normalized);
   sanitizeAndPersist();
   renderAll();
-  els.editorDialog.close();
-  openRecipe(Core.recipeRef(normalized));
+  removeEditorDraft();
+  finishEditorSave(Core.recipeRef(normalized));
   setGlobalStatus(index >= 0 ? "菜谱已更新" : "菜谱已保存", "success");
+}
+
+function finishEditorSave(ref) {
+  clearTimeout(state.editorDraftTimer);
+  state.editorDirty=false;
+  state.activeRecipe=ref;
+  recent=Core.addRecent(recent,ref,validRefs());
+  sanitizeAndPersist();
+  renderAll();
+  renderRecipePage(findRecipe(ref));
+  switchView("recipe");
 }
 
 function setEditorStep(index) {
   state.editorStep=Math.max(0,Math.min(2,index));
   document.querySelectorAll("[data-editor-panel]").forEach(panel=>{const active=Number(panel.dataset.editorPanel)===state.editorStep;panel.hidden=!active;panel.classList.toggle("active",active);});
-  document.querySelectorAll(".editor-progress span").forEach((item,i)=>item.classList.toggle("active",i===state.editorStep));
+  document.querySelectorAll("[data-editor-step]").forEach((item,i)=>item.classList.toggle("active",i===state.editorStep));
   document.querySelector("#editor-prev").hidden=state.editorStep===0;
   document.querySelector("#editor-next").hidden=state.editorStep===2;
   document.querySelector("#editor-save").hidden=state.editorStep!==2;
@@ -337,6 +466,31 @@ function advanceEditor(direction) {
     if(invalid){invalid.reportValidity();return;}
   }
   setEditorStep(state.editorStep+direction);
+  markEditorDirty();
+}
+
+function handleEditorRowAction(button) {
+  const row=button.closest(".dynamic-row"), container=row?.parentElement;
+  if(!row||!container)return;
+  const action=button.dataset.rowAction;
+  if(action==="remove") {
+    if(container.children.length>1)row.remove();
+    else els.editorStatus.textContent="至少保留一项";
+  } else if(action==="up"&&row.previousElementSibling)container.insertBefore(row,row.previousElementSibling);
+  else if(action==="down"&&row.nextElementSibling)container.insertBefore(row.nextElementSibling,row);
+  else if(action==="duplicate") {
+    const index=[...container.children].indexOf(row);
+    const duplicate=container.id==="ingredient-rows"?addIngredientRow(readIngredientRows()[index]):addStepRow(readStepRows(false)[index]);
+    container.insertBefore(duplicate,row.nextElementSibling);
+  }
+  markEditorDirty();
+}
+
+function updateServingControl(target) {
+  const recipe=findRecipe(state.activeRecipe);if(!recipe)return;
+  state.targetServings=Math.max(.5,Math.min(50,Math.round(Number(target)*2)/2));
+  state.detailPanel="ingredients";
+  renderRecipePage(recipe);
 }
 
 function deleteRecipe(ref) {
@@ -487,7 +641,7 @@ function initializeAppInfo() {
   if (!window.YiCanAndroid?.getAppInfo) return;
   try {
     const info = JSON.parse(window.YiCanAndroid.getAppInfo());
-    els.currentVersion.textContent = info.versionName || "1.6.0";
+    els.currentVersion.textContent = info.versionName || "1.7.0";
     state.appVersion = info.versionName || "unknown";
     pollUpdateState();
   } catch (_) {}
@@ -505,6 +659,10 @@ document.addEventListener("click", event => {
   if (actionButton) handleAction(actionButton.dataset.action, actionButton.dataset.ref, actionButton);
   const detailButton=event.target.closest("[data-detail-panel]");
   if(detailButton){state.detailPanel=detailButton.dataset.detailPanel;const recipe=findRecipe(state.activeRecipe);if(recipe)renderRecipePage(recipe);}
+  const servingPreset=event.target.closest("[data-serving-ratio]");
+  if(servingPreset){const recipe=findRecipe(state.activeRecipe);if(recipe)updateServingControl(Core.normalizeBaseServings(recipe.baseServings)*Number(servingPreset.dataset.servingRatio));}
+  const servingAction=event.target.closest("[data-serving-action]");
+  if(servingAction)updateServingControl(state.targetServings+(servingAction.dataset.servingAction==="plus"?.5:-.5));
   const mineButton=event.target.closest("[data-mine-target]");if(mineButton)switchView(mineButton.dataset.mineTarget);
   if(event.target.closest("[data-page-back]"))goBackPage();
   const pageButton=event.target.closest("[data-page-scope]");if(pageButton&&!pageButton.disabled){state.pages[pageButton.dataset.pageScope]=Number(pageButton.dataset.page);renderAll();window.scrollTo({top:0,behavior:"smooth"});}
@@ -515,10 +673,8 @@ document.addEventListener("click", event => {
   if (closeButton) document.querySelector(`#${closeButton.dataset.close}`)?.close();
   const queryButton = event.target.closest("[data-query]");
   if (queryButton) { els.input.value=queryButton.dataset.query; state.query=queryButton.dataset.query; state.pages.discover=1; renderDiscover(); document.querySelector("#results-title").scrollIntoView({behavior:"smooth"}); }
-  if (event.target.classList.contains("remove-row")) {
-    const container = event.target.closest("#ingredient-rows, #step-rows");
-    if (container && container.children.length > 1) event.target.closest(".dynamic-row").remove();
-  }
+  const rowAction=event.target.closest("[data-row-action]");if(rowAction)handleEditorRowAction(rowAction);
+  const editorStep=event.target.closest("[data-editor-step]");if(editorStep){const target=Number(editorStep.dataset.editorStep);if(target<=state.editorStep)setEditorStep(target);else while(state.editorStep<target){const before=state.editorStep;advanceEditor(1);if(state.editorStep===before)break;}}
 });
 
 els.nav.forEach(button => button.addEventListener("click", () => switchView(button.dataset.viewTarget)));
@@ -529,10 +685,15 @@ els.category.addEventListener("change",()=>{state.category=els.category.value;st
 els.ingredient.addEventListener("change",()=>{state.ingredient=els.ingredient.value;state.pages.discover=1;renderDiscover();});
 document.querySelector("#reset-button").addEventListener("click",()=>{state.query="";state.time="all";state.category="all";state.ingredient="all";state.pages.discover=1;els.input.value="";els.time.value="all";els.category.value="all";renderDiscover();});
 document.querySelector("#new-recipe").addEventListener("click",()=>openEditor(null));
-document.querySelector("#add-ingredient").addEventListener("click",()=>addIngredientRow());
-document.querySelector("#add-step").addEventListener("click",()=>addStepRow());
+document.querySelector("#add-ingredient").addEventListener("click",()=>{addIngredientRow();markEditorDirty();});
+document.querySelector("#add-step").addEventListener("click",()=>{addStepRow();markEditorDirty();});
 document.querySelector("#editor-prev").addEventListener("click",()=>advanceEditor(-1));
 document.querySelector("#editor-next").addEventListener("click",()=>advanceEditor(1));
+document.querySelector("#editor-exit").addEventListener("click",leaveEditor);
+document.querySelector("#resume-draft").addEventListener("click",resumeEditorDraft);
+document.querySelector("#discard-draft").addEventListener("click",discardEditorDraft);
+els.editorForm.addEventListener("input",markEditorDirty);
+els.editorForm.addEventListener("change",markEditorDirty);
 els.editorForm.addEventListener("submit",event=>{event.preventDefault();try{saveEditor();}catch(error){els.editorStatus.textContent=error.message||"无法保存菜谱";els.editorStatus.className="import-status error";}});
 document.querySelector("#clear-recent").addEventListener("click",()=>{if(!recent.length||!window.confirm("确定清空最近浏览吗？"))return;recent=[];state.pages.recent=1;sanitizeAndPersist();renderLibrary();});
 document.querySelector("#open-import").addEventListener("click",()=>{els.importForm.reset();setImportStatus("");els.importDialog.showModal();});
@@ -544,7 +705,7 @@ els.downloadUpdate.addEventListener("click",()=>{if(window.YiCanAndroid?.downloa
 els.cancelUpdate.addEventListener("click",()=>{if(window.YiCanAndroid?.cancelUpdate)window.YiCanAndroid.cancelUpdate();});
 els.retryUpdate.addEventListener("click",()=>{if(window.YiCanAndroid?.retryUpdate)window.YiCanAndroid.retryUpdate();});
 els.installUpdate.addEventListener("click",()=>{if(window.YiCanAndroid?.resumeInstall)window.YiCanAndroid.resumeInstall();});
-[els.editorDialog,els.importDialog,els.updateDialog].forEach(dialog=>dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close();}));
+[els.importDialog,els.updateDialog].forEach(dialog=>dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close();}));
 
 window.recipeApp = {
   search(query){state.query=query||"";state.pages.discover=1;switchView("discover");renderDiscover();return getDiscoverResults().map(item=>({name:item.recipe.name,matches:item.matches}));},
@@ -552,7 +713,7 @@ window.recipeApp = {
   searchByIngredients(ingredients){return this.search(Array.isArray(ingredients)?ingredients.join(" "):ingredients||"");},
   openRecipe,
   importRecipes(data){return importFromText(typeof data==="string"?data:JSON.stringify(data));},
-  handleBack(){if(els.cookingDialog.open){pauseCooking();els.cookingDialog.close();return "handled";}const open=[els.updateDialog,els.importDialog,els.editorDialog].find(dialog=>dialog.open);if(open){open.close();return "handled";}if(state.view==="recipe"||["personal","recent","data","update"].includes(state.view)){goBackPage();return "handled";}if(state.view!=="discover"){switchView("discover");return "handled";}return "none";}
+  handleBack(){if(els.cookingDialog.open){pauseCooking();els.cookingDialog.close();return "handled";}const open=[els.updateDialog,els.importDialog].find(dialog=>dialog.open);if(open){open.close();return "handled";}if(state.view==="recipe"||state.view==="editor"||["personal","recent","data","update"].includes(state.view)){goBackPage();return "handled";}if(state.view!=="discover"){switchView("discover");return "handled";}return "none";}
 };
 
 sanitizeAndPersist();

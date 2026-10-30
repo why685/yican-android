@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "versionCode": 12,
-  "versionName": "1.6.0",
-  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.6.0/YiCan-1.6.0.apk",
+  "versionCode": 13,
+  "versionName": "1.7.0",
+  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.7.0/YiCan-1.7.0.apk",
   "apkUrls": [
-    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.6.0/YiCan-1.6.0.apk",
-    "https://github.com/why685/yican-android/releases/download/v1.6.0/YiCan-1.6.0.apk"
+    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.7.0/YiCan-1.7.0.apk",
+    "https://github.com/why685/yican-android/releases/download/v1.7.0/YiCan-1.7.0.apk"
   ],
-  "sha256": "7a4892a334dc014a91f02c3d84feb40de63d76306eaf4d42ed29630e63b4d15a",
-  "releaseNotes": "菜谱详情页新增修改与恢复原版；增加荤素大类和主要食材小类筛选，个人菜谱也可手动分类，修改内容随完整备份保存。"
+  "sha256": "3f9f7a4fb82c23bdb6c85ad3e5ad19f3e68c43c8b8b6ba82c3b6777b1ad366d0",
+  "releaseNotes": "详情页改为紧凑固定布局并增加份数换算；编辑器迁移到独立三步页面，支持行复制排序、计时与视频时间点编辑，以及 500 毫秒自动草稿恢复。"
 }

@@ -144,3 +144,58 @@ test("timer state rejects damage and calculates remaining time", () => {
   assert.equal(core.normalizeTimerState({recipeRef:"bad", stepIndex:0, durationSeconds:10, deadline:2000}, 1000), null);
   assert.deepEqual(core.normalizeTimerState({recipeRef:"custom:10", stepIndex:2, durationSeconds:90, deadline:5000}, 1000), {recipeRef:"custom:10", stepIndex:2, durationSeconds:90, deadline:5000, remainingSeconds:4});
 });
+
+test("normalizes base servings and keeps it through backup restore", () => {
+  const normalized = core.normalizeImportedRecipe(recipe({baseServings: 4}));
+  assert.equal(normalized.baseServings, 4);
+  assert.equal(core.normalizeImportedRecipe(recipe({baseServings: 0})).baseServings, 0.5);
+  assert.equal(core.normalizeImportedRecipe(recipe({baseServings: "bad"})).baseServings, 1);
+  const backup = core.createBackup([recipe({baseServings: 2.5})], [], []);
+  const restored = core.mergeBackup({customRecipes:[],favorites:[],recent:[]}, backup, new Set());
+  assert.equal(restored.customRecipes[0].baseServings, 2.5);
+});
+
+test("scales numeric, decimal, range, fraction, half and parenthesized amounts", () => {
+  assert.equal(core.scaleAmount("500g（焯水100g，调味370g，勾芡30g）", .5), "250g（焯水50g，调味185g，勾芡15g）");
+  assert.equal(core.scaleAmount("2-3个", 2), "4-6个");
+  assert.equal(core.scaleAmount("1/2勺", 2), "1勺");
+  assert.equal(core.scaleAmount("1.5克", 2), "3克");
+  assert.equal(core.scaleAmount("半根", 2), "1根");
+});
+
+test("does not scale descriptive amounts, percentages, temperatures or ratios", () => {
+  assert.equal(core.scaleAmount("适量、少许", 2), "适量、少许");
+  assert.equal(core.scaleAmount("肥瘦比3:7", 2), "肥瘦比3:7");
+  assert.equal(core.scaleAmount("浓度15%", 2), "浓度15%");
+  assert.equal(core.scaleAmount("加热至100℃", 2), "加热至100℃");
+});
+
+test("editor drafts recover valid snapshots and ignore damaged entries", () => {
+  const storage = {getItem() { return JSON.stringify({
+    "custom:10": {ref:"custom:10", updatedAt:"2026-10-30T00:00:00.000Z", snapshot:{name:"草稿",baseServings:2}},
+    bad: {ref:"broken", snapshot:{}},
+    mismatch: {ref:"new", snapshot:{}}
+  }); }};
+  const drafts = core.parseEditorDrafts(storage);
+  assert.deepEqual(Object.keys(drafts), ["custom:10"]);
+  assert.equal(drafts["custom:10"].snapshot.name, "草稿");
+  assert.deepEqual(core.parseEditorDrafts({getItem(){return "not-json";}}), {});
+});
+
+test("editing metadata preserves video timestamps, timer, tips and classifications", () => {
+  const normalized = core.normalizeRecipeOverride(recipe({
+    id: 7,
+    baseServings: 3,
+    category:"荤",
+    mainIngredients:["猪肉"],
+    video:"https://www.bilibili.com/video/BV1test/",
+    tips:["按肉质调整时间"],
+    steps:[["压制","小火压制",5400,192]]
+  }));
+  assert.equal(normalized.baseServings, 3);
+  assert.equal(normalized.video, "https://www.bilibili.com/video/BV1test/");
+  assert.deepEqual(normalized.steps[0], ["压制","小火压制",5400,192]);
+  assert.deepEqual(normalized.tips, ["按肉质调整时间"]);
+  assert.equal(normalized.category, "荤");
+  assert.deepEqual(normalized.mainIngredients, ["猪肉"]);
+});
