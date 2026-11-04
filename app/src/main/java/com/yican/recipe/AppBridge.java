@@ -70,6 +70,7 @@ final class AppBridge {
     private final AlarmManager alarmManager;
     private final SharedPreferences preferences;
     private final BroadcastReceiver downloadReceiver;
+    private final SharedRecipeImporter sharedRecipeImporter;
     private UpdateManifest pendingUpdate;
     private long pendingDownloadId = -1L;
     private int pendingDownloadSource;
@@ -80,6 +81,8 @@ final class AppBridge {
     private File pendingExportFile;
     private boolean receiverRegistered;
     private boolean verifyingDownload;
+    private volatile boolean pageReady;
+    private volatile JSONObject pendingSharedRecipe;
 
     AppBridge(MainActivity activity, WebView webView) {
         this.activity = activity;
@@ -87,6 +90,7 @@ final class AppBridge {
         this.downloadManager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
         this.alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
         this.preferences = activity.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        this.sharedRecipeImporter = new SharedRecipeImporter(activity);
         restorePendingState();
         this.downloadReceiver = new BroadcastReceiver() {
             @Override
@@ -112,6 +116,25 @@ final class AppBridge {
         } catch (Exception ignored) {
         }
         return result.toString();
+    }
+
+    void acceptSharedIntent(Intent intent) {
+        if (!sharedRecipeImporter.accepts(intent)) return;
+        sharedRecipeImporter.process(intent, result -> {
+            pendingSharedRecipe = result;
+            if (pageReady) sendSharedRecipe(result);
+        });
+    }
+
+    void onPageReady() {
+        pageReady = true;
+        JSONObject pending = pendingSharedRecipe;
+        if (pending != null) sendSharedRecipe(pending);
+    }
+
+    @JavascriptInterface
+    public String getSharedImageData(String token) {
+        return sharedRecipeImporter.imageData(token);
     }
 
     @JavascriptInterface
@@ -368,6 +391,7 @@ final class AppBridge {
             }
             receiverRegistered = false;
         }
+        sharedRecipeImporter.destroy();
         executor.shutdownNow();
     }
 
@@ -780,6 +804,11 @@ final class AppBridge {
         } catch (Exception ignored) {
         }
         evaluate("window.YiCanNative&&window.YiCanNative.onNativeStatus(" + envelope.toString() + ");");
+    }
+
+    private void sendSharedRecipe(JSONObject payload) {
+        pendingSharedRecipe = null;
+        evaluate("window.YiCanNative&&window.YiCanNative.onSharedRecipe(" + payload.toString() + ");");
     }
 
     private void sendExportResult(boolean success, String message) {

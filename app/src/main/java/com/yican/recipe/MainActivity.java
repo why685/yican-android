@@ -63,6 +63,7 @@ public class MainActivity extends Activity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 pageReady = url != null && url.startsWith("file:///android_asset/www/");
+                if (pageReady && appBridge != null) appBridge.onPageReady();
                 deliverTimerDestination();
             }
 
@@ -94,6 +95,7 @@ public class MainActivity extends Activity {
         webView.addJavascriptInterface(appBridge, "YiCanAndroid");
 
         captureTimerDestination(getIntent());
+        appBridge.acceptSharedIntent(getIntent());
         webView.loadUrl("file:///android_asset/www/index.html");
     }
 
@@ -129,6 +131,7 @@ public class MainActivity extends Activity {
         super.onNewIntent(intent);
         setIntent(intent);
         captureTimerDestination(intent);
+        if (appBridge != null) appBridge.acceptSharedIntent(intent);
         deliverTimerDestination();
     }
 

@@ -200,3 +200,66 @@ test("editing metadata preserves video timestamps, timer, tips and classificatio
   assert.equal(normalized.category, "荤");
   assert.deepEqual(normalized.mainIngredients, ["猪肉"]);
 });
+
+test("normalizes quick collection inbox items and rejects unsafe image tokens", () => {
+  const item = core.normalizeInboxItem({
+    id:"inbox-test-001",
+    status:"review",
+    sourceUrl:"看看这个 https://b23.tv/abc123。",
+    imageTokens:["12345678-1234-1234-1234-123456789abc-0.jpg", "../unsafe.jpg"],
+    issues:["请复核错字"]
+  });
+  assert.equal(item.sourceUrl, "https://b23.tv/abc123");
+  assert.deepEqual(item.imageTokens, ["12345678-1234-1234-1234-123456789abc-0.jpg"]);
+  assert.equal(item.status, "review");
+  assert.equal(core.normalizeInboxItem({id:"?"}), null);
+});
+
+test("parses shared cooking text into an editable recipe draft", () => {
+  const parsed = core.parseCollectedRecipe({
+    id:"inbox-hongshao-zhouzi",
+    subject:"红烧肘子",
+    sourceUrl:"https://www.bilibili.com/video/BV1test/",
+    ocrText:[
+      "红烧肘子食材",
+      "猪前肘1500g，花雕酒500g，冰糖316g，油130g",
+      "食材",
+      "大葱60g",
+      "大姜40g",
+      "步骤",
+      "00:12 猪前肘燎毛后改刀",
+      "00:40 焯水：起锅加水，放入肘子和花雕酒",
+      "Tips：根据猪肘品质调整煮制时间"
+    ].join("\n")
+  });
+  assert.equal(parsed.name, "红烧肘子");
+  assert.equal(parsed.source, "哔哩哔哩");
+  assert.equal(parsed.video, "https://www.bilibili.com/video/BV1test/");
+  assert.ok(parsed.ingredients.some(item => item.name.includes("猪前肘") && item.amount === "1500g"));
+  assert.ok(parsed.ingredients.some(item => item.name.includes("大葱") && item.amount === "60g"));
+  assert.ok(parsed.steps.length >= 2);
+  assert.ok(parsed.tips.some(value => value.includes("猪肘品质")));
+});
+
+test("flags suspicious OCR characters for manual review", () => {
+  const parsed = core.parseCollectedRecipe({
+    id:"inbox-ocr-review",
+    subject:"测试菜谱",
+    ocrText:"食材\n猪肉500g\n步骤\n加入猪□后翻炒至熟"
+  });
+  assert.ok(parsed.issues.some(value => value.includes("□")));
+});
+
+test("backup round-trip preserves and de-duplicates the collection inbox", () => {
+  const inboxItem = core.normalizeInboxItem({
+    id:"inbox-backup-001",
+    title:"红烧肘子",
+    sourceUrl:"https://b23.tv/recipe",
+    sharedText:"原始分享文字"
+  });
+  const backup = core.createBackup([], [], [], undefined, "1.8.0", [], [inboxItem]);
+  const restored = core.mergeBackup({customRecipes:[],recipeOverrides:[],favorites:[],recent:[],inbox:[{...inboxItem,id:"inbox-current-001"}]}, backup, new Set());
+  assert.equal(backup.inbox.length, 1);
+  assert.equal(restored.inbox.length, 1);
+  assert.equal(restored.inbox[0].sourceUrl, "https://b23.tv/recipe");
+});

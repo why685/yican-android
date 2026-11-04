@@ -11,6 +11,7 @@
   const TIMER_STORAGE_KEY = "yican_cooking_timer_v1";
   const OVERRIDES_STORAGE_KEY = "yican_recipe_overrides_v1";
   const EDITOR_DRAFTS_STORAGE_KEY = "yican_recipe_editor_drafts_v1";
+  const INBOX_STORAGE_KEY = "yican_recipe_inbox_v1";
   const BACKUP_FORMAT = "yican-backup";
   const BACKUP_VERSION = 1;
   const RECENT_LIMIT = 20;
@@ -70,6 +71,85 @@
       if (draft && key === draft.ref) result[key] = draft;
     }
     return result;
+  }
+
+  function normalizeInboxItem(raw, index = 0) {
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
+    const id = clean(raw.id) || `inbox-${Date.now()}-${index}`;
+    if (!/^[a-zA-Z0-9_-]{6,100}$/.test(id)) return null;
+    const status = ["pending","review","completed"].includes(raw.status) ? raw.status : "pending";
+    const imageTokens = (Array.isArray(raw.imageTokens) ? raw.imageTokens : []).map(clean).filter(value=>/^[a-f0-9-]{36}-\d+\.jpg$/.test(value)).slice(0,6);
+    const issues = (Array.isArray(raw.issues) ? raw.issues : []).map(clean).filter(Boolean).slice(0,30);
+    const recipeRefValue = /^(builtin|custom):\d+$/.test(clean(raw.recipeRef)) ? clean(raw.recipeRef) : "";
+    return {
+      id,
+      status,
+      createdAt:clean(raw.createdAt) || new Date().toISOString(),
+      updatedAt:clean(raw.updatedAt) || clean(raw.createdAt) || new Date().toISOString(),
+      title:clean(raw.title).slice(0,120),
+      subject:clean(raw.subject).slice(0,240),
+      sourceUrl:extractFirstUrl(raw.sourceUrl || raw.sharedText || ""),
+      sharedText:clean(raw.sharedText).slice(0,30000),
+      ocrText:clean(raw.ocrText).slice(0,30000),
+      imageTokens,
+      issues,
+      recipeRef:recipeRefValue
+    };
+  }
+
+  function extractFirstUrl(value) {
+    const match=clean(value).match(/https?:\/\/[^\s<>"']+/i);
+    return match ? match[0].replace(/[，。；、）)]+$/,"") : "";
+  }
+
+  function collectedSource(url) {
+    try {
+      const host=new URL(url).hostname.toLowerCase();
+      if(host.includes("bilibili.com")||host==="b23.tv")return "哔哩哔哩";
+      if(host.includes("douyin.com"))return "抖音";
+      if(host.includes("xiaohongshu.com")||host==="xhslink.com")return "小红书";
+      if(host.includes("kuaishou.com"))return "快手";
+      return host.replace(/^www\./,"").slice(0,40) || "视频分享";
+    } catch (_) { return "视频分享"; }
+  }
+
+  function parseCollectedRecipe(raw) {
+    const item=normalizeInboxItem({...raw,id:clean(raw?.id)||`inbox-${Date.now()}`}) || {};
+    const combined=[item.sharedText,item.ocrText].filter(Boolean).join("\n");
+    const lines=combined.split(/\r?\n/).map(value=>clean(value).replace(/^[•·●▪◆◇★*-]+\s*/,"")).filter(Boolean);
+    let mode="", title=clean(item.title||item.subject).replace(/https?:\/\/\S+/g,"").replace(/[|｜].*$/,"").trim();
+    if(!title){const candidate=lines.find(line=>line.length<=40&&!/食材|用料|配料|步骤|做法|tips?/i.test(line));title=candidate||"待整理菜谱";}
+    title=title.replace(/^(分享|转发)[:：]?\s*/,"").slice(0,60) || "待整理菜谱";
+    const ingredients=[], steps=[], tips=[], issues=[];
+    const ingredientKeys=new Set();
+    const amountPattern=/([^，,；;。:\n]{1,18}?)[：:\s]*((?:\d+(?:\.\d+)?(?:[-–~至到]\d+(?:\.\d+)?)?\s*(?:克|g|kg|千克|毫升|ml|升|l|个|只|根|颗|勺|片|粒|斤|两|碗|杯|盒|块|张)|半(?:个|根|只|颗|勺|斤)?|适量|少许))/gi;
+    for(const original of lines){
+      const line=original.replace(/\s+/g," ").trim();
+      if(/[�□■▢]/.test(line)||(/\b[a-z]\b/i.test(line)&&/[\u4e00-\u9fff]/.test(line)))issues.push(`请复核：${line}`);
+      if(/^(食材|用料|配料|原料)/i.test(line)){mode="ingredients";continue;}
+      if(/^(步骤|做法|制作|烹饪)/i.test(line)){mode="steps";continue;}
+      if(/^tips?[:：]?/i.test(line)){mode="tips";const value=line.replace(/^tips?[:：]?/i,"").trim();if(value)tips.push(value);continue;}
+      if(mode==="tips"){tips.push(line);continue;}
+      let matched=false, match;
+      amountPattern.lastIndex=0;
+      while((match=amountPattern.exec(line))){
+        const name=match[1].replace(/^[，,；;。\s]+/,"").replace(/[（(].*$/,"").trim().slice(-18);
+        const amount=match[2].trim();
+        const key=name.toLowerCase();
+        if(name&&amount&&!ingredientKeys.has(key)&&!/时间|分钟|小时/.test(name)){ingredients.push({name,amount,optional:false});ingredientKeys.add(key);matched=true;}
+      }
+      if(mode==="ingredients"&&matched)continue;
+      const stepLike=mode==="steps"||/^[(（]?\d{1,2}[:：.]\d{1,2}[)）]?/.test(line)||/^(第?\d+[步、.：:]|一、|二、|三、|四、|五、)/.test(line);
+      if(stepLike||(!matched&&line.length>=14&&/放入|加入|倒入|切|炒|煮|焯|烧|蒸|腌|搅拌|调味/.test(line))){
+        const cleaned=line.replace(/^[(（]?\d{1,2}[:：.]\d{1,2}[)）]?\s*/,"").replace(/^(第?\d+[步、.：:]|[一二三四五六七八九十]+、)\s*/,"");
+        const parts=cleaned.split(/[：:]/,2);steps.push([parts.length>1&&parts[0].length<=12?parts[0]:`第 ${steps.length+1} 步`,parts.length>1&&parts[0].length<=12?cleaned.slice(parts[0].length+1).trim():cleaned]);
+      }
+    }
+    if(!ingredients.length)ingredients.push({name:"待补充食材",amount:"适量",optional:false});
+    if(!steps.length)steps.push(["第 1 步","请根据原视频或配方截图补充具体做法"]);
+    const sourceUrl=item.sourceUrl||extractFirstUrl(combined);
+    const classified=classifyRecipe({name:title,ingredients});
+    return {id:Date.now(),name:title,emoji:"🍽️",time:20,difficulty:"简单",baseServings:1,source:collectedSource(sourceUrl),video:sourceUrl,description:"通过快速收集导入，请在保存前核对食材和步骤。",flavors:["待整理"],ingredients,steps,tips,category:classified.category,mainIngredients:classified.mainIngredients,issues};
   }
 
   const MEAT_GROUPS = [
@@ -303,7 +383,7 @@
     return [ref, ...uniqueValidRefs(recent, validRefs).filter(item => item !== ref)].slice(0, RECENT_LIMIT);
   }
 
-  function createBackup(customRecipes, favorites, recent, exportedAt, appVersion, recipeOverrides) {
+  function createBackup(customRecipes, favorites, recent, exportedAt, appVersion, recipeOverrides, inbox) {
     const normalized = (Array.isArray(customRecipes) ? customRecipes : []).map((recipe, index) => normalizeImportedRecipe(recipe, index, true));
     const normalizedOverrides = (Array.isArray(recipeOverrides) ? recipeOverrides : []).map(normalizeRecipeOverride);
     const validRefs = new Set(normalized.map(recipeRef));
@@ -317,7 +397,8 @@
       customRecipes: normalized,
       recipeOverrides: normalizedOverrides,
       favorites: uniqueValidRefs(favorites, validRefs),
-      recent: uniqueValidRefs(recent, validRefs, RECENT_LIMIT)
+      recent: uniqueValidRefs(recent, validRefs, RECENT_LIMIT),
+      inbox:(Array.isArray(inbox)?inbox:[]).map(normalizeInboxItem).filter(Boolean).slice(0,200)
     };
   }
 
@@ -371,7 +452,17 @@
       overridesById.set(normalized.id, normalized);
       overridesAdded += 1;
     }
-    return {customRecipes: resultRecipes, recipeOverrides:[...overridesById.values()], favorites, recent, added, skipped, overridesAdded};
+    const currentInbox=(Array.isArray(current.inbox)?current.inbox:[]).map(normalizeInboxItem).filter(Boolean);
+    const inboxById=new Map(currentInbox.map(item=>[item.id,item]));
+    const inboxByUrl=new Map(currentInbox.filter(item=>item.sourceUrl).map(item=>[item.sourceUrl,item]));
+    for(const raw of Array.isArray(backup.inbox)?backup.inbox:[]){
+      const normalized=normalizeInboxItem(raw,inboxById.size);
+      if(!normalized||inboxById.has(normalized.id)||(normalized.sourceUrl&&inboxByUrl.has(normalized.sourceUrl)))continue;
+      inboxById.set(normalized.id,normalized);
+      if(normalized.sourceUrl)inboxByUrl.set(normalized.sourceUrl,normalized);
+      if(inboxById.size>=200)break;
+    }
+    return {customRecipes: resultRecipes, recipeOverrides:[...overridesById.values()], favorites, recent, inbox:[...inboxById.values()], added, skipped, overridesAdded};
   }
 
   function importLegacy(current, value, builtinRefs) {
@@ -417,6 +508,7 @@
     TIMER_STORAGE_KEY,
     OVERRIDES_STORAGE_KEY,
     EDITOR_DRAFTS_STORAGE_KEY,
+    INBOX_STORAGE_KEY,
     BACKUP_FORMAT,
     BACKUP_VERSION,
     RECENT_LIMIT,
@@ -426,6 +518,9 @@
     scaleAmount,
     normalizeEditorDraft,
     parseEditorDrafts,
+    normalizeInboxItem,
+    extractFirstUrl,
+    parseCollectedRecipe,
     classifyRecipe,
     recipeRef,
     recipeIdentity,

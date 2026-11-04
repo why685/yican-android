@@ -26,9 +26,10 @@ const recipeOverrides = loadRecipeOverrides();
 const builtInRefs = new Set(builtInRecipes.map(Core.recipeRef));
 let favorites = Core.parseStoredArray(localStorage, Core.FAVORITES_STORAGE_KEY);
 let recent = Core.parseStoredArray(localStorage, Core.RECENT_STORAGE_KEY);
-const ROOT_VIEWS = ["discover","favorites","mine"];
-const VALID_VIEWS = [...ROOT_VIEWS,"personal","recent","data","import","update","recipe","editor","cooking"];
-const state = {view:"discover", returnView:"discover", query:"", time:"all", category:"all", ingredient:"all", activeRecipe:null, appVersion:"unknown", updatePoll:null, searchTimer:null, resizeTimer:null, navStack:["discover"], viewScroll:{}, ignorePopCount:0, editorStep:0, editorReturnView:"personal", editorDraftKey:"", editorDraftTimer:null, editorDraftPaused:false, editorDirty:false, detailPanel:"overview", targetServings:1, pages:{discover:1,favorites:1,recent:1,personal:1}, cooking:{ref:null,index:0,completed:new Set(),remaining:0,running:false,deadline:0,tick:null}};
+let inbox = Core.parseStoredArray(localStorage, Core.INBOX_STORAGE_KEY).map(Core.normalizeInboxItem).filter(Boolean).slice(0,200);
+const ROOT_VIEWS = ["discover","library","mine"];
+const VALID_VIEWS = [...ROOT_VIEWS,"data","import","collect","help","about","update","recipe","editor","cooking"];
+const state = {view:"discover", returnView:"discover", libraryTab:"favorites", query:"", time:"all", category:"all", ingredient:"all", activeRecipe:null, activeInboxId:null, pendingCollection:null, appVersion:"unknown", updatePoll:null, searchTimer:null, resizeTimer:null, navStack:["discover"], viewScroll:{}, ignorePopCount:0, editorStep:0, editorReturnView:"library", editorDraftKey:"", editorDraftTimer:null, editorDraftPaused:false, editorDirty:false, detailPanel:"overview", targetServings:1, pages:{discover:1,favorites:1,recent:1,personal:1,inbox:1}, cooking:{ref:null,index:0,completed:new Set(),remaining:0,running:false,deadline:0,tick:null}};
 
 const els = {
   views:[...document.querySelectorAll(".page-view")], nav:[...document.querySelectorAll("[data-view-target]")],
@@ -38,13 +39,15 @@ const els = {
   favoritesGrid:document.querySelector("#favorites-grid"), favoritesEmpty:document.querySelector("#favorites-empty"),
   recentGrid:document.querySelector("#recent-grid"), recentEmpty:document.querySelector("#recent-empty"),
   personalGrid:document.querySelector("#personal-grid"), personalEmpty:document.querySelector("#personal-empty"), personalCount:document.querySelector("#personal-count"),
-  pagers:{discover:document.querySelector("#discover-pagination"),favorites:document.querySelector("#favorites-pagination"),recent:document.querySelector("#recent-pagination"),personal:document.querySelector("#personal-pagination")},
+  inboxGrid:document.querySelector("#inbox-grid"), inboxEmpty:document.querySelector("#inbox-empty"), inboxCount:document.querySelector("#inbox-count"),
+  pagers:{discover:document.querySelector("#discover-pagination"),favorites:document.querySelector("#favorites-pagination"),recent:document.querySelector("#recent-pagination"),personal:document.querySelector("#personal-pagination"),inbox:document.querySelector("#inbox-pagination")},
   recipeContent:document.querySelector("#recipe-page-content"),
   editorForm:document.querySelector("#editor-form"), editorStatus:document.querySelector("#editor-status"), editorDraftStatus:document.querySelector("#editor-draft-status"), editorDraftBanner:document.querySelector("#editor-draft-banner"),
   importForm:document.querySelector("#import-form"), importFile:document.querySelector("#recipe-file"), importJson:document.querySelector("#recipe-json"), importStatus:document.querySelector("#import-status"),
   dataStatus:document.querySelector("#data-status"), updateStatus:document.querySelector("#update-status"), currentVersion:document.querySelector("#current-version"), updateCurrentVersion:document.querySelector("#update-current-version"), updateBadge:document.querySelector("#update-badge"),
   updateVersion:document.querySelector("#update-version"), updateMessage:document.querySelector("#update-message"), releaseNotes:document.querySelector("#release-notes"),
-  updateProgress:document.querySelector("#update-progress"), cancelUpdate:document.querySelector("#cancel-update"), retryUpdate:document.querySelector("#retry-update"), installUpdate:document.querySelector("#install-update"), downloadUpdate:document.querySelector("#download-update")
+  updateProgress:document.querySelector("#update-progress"), cancelUpdate:document.querySelector("#cancel-update"), retryUpdate:document.querySelector("#retry-update"), installUpdate:document.querySelector("#install-update"), downloadUpdate:document.querySelector("#download-update"),
+  collectForm:document.querySelector("#collect-form"), collectTitle:document.querySelector("#collect-title"), collectUrl:document.querySelector("#collect-url"), collectText:document.querySelector("#collect-text"), collectStatus:document.querySelector("#collect-status"), collectImages:document.querySelector("#collect-images"), collectShareState:document.querySelector("#collect-share-state"), collectShareSummary:document.querySelector("#collect-share-summary")
 };
 els.cookingContent=document.querySelector("#cooking-content");
 
@@ -96,6 +99,8 @@ function sanitizeAndPersist() {
   localStorage.setItem(Core.OVERRIDES_STORAGE_KEY, JSON.stringify(recipeOverrides));
   localStorage.setItem(Core.FAVORITES_STORAGE_KEY, JSON.stringify(favorites));
   localStorage.setItem(Core.RECENT_STORAGE_KEY, JSON.stringify(recent));
+  inbox=inbox.map(Core.normalizeInboxItem).filter(Boolean).slice(0,200);
+  localStorage.setItem(Core.INBOX_STORAGE_KEY,JSON.stringify(inbox));
 }
 
 function getDiscoverResults() {
@@ -119,6 +124,12 @@ function cardHtml(recipe, context = "default", match = null) {
     </div>
     <div class="card-body"><div class="card-meta"><span>⏱ ${recipe.time} 分钟</span><span>● ${escapeHtml(recipe.difficulty)}</span></div><h3>${escapeHtml(recipe.name)}</h3><div class="creator-line">${recipe.custom ? "本机保存" : "来自"} ${escapeHtml(recipe.source)}</div><p>${escapeHtml(recipe.description)}</p><div class="tag-row">${tags}</div></div>
   </article>`;
+}
+
+function inboxCardHtml(item) {
+  const parsed=Core.parseCollectedRecipe(item), status=item.status==="completed"?"已完成":item.issues?.length?"待确认":"待整理";
+  const preview=(item.ocrText||item.sharedText||"尚未添加配方文字").replace(/https?:\/\/\S+/g,"").trim().slice(0,120);
+  return `<article class="inbox-card"><div><span class="inbox-status ${item.status}">${status}</span><h3>${escapeHtml(item.title||parsed.name||"待整理菜谱")}</h3><p>${escapeHtml(preview)}</p>${item.sourceUrl?`<small>${escapeHtml(parsed.source)} · 已保存来源链接</small>`:"<small>本机收集</small>"}</div><div class="inbox-actions">${item.recipeRef?`<button type="button" data-action="open" data-ref="${escapeHtml(item.recipeRef)}">打开菜谱</button>`:`<button class="primary-action" type="button" data-action="collect-edit" data-ref="${escapeHtml(item.id)}">完善菜谱</button>`}<button class="text-button danger" type="button" data-action="collect-delete" data-ref="${escapeHtml(item.id)}">删除</button></div></article>`;
 }
 
 function renderDiscover() {
@@ -170,6 +181,15 @@ function renderLibrary() {
   els.personalGrid.hidden = customRecipes.length === 0;
   els.personalEmpty.hidden = customRecipes.length !== 0;
   els.personalCount.textContent = `${customRecipes.length} 份`;
+
+  const inboxPage=Core.paginate(inbox,state.pages.inbox,pageSize());state.pages.inbox=inboxPage.page;
+  els.inboxGrid.innerHTML=inboxPage.items.map(inboxCardHtml).join("");
+  renderPagination(els.pagers.inbox,inboxPage,"inbox");
+  els.inboxGrid.hidden=inbox.length===0;
+  els.inboxEmpty.hidden=inbox.length!==0;
+  els.inboxCount.textContent=String(inbox.filter(item=>item.status!=="completed").length);
+  document.querySelectorAll("[data-library-tab]").forEach(button=>button.classList.toggle("active",button.dataset.libraryTab===state.libraryTab));
+  document.querySelectorAll("[data-library-panel]").forEach(panel=>{const active=panel.dataset.libraryPanel===state.libraryTab;panel.hidden=!active;panel.classList.toggle("active",active);});
 }
 
 function renderAll() { renderDiscover(); renderLibrary(); }
@@ -177,6 +197,74 @@ function renderAll() { renderDiscover(); renderLibrary(); }
 function renderQuickPicks() {
   const picks = ["番茄","鸡蛋","下饭","快手","汤"];
   els.quick.innerHTML = picks.map(item => `<button type="button" data-query="${item}">${item}</button>`).join("");
+}
+
+function setCollectStatus(message="",type="") {
+  els.collectStatus.textContent=message;
+  els.collectStatus.className=`import-status${type?` ${type}`:""}`;
+}
+
+function openCollect(payload=null) {
+  state.activeInboxId=null;
+  state.pendingCollection=payload;
+  els.collectForm.reset();
+  els.collectImages.innerHTML="";
+  els.collectImages.hidden=true;
+  els.collectShareState.hidden=!payload;
+  els.collectShareSummary.textContent="";
+  setCollectStatus("");
+  if(payload){
+    els.collectTitle.value=payload.subject||"";
+    els.collectUrl.value=payload.sourceUrl||"";
+    els.collectText.value=[payload.sharedText,payload.ocrText].filter(Boolean).join("\n\n");
+    const images=Array.isArray(payload.images)?payload.images:[];
+    els.collectShareSummary.textContent=`${payload.sourceUrl?"视频链接 · ":""}${images.length?`${images.length} 张截图已完成本机识别`:"已收到分享文字"}`;
+    if(images.length){
+      els.collectImages.hidden=false;
+      els.collectImages.innerHTML=images.map((image,index)=>{let data="";try{data=window.YiCanAndroid?.getSharedImageData?.(image.token)||"";}catch(_){}return `<figure>${data?`<img src="${data}" alt="配方截图 ${index+1}">`:""}<figcaption>截图 ${index+1}${image.text?" · 已识别":" · 未识别"}</figcaption></figure>`;}).join("");
+    }
+    const errors=Array.isArray(payload.errors)?payload.errors.filter(Boolean):[];
+    setCollectStatus(errors.length?errors.join("；"):"已完成本机处理，请确认内容后保存",errors.length?"error":"success");
+  }
+  if(state.view!=="collect")navigateTo("collect");
+}
+
+function collectionFromForm() {
+  const raw={id:state.pendingCollection?.batchId?`inbox-${state.pendingCollection.batchId}`:`inbox-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,status:"pending",createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),title:els.collectTitle.value,subject:state.pendingCollection?.subject||els.collectTitle.value,sourceUrl:els.collectUrl.value,sharedText:els.collectText.value,ocrText:state.pendingCollection?.ocrText||"",imageTokens:(state.pendingCollection?.images||[]).map(image=>image.token),issues:[]};
+  const parsed=Core.parseCollectedRecipe(raw);
+  raw.title=raw.title.trim()||parsed.name;
+  raw.issues=parsed.issues;
+  raw.status=raw.issues.length?"review":"pending";
+  return Core.normalizeInboxItem(raw);
+}
+
+function saveCollection(improve=false) {
+  const item=collectionFromForm();
+  if(!item||(!item.sourceUrl&&!item.sharedText&&!item.ocrText)){setCollectStatus("请先粘贴链接、文案，或从视频/相册分享截图","error");return;}
+  const duplicateIndex=inbox.findIndex(value=>(item.sourceUrl&&value.sourceUrl===item.sourceUrl)||value.id===item.id);
+  if(duplicateIndex>=0){item.id=inbox[duplicateIndex].id;item.createdAt=inbox[duplicateIndex].createdAt;inbox.splice(duplicateIndex,1,item);}else inbox.unshift(item);
+  state.pages.inbox=1;
+  sanitizeAndPersist();
+  renderLibrary();
+  state.pendingCollection=null;
+  if(improve){openCollectedEditor(item.id);return;}
+  state.libraryTab="inbox";
+  navigateRoot("library");
+  renderLibrary();
+}
+
+function openCollectedEditor(id) {
+  const item=inbox.find(value=>value.id===id);if(!item)return;
+  const parsed=Core.parseCollectedRecipe(item);
+  state.activeInboxId=id;
+  openEditor({...parsed,id:Date.now(),custom:true,colors:["#8a5141","#d48250"]});
+  if(parsed.issues.length){els.editorStatus.textContent=`有 ${parsed.issues.length} 处文字需要重点复核`;els.editorStatus.className="import-status error";}
+}
+
+function deleteCollection(id) {
+  const item=inbox.find(value=>value.id===id);if(!item||!window.confirm(`确定删除“${item.title||"这条收集"}”吗？`))return;
+  inbox=inbox.filter(value=>value.id!==id);
+  sanitizeAndPersist();renderLibrary();
 }
 
 function viewScrollContainer(view = state.view) {
@@ -500,6 +588,7 @@ function finishEditorSave(ref) {
   clearTimeout(state.editorDraftTimer);
   state.editorDirty=false;
   state.activeRecipe=ref;
+  if(state.activeInboxId){const item=inbox.find(value=>value.id===state.activeInboxId);if(item){item.status="completed";item.recipeRef=ref;item.updatedAt=new Date().toISOString();}state.activeInboxId=null;}
   recent=Core.addRecent(recent,ref,validRefs());
   sanitizeAndPersist();
   renderAll();
@@ -578,11 +667,13 @@ function restoreRecipe(ref) {
 function handleAction(action, ref, button) {
   if (action === "open") openRecipe(ref);
   if (action === "favorite") toggleFavorite(ref);
-  if (action === "edit") openEditor(findRecipe(ref));
+  if (action === "edit") {state.activeInboxId=null;openEditor(findRecipe(ref));}
   if (action === "delete") deleteRecipe(ref);
   if (action === "restore") restoreRecipe(ref);
   if (action === "cook") openCooking(ref, 0);
   if (action === "cook-step") openCooking(ref, Number(button?.dataset.stepIndex || 0));
+  if (action === "collect-edit") openCollectedEditor(ref);
+  if (action === "collect-delete") deleteCollection(ref);
 }
 
 function openCooking(ref, stepIndex = 0) {
@@ -626,18 +717,19 @@ function changeCookingStep(delta){const recipe=findRecipe(state.cooking.ref);if(
 function handleCookingAction(action){const recipe=findRecipe(state.cooking.ref);if(!recipe)return;if(action==="close"){pauseCooking();goBackPage();return;}if(action==="prev")changeCookingStep(-1);if(action==="next")changeCookingStep(1);if(action==="complete"){state.cooking.completed.has(state.cooking.index)?state.cooking.completed.delete(state.cooking.index):state.cooking.completed.add(state.cooking.index);persistCookingTimer();renderCooking();}if(action==="reset"){pauseCooking();state.cooking.remaining=recipe.steps[state.cooking.index][2]||0;state.cooking.deadline=0;persistCookingTimer();renderCooking();}if(action==="add"){const current=state.cooking.running?Math.max(0,Math.ceil((state.cooking.deadline-Date.now())/1000)):Number(document.querySelector("#cooking-seconds")?.value||state.cooking.remaining||0);state.cooking.remaining=Math.min(14400,current+60);if(state.cooking.running){state.cooking.deadline=Date.now()+state.cooking.remaining*1000;window.YiCanAndroid?.startStepTimer?.(state.cooking.ref,state.cooking.index,state.cooking.remaining);}persistCookingTimer();renderCooking();}if(action==="toggle"){if(state.cooking.running){pauseCooking();renderCooking();}else{const seconds=Math.max(1,Math.min(14400,Number(document.querySelector("#cooking-seconds")?.value||state.cooking.remaining||recipe.steps[state.cooking.index][2]||300)));state.cooking.remaining=seconds;state.cooking.deadline=Date.now()+seconds*1000;state.cooking.running=true;persistCookingTimer();window.YiCanAndroid?.startStepTimer?.(state.cooking.ref,state.cooking.index,seconds);startCookingTick();renderCooking();}}}
 
 function importFromText(text) {
-  const result = Core.importFromText({customRecipes, recipeOverrides, favorites, recent}, text, builtInRefs);
+  const result = Core.importFromText({customRecipes, recipeOverrides, favorites, recent, inbox}, text, builtInRefs);
   customRecipes.splice(0, customRecipes.length, ...result.customRecipes);
   recipeOverrides.splice(0, recipeOverrides.length, ...(result.recipeOverrides || []));
   favorites = result.favorites;
   recent = result.recent;
+  inbox = result.inbox || inbox;
   sanitizeAndPersist();
   renderAll();
   return result;
 }
 
 function exportBackup() {
-  const backup = Core.createBackup(customRecipes, favorites, recent, undefined, state.appVersion, recipeOverrides);
+  const backup = Core.createBackup(customRecipes, favorites, recent, undefined, state.appVersion, recipeOverrides, inbox);
   const json = JSON.stringify(backup, null, 2);
   if (window.YiCanAndroid?.exportBackup) {
     window.YiCanAndroid.exportBackup(json);
@@ -692,6 +784,9 @@ window.YiCanNative = {
     if (downloading && !state.updatePoll) state.updatePoll = setInterval(pollUpdateState, 1000);
     if (!downloading && state.updatePoll) { clearInterval(state.updatePoll); state.updatePoll = null; }
   },
+  onSharedRecipe(result) {
+    openCollect(result || {});
+  },
   onNativeStatus(event) {
     if(event?.type!=="timer")return;
     const payload=event.payload||{};
@@ -737,6 +832,8 @@ document.addEventListener("click", event => {
   const servingAction=event.target.closest("[data-serving-action]");
   if(servingAction)updateServingControl(state.targetServings+(servingAction.dataset.servingAction==="plus"?.5:-.5));
   const mineButton=event.target.closest("[data-mine-target]");if(mineButton)switchView(mineButton.dataset.mineTarget);
+  const libraryTab=event.target.closest("[data-library-tab]");if(libraryTab){state.libraryTab=libraryTab.dataset.libraryTab;renderLibrary();viewScrollContainer("library")?.scrollTo({top:0,behavior:"smooth"});}
+  if(event.target.closest("[data-open-collect]"))openCollect();
   if(event.target.closest("[data-page-back]"))goBackPage();
   const pageButton=event.target.closest("[data-page-scope]");if(pageButton&&!pageButton.disabled){state.pages[pageButton.dataset.pageScope]=Number(pageButton.dataset.page);renderAll();const grid=document.querySelector(`#${pageButton.dataset.pageScope==='discover'?'recipe':pageButton.dataset.pageScope}-grid`);grid?.scrollIntoView({block:"start",behavior:"smooth"});}
   const cookButton=event.target.closest("[data-cook-action]");if(cookButton)handleCookingAction(cookButton.dataset.cookAction);
@@ -760,7 +857,7 @@ els.category.addEventListener("change",()=>{state.category=els.category.value;st
 els.ingredient.addEventListener("change",()=>{state.ingredient=els.ingredient.value;state.pages.discover=1;renderDiscover();});
 window.addEventListener("resize",()=>{clearTimeout(state.resizeTimer);state.resizeTimer=setTimeout(renderAll,120);});
 document.querySelector("#reset-button").addEventListener("click",()=>{state.query="";state.time="all";state.category="all";state.ingredient="all";state.pages.discover=1;els.input.value="";els.time.value="all";els.category.value="all";renderDiscover();});
-document.querySelector("#new-recipe").addEventListener("click",()=>openEditor(null));
+document.querySelector("#new-recipe").addEventListener("click",()=>{state.activeInboxId=null;openEditor(null);});
 document.querySelector("#add-ingredient").addEventListener("click",()=>{addIngredientRow();markEditorDirty();});
 document.querySelector("#add-step").addEventListener("click",()=>{addStepRow();markEditorDirty();});
 document.querySelector("#editor-prev").addEventListener("click",()=>advanceEditor(-1));
@@ -772,6 +869,8 @@ els.editorForm.addEventListener("input",markEditorDirty);
 els.editorForm.addEventListener("change",markEditorDirty);
 els.editorForm.addEventListener("submit",event=>{event.preventDefault();try{saveEditor();}catch(error){els.editorStatus.textContent=error.message||"无法保存菜谱";els.editorStatus.className="import-status error";}});
 document.querySelector("#clear-recent").addEventListener("click",()=>{if(!recent.length||!window.confirm("确定清空最近浏览吗？"))return;recent=[];state.pages.recent=1;sanitizeAndPersist();renderLibrary();});
+document.querySelector("#collect-save").addEventListener("click",()=>saveCollection(false));
+els.collectForm.addEventListener("submit",event=>{event.preventDefault();saveCollection(true);});
 document.querySelector("#open-import").addEventListener("click",()=>{els.importForm.reset();setImportStatus("");navigateTo("import");});
 els.importFile.addEventListener("change",async()=>{const file=els.importFile.files?.[0];if(!file)return;if(file.size>5*1024*1024){setImportStatus("文件不能超过 5 MB","error");return;}try{els.importJson.value=await file.text();setImportStatus(`已读取 ${file.name}，请确认导入`,"success");}catch(_){setImportStatus("无法读取这个文件","error");}});
 els.importForm.addEventListener("submit",event=>{event.preventDefault();try{const result=importFromText(els.importJson.value);const message=`成功加入 ${result.added} 份菜谱${result.overridesAdded?`，恢复 ${result.overridesAdded} 份内置菜谱修改`:""}${result.skipped?`，跳过 ${result.skipped} 份重复菜谱`:""}`;setImportStatus(message,"success");setGlobalStatus(message,"success");setTimeout(goBackPage,700);}catch(error){setImportStatus(error.message||"导入失败","error");}});
@@ -789,6 +888,7 @@ window.recipeApp = {
   searchByIngredients(ingredients){return this.search(Array.isArray(ingredients)?ingredients.join(" "):ingredients||"");},
   openRecipe,
   importRecipes(data){return importFromText(typeof data==="string"?data:JSON.stringify(data));},
+  collect(data){openCollect(data||null);return "handled";},
   handleBack(){if(state.navStack.length>1){goBackPage();return "handled";}if(state.view!=="discover"){navigateRoot("discover");return "handled";}return "none";}
 };
 
@@ -797,7 +897,8 @@ renderQuickPicks();
 renderAll();
 initializeAppInfo();
 registerRecipeTools();
-const initialView=ROOT_VIEWS.includes(location.hash.slice(1))?location.hash.slice(1):"discover";
+const requestedInitialView=location.hash.slice(1)==="favorites"?"library":location.hash.slice(1);
+const initialView=ROOT_VIEWS.includes(requestedInitialView)?requestedInitialView:"discover";
 state.navStack=[initialView];
 history.replaceState({view:initialView},"",`#${initialView}`);
 applyView(initialView);

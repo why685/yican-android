@@ -294,6 +294,72 @@ body { padding-bottom: calc(82px + env(safe-area-inset-bottom)); }
   footer { padding: 26px 18px 34px; flex-direction: column; gap: 6px; }
 }
 
+/* Recipe library and quick collection */
+.library-heading { display:flex; align-items:end; justify-content:space-between; gap:18px; }
+.library-heading h1 { margin-bottom:4px; }
+.library-tabs { position:sticky; top:0; z-index:4; display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:18px; padding:5px; border:1px solid var(--line); border-radius:15px; background:rgba(255,253,249,.96); backdrop-filter:blur(14px); }
+.library-tabs button { border:0; padding:10px 8px; border-radius:11px; color:var(--muted); background:transparent; font-weight:800; }
+.library-tabs button.active { color:#fff; background:var(--red); }
+.library-tabs b { display:inline-grid; min-width:18px; height:18px; place-items:center; margin-left:3px; border-radius:9px; color:var(--red); background:#fff; font-size:.68rem; }
+.library-panel-head { display:flex; justify-content:space-between; align-items:center; gap:12px; margin:0 0 14px; color:var(--muted); }
+.inbox-grid { display:grid; gap:12px; }
+.inbox-card { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:18px 20px; border:1px solid var(--line); border-radius:18px; background:var(--surface); box-shadow:0 10px 30px rgba(70,38,20,.06); }
+.inbox-card h3 { margin:7px 0 5px; font:700 1.2rem/1.2 "Songti SC","STSong",serif; }
+.inbox-card p { max-width:720px; margin:0 0 6px; color:var(--muted); line-height:1.5; }
+.inbox-card small { color:var(--red); }
+.inbox-status { display:inline-block; padding:4px 8px; border-radius:999px; color:#8a531b; background:#fff0cc; font-size:.72rem; font-weight:800; }
+.inbox-status.completed { color:#2f6547; background:#e6f3e9; }
+.inbox-status.review { color:#a22f26; background:#fde7e2; }
+.inbox-actions { display:flex; flex:0 0 auto; gap:8px; }
+.inbox-actions button { padding:9px 12px; border:1px solid var(--line); border-radius:10px; }
+.quick-collect-fab { position:fixed; z-index:21; right:max(18px,env(safe-area-inset-right)); bottom:max(22px,env(safe-area-inset-bottom)); padding:12px 17px; border:0; border-radius:999px; color:#fff; background:var(--orange); box-shadow:0 12px 32px rgba(136,68,25,.28); font-weight:900; }
+.secondary-page .quick-collect-fab, .cooking-page-open .quick-collect-fab { display:none; }
+.collect-form { display:grid; gap:15px; }
+.collect-form > label { display:grid; gap:6px; font-weight:800; }
+.collect-form input, .collect-form textarea { width:100%; padding:12px 13px; border:1px solid var(--line); border-radius:11px; background:#fffdf9; }
+.collect-share-state { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 14px; border-radius:12px; color:#315f47; background:#e8f4eb; }
+.collect-share-state span { color:#527062; font-size:.85rem; }
+.collect-images { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; }
+.collect-images figure { margin:0; overflow:hidden; border:1px solid var(--line); border-radius:12px; background:#f7f2eb; }
+.collect-images img { display:block; width:100%; height:140px; object-fit:cover; }
+.collect-images figcaption { padding:8px 10px; color:var(--muted); font-size:.75rem; }
+.collect-actions { display:flex; justify-content:flex-end; gap:10px; }
+.collect-actions button { padding:12px 18px; border:1px solid var(--line); border-radius:12px; font-weight:800; }
+.info-page { width:min(760px,100%); margin:0 auto; padding:24px; border:1px solid var(--line); border-radius:18px; background:var(--surface); }
+.info-page h2 { margin:20px 0 7px; font-family:"Songti SC","STSong",serif; }
+.info-page h2:first-child { margin-top:0; }
+.info-page p { color:var(--muted); line-height:1.75; }
+
+@media (min-width: 900px) {
+  .quick-collect-fab { right:calc((100vw - 1184px)/2); bottom:22px; }
+}
+
+@media (max-width: 620px) {
+  .library-heading { align-items:center; padding:18px 0 14px; }
+  .library-heading h1 { font-size:1.75rem; }
+  .library-heading p { display:none; }
+  .library-heading .primary-action { padding:9px 11px; font-size:.78rem; }
+  .library-tabs { margin-bottom:10px; gap:3px; padding:4px; }
+  .library-tabs button { padding:8px 3px; font-size:.76rem; }
+  .library-tabs b { min-width:15px; height:15px; font-size:.58rem; }
+  .library-panel-head { margin-bottom:9px; font-size:.75rem; }
+  .inbox-grid { gap:8px; }
+  .inbox-card { display:grid; gap:12px; padding:13px; border-radius:14px; }
+  .inbox-card h3 { font-size:1.05rem; }
+  .inbox-card p { display:-webkit-box; overflow:hidden; -webkit-line-clamp:2; -webkit-box-orient:vertical; font-size:.78rem; }
+  .inbox-actions { justify-content:flex-end; }
+  .quick-collect-fab { right:14px; bottom:calc(64px + env(safe-area-inset-bottom)); padding:10px 13px; font-size:.78rem; }
+  .collect-view .section-shell { padding-bottom:20px; }
+  .collect-form { padding:14px; gap:11px; }
+  .collect-form textarea { min-height:160px; }
+  .collect-share-state { align-items:flex-start; flex-direction:column; gap:3px; }
+  .collect-images { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .collect-images img { height:110px; }
+  .collect-actions { position:sticky; bottom:0; padding-top:10px; background:linear-gradient(transparent,#fbf7f0 28%); }
+  .collect-actions button { flex:1; padding:11px 8px; }
+  .info-page { padding:17px; }
+}
+
 /* Confirmed page architecture and interaction design */
 .mobile-title { display: none; }
 .search-form { grid-template-columns: 28px minmax(0,1fr) auto auto; }
@@ -648,6 +714,7 @@ body { padding-bottom: calc(82px + env(safe-area-inset-bottom)); }
 
 /* Final mobile overrides: keep every phone list at two columns. */
 @media (max-width: 620px) {
+  .library-heading > .primary-action { display: none; }
   #view-discover .search-form { grid-template-columns: 18px minmax(0,1fr) 28px; }
   #view-discover .search-form button[type="submit"] { display: none; }
   #view-discover .search-form .search-clear { display: grid; width: 28px; height: 28px; padding: 0; }

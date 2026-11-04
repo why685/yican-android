@@ -61,12 +61,31 @@
         </section>
       </section>
 
-      <section class="page-view library-view" id="view-favorites" data-view="favorites" hidden>
+      <section class="page-view library-view" id="view-library" data-view="library" hidden>
         <div class="section-shell">
-          <div class="page-heading"><p class="eyebrow">随时再做</p><h1>我的收藏</h1><p>把喜欢的味道留在手边。</p></div>
-          <div id="favorites-grid" class="recipe-grid"></div>
-          <div id="favorites-pagination" class="pagination" aria-label="收藏分页"></div>
-          <div id="favorites-empty" class="empty-state" hidden><span aria-hidden="true">♡</span><h3>还没有收藏</h3><p>打开任意菜谱，点一下收藏即可。</p><button type="button" data-go="discover">去发现菜谱</button></div>
+          <div class="page-heading library-heading"><div><p class="eyebrow">都在这里</p><h1>菜谱库</h1><p>收藏、最近、自建和临时收集集中管理。</p></div><button class="primary-action" data-open-collect type="button">＋ 快速收集</button></div>
+          <div class="library-tabs" role="tablist" aria-label="菜谱库分类">
+            <button class="active" type="button" data-library-tab="favorites">收藏</button>
+            <button type="button" data-library-tab="recent">最近</button>
+            <button type="button" data-library-tab="personal">自建</button>
+            <button type="button" data-library-tab="inbox">收集箱 <b id="inbox-count">0</b></button>
+          </div>
+          <section class="library-panel active" data-library-panel="favorites">
+            <div id="favorites-grid" class="recipe-grid"></div><div id="favorites-pagination" class="pagination" aria-label="收藏分页"></div>
+            <div id="favorites-empty" class="empty-state" hidden><span aria-hidden="true">♡</span><h3>还没有收藏</h3><p>打开任意菜谱，点一下收藏即可。</p><button type="button" data-go="discover">去发现菜谱</button></div>
+          </section>
+          <section class="library-panel" data-library-panel="recent" hidden>
+            <div class="library-panel-head"><span>最多保留 20 条</span><button class="text-button" id="clear-recent" type="button">清空</button></div>
+            <div id="recent-grid" class="recipe-grid compact-grid"></div><div id="recent-pagination" class="pagination"></div><p id="recent-empty" class="inline-empty" hidden>打开过的菜谱会出现在这里。</p>
+          </section>
+          <section class="library-panel" data-library-panel="personal" hidden>
+            <div class="library-panel-head"><span id="personal-count">0 份</span><button class="primary-action" id="new-recipe" type="button">＋ 新建菜谱</button></div>
+            <div id="personal-grid" class="recipe-grid"></div><div id="personal-pagination" class="pagination"></div><p id="personal-empty" class="inline-empty" hidden>还没有自建菜谱，可以新建或从收集箱完善。</p>
+          </section>
+          <section class="library-panel" data-library-panel="inbox" hidden>
+            <div class="library-panel-head"><span>视频链接、文案和截图识别结果</span><button class="primary-action" data-open-collect type="button">＋ 快速收集</button></div>
+            <div id="inbox-grid" class="inbox-grid"></div><div id="inbox-pagination" class="pagination"></div><p id="inbox-empty" class="inline-empty" hidden>还没有待整理内容，可以从视频或相册分享至一餐。</p>
+          </section>
         </div>
       </section>
 
@@ -74,25 +93,17 @@
         <div class="section-shell">
           <div class="page-heading mine-heading"><div><p class="eyebrow">本机菜谱本</p><h1>我的</h1><p>选择一项进入，首页不再堆叠长列表。</p></div></div>
           <div id="mine-dashboard" class="mine-dashboard">
-            <button type="button" data-mine-target="personal"><span>🍳</span><strong>个人菜谱</strong><small id="personal-count">0 份</small></button>
-            <button type="button" data-mine-target="recent"><span>◷</span><strong>最近浏览</strong><small>最多 20 条</small></button>
             <button type="button" data-mine-target="data"><span>⇅</span><strong>数据管理</strong><small>备份与恢复</small></button>
             <button type="button" data-mine-target="update"><span>↻</span><strong>应用更新</strong><small id="update-badge">当前 <b id="current-version">1.8.0</b></small></button>
+            <button type="button" data-mine-target="help"><span>?</span><strong>使用说明</strong><small>搜索、收集与烹饪</small></button>
+            <button type="button" data-mine-target="about"><span>一</span><strong>关于一餐</strong><small>离线与隐私说明</small></button>
           </div>
 
         </div>
       </section>
 
-      <section class="page-view library-view secondary-view" id="view-personal" data-view="personal" hidden>
-        <div class="section-shell"><div class="subhead page-subhead"><button class="text-button" data-page-back type="button">← 返回我的</button><h1 id="personal-title">个人菜谱</h1><button class="primary-action" id="new-recipe" type="button">＋ 新建</button></div><div id="personal-grid" class="recipe-grid"></div><div id="personal-pagination" class="pagination"></div><p id="personal-empty" class="inline-empty" hidden>还没有个人菜谱，可以新建或导入一份。</p></div>
-      </section>
-
-      <section class="page-view library-view secondary-view" id="view-recent" data-view="recent" hidden>
-        <div class="section-shell"><div class="subhead page-subhead"><button class="text-button" data-page-back type="button">← 返回我的</button><h1 id="recent-title">最近浏览</h1><button class="text-button" id="clear-recent" type="button">清空</button></div><div id="recent-grid" class="recipe-grid compact-grid"></div><div id="recent-pagination" class="pagination"></div><p id="recent-empty" class="inline-empty" hidden>打开过的菜谱会出现在这里。</p></div>
-      </section>
-
       <section class="page-view library-view secondary-view" id="view-data" data-view="data" hidden>
-        <div class="section-shell"><div class="subhead page-subhead"><button class="text-button" data-page-back type="button">← 返回我的</button><h1>数据管理</h1><span></span></div><div class="data-actions"><button id="open-import" type="button"><strong>导入与恢复</strong><span>传统 JSON 或完整备份</span></button><button id="export-backup" type="button"><strong>导出完整备份</strong><span>菜谱、收藏和最近浏览</span></button></div><p id="data-status" class="global-status" role="status" aria-live="polite"></p></div>
+        <div class="section-shell"><div class="subhead page-subhead"><button class="text-button" data-page-back type="button">← 返回我的</button><h1>数据管理</h1><span></span></div><div class="data-actions"><button id="open-import" type="button"><strong>导入与恢复</strong><span>传统 JSON 或完整备份</span></button><button id="export-backup" type="button"><strong>导出完整备份</strong><span>菜谱、收藏、最近浏览和收集箱</span></button></div><p id="data-status" class="global-status" role="status" aria-live="polite"></p></div>
       </section>
 
       <section class="page-view library-view secondary-view import-view" id="view-import" data-view="import" hidden>
@@ -104,11 +115,34 @@
             <div class="import-divider"><span>或者粘贴 JSON</span></div>
             <label for="recipe-json">菜谱数据</label>
             <textarea id="recipe-json" rows="9" spellcheck="false" placeholder='例如：{"name":"青椒炒蛋","ingredients":["青椒","鸡蛋"],"steps":["处理食材","炒熟调味"]}'></textarea>
-            <details><summary>查看数据格式说明</summary><p>传统菜谱必填 name、ingredients、steps；完整备份还包含收藏和最近浏览。</p></details>
+            <details><summary>查看数据格式说明</summary><p>传统菜谱必填 name、ingredients、steps；完整备份还包含收藏、最近浏览和收集箱。</p></details>
             <p id="import-status" class="import-status" role="status" aria-live="polite"></p>
             <div class="page-actions"><button class="import-submit" type="submit">确认导入</button></div>
           </form>
         </div>
+      </section>
+
+      <section class="page-view library-view secondary-view collect-view" id="view-collect" data-view="collect" hidden>
+        <div class="section-shell"><div class="subhead page-subhead"><button class="text-button" data-page-back type="button">← 返回</button><h1>快速收集菜谱</h1><span></span></div>
+          <form id="collect-form" class="page-form collect-form">
+            <p class="import-intro">从视频应用或相册使用“分享至一餐”最方便；也可以在这里粘贴链接和配方文案。</p>
+            <div id="collect-share-state" class="collect-share-state" hidden><strong>已收到分享内容</strong><span id="collect-share-summary"></span></div>
+            <label>菜名或视频标题<input id="collect-title" maxlength="120" placeholder="例如：红烧肘子" /></label>
+            <label>视频链接<input id="collect-url" type="url" maxlength="1000" placeholder="https://www.bilibili.com/video/..." /></label>
+            <label>配方文案或识别文字<textarea id="collect-text" rows="10" maxlength="30000" placeholder="可以粘贴食材、用量、步骤和 Tips"></textarea></label>
+            <div id="collect-images" class="collect-images" hidden></div>
+            <p id="collect-status" class="import-status" role="status" aria-live="polite"></p>
+            <div class="collect-actions"><button type="button" id="collect-save">先存入收集箱</button><button class="primary-action" type="submit">识别并完善</button></div>
+          </form>
+        </div>
+      </section>
+
+      <section class="page-view library-view secondary-view" id="view-help" data-view="help" hidden>
+        <div class="section-shell"><div class="subhead page-subhead"><button class="text-button" data-page-back type="button">← 返回我的</button><h1>使用说明</h1><span></span></div><div class="info-page"><h2>快速收集</h2><p>在视频或相册中点“分享”，选择“一餐”，即可接收链接、文案或最多 6 张配方截图。截图文字只在本机识别。</p><h2>菜谱库</h2><p>收藏、最近、自建菜谱和待整理内容分别保存在菜谱库的四个标签中。</p><h2>编辑与烹饪</h2><p>识别结果会先进入现有三步编辑器，确认食材和步骤后再保存为正式菜谱。</p></div></div>
+      </section>
+
+      <section class="page-view library-view secondary-view" id="view-about" data-view="about" hidden>
+        <div class="section-shell"><div class="subhead page-subhead"><button class="text-button" data-page-back type="button">← 返回我的</button><h1>关于一餐</h1><span></span></div><div class="info-page"><h2>离线优先</h2><p>菜谱、收藏、历史和收集箱默认只保存在本机，不需要账号、云同步或统计服务。</p><h2>隐私</h2><p>分享的截图使用内置中文识别模型在设备上处理；一餐不会下载整段视频，也不会自动读取剪贴板。</p><h2>开源仓库</h2><p><a href="https://github.com/why685/yican-android" target="_blank" rel="noopener">why685/yican-android</a></p></div></div>
       </section>
 
       <section class="page-view library-view secondary-view" id="view-update" data-view="update" hidden>
@@ -175,9 +209,10 @@
 
     <nav class="bottom-nav" aria-label="主要页面">
       <button class="active" type="button" data-view-target="discover" aria-current="page"><span aria-hidden="true">⌕</span><b>发现</b></button>
-      <button type="button" data-view-target="favorites"><span aria-hidden="true">♡</span><b>收藏</b></button>
+      <button type="button" data-view-target="library"><span aria-hidden="true">▤</span><b>菜谱库</b></button>
       <button type="button" data-view-target="mine"><span aria-hidden="true">人</span><b>我的</b></button>
     </nav>
+    <button class="quick-collect-fab" data-open-collect type="button">＋ 快速收集</button>
 
     <script src="./app-core.js"></script>
     <script src="./recipes-suipo.js"></script>
