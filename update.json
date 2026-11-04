@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "versionCode": 13,
-  "versionName": "1.7.0",
-  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.7.0/YiCan-1.7.0.apk",
+  "versionCode": 14,
+  "versionName": "1.8.0",
+  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.8.0/YiCan-1.8.0.apk",
   "apkUrls": [
-    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.7.0/YiCan-1.7.0.apk",
-    "https://github.com/why685/yican-android/releases/download/v1.7.0/YiCan-1.7.0.apk"
+    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.8.0/YiCan-1.8.0.apk",
+    "https://github.com/why685/yican-android/releases/download/v1.8.0/YiCan-1.8.0.apk"
   ],
-  "sha256": "3f9f7a4fb82c23bdb6c85ad3e5ad19f3e68c43c8b8b6ba82c3b6777b1ad366d0",
-  "releaseNotes": "详情页改为紧凑固定布局并增加份数换算；编辑器迁移到独立三步页面，支持行复制排序、计时与视频时间点编辑，以及 500 毫秒自动草稿恢复。"
+  "sha256": "a6ae791bbb3d68d72691709f394f61fa5c092eff0fea5532ae30e161fc59b546",
+  "releaseNotes": "手机发现页改为紧凑两列布局；功能进入独立页面并按层级返回；更新流程改为页内展示；全屏烹饪保存已完成步骤。"
 }
