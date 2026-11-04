@@ -142,7 +142,8 @@ test("backup round-trip preserves local edits to built-in recipes", () => {
 
 test("timer state rejects damage and calculates remaining time", () => {
   assert.equal(core.normalizeTimerState({recipeRef:"bad", stepIndex:0, durationSeconds:10, deadline:2000}, 1000), null);
-  assert.deepEqual(core.normalizeTimerState({recipeRef:"custom:10", stepIndex:2, durationSeconds:90, deadline:5000}, 1000), {recipeRef:"custom:10", stepIndex:2, durationSeconds:90, deadline:5000, remainingSeconds:4});
+  assert.deepEqual(core.normalizeTimerState({recipeRef:"custom:10", stepIndex:2, durationSeconds:90, deadline:5000}, 1000), {recipeRef:"custom:10", stepIndex:2, durationSeconds:90, deadline:5000, remainingSeconds:4, completedSteps:[]});
+  assert.deepEqual(core.normalizeTimerState({recipeRef:"custom:10", stepIndex:2, durationSeconds:90, deadline:5000, completedSteps:[2,"1",2,-1,"bad"]}, 1000).completedSteps, [1,2]);
 });
 
 test("normalizes base servings and keeps it through backup restore", () => {

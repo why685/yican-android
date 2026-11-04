@@ -275,7 +275,9 @@
     if (!/^(builtin|custom):\d+$/.test(recipeRef) || !Number.isInteger(stepIndex) || stepIndex < 0
       || !Number.isInteger(durationSeconds) || durationSeconds < 1 || durationSeconds > 14400
       || !Number.isFinite(deadline) || deadline <= 0) return null;
-    return {recipeRef, stepIndex, durationSeconds, deadline, remainingSeconds:Math.max(0, Math.ceil((deadline - now) / 1000))};
+    const completedSteps=[...new Set((Array.isArray(raw.completedSteps)?raw.completedSteps:[])
+      .map(value=>Number.parseInt(value,10)).filter(value=>Number.isInteger(value)&&value>=0))].sort((a,b)=>a-b);
+    return {recipeRef, stepIndex, durationSeconds, deadline, remainingSeconds:Math.max(0, Math.ceil((deadline - now) / 1000)), completedSteps};
   }
 
   function recipeRef(recipe) {

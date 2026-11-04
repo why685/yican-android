@@ -23,7 +23,7 @@
         <section class="search-stage" aria-labelledby="page-title">
           <div class="search-copy">
             <p class="eyebrow">今天吃什么？</p>
-            <h1 id="page-title">把冰箱里的食材，<br />变成今晚的一餐。</h1>
+            <h1 id="page-title"><span class="desktop-title">把冰箱里的食材，<br />变成今晚的一餐。</span><span class="mobile-title">发现菜谱</span></h1>
             <p class="intro">一个关键词，同时查找菜名、食材、口味和做法。</p>
             <div class="source-note">
               <span>菜谱来源</span>
@@ -36,6 +36,7 @@
                 <label class="sr-only" for="search-input">关键词搜索</label>
                 <span class="search-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg></span>
                 <input id="search-input" autocomplete="off" placeholder="搜索菜名、食材、口味或做法" />
+                <button class="search-clear" id="search-clear" type="button" aria-label="清除搜索" hidden>×</button>
                 <button type="submit">开始找菜</button>
               </form>
               <div id="quick-picks" class="quick-picks" aria-label="热门搜索"></div>
@@ -76,7 +77,7 @@
             <button type="button" data-mine-target="personal"><span>🍳</span><strong>个人菜谱</strong><small id="personal-count">0 份</small></button>
             <button type="button" data-mine-target="recent"><span>◷</span><strong>最近浏览</strong><small>最多 20 条</small></button>
             <button type="button" data-mine-target="data"><span>⇅</span><strong>数据管理</strong><small>备份与恢复</small></button>
-            <button type="button" data-mine-target="update"><span>↻</span><strong>应用更新</strong><small>当前 <b id="current-version">1.7.0</b></small></button>
+            <button type="button" data-mine-target="update"><span>↻</span><strong>应用更新</strong><small id="update-badge">当前 <b id="current-version">1.7.0</b></small></button>
           </div>
 
         </div>
@@ -94,8 +95,33 @@
         <div class="section-shell"><div class="subhead page-subhead"><button class="text-button" data-page-back type="button">← 返回我的</button><h1>数据管理</h1><span></span></div><div class="data-actions"><button id="open-import" type="button"><strong>导入与恢复</strong><span>传统 JSON 或完整备份</span></button><button id="export-backup" type="button"><strong>导出完整备份</strong><span>菜谱、收藏和最近浏览</span></button></div><p id="data-status" class="global-status" role="status" aria-live="polite"></p></div>
       </section>
 
+      <section class="page-view library-view secondary-view import-view" id="view-import" data-view="import" hidden>
+        <div class="section-shell"><div class="subhead page-subhead"><button class="text-button" data-page-back type="button">← 返回数据管理</button><h1>导入与恢复</h1><span></span></div>
+          <form id="import-form" class="import-form page-form">
+            <p class="import-intro">选择传统菜谱 JSON 或一餐完整备份。恢复采用合并去重，不会覆盖现有内容。</p>
+            <label class="file-picker" for="recipe-file"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m-4 4 4-4 4 4M5 14v5h14v-5"/></svg><span><strong>选择 JSON 文件</strong><small>最大 5 MB</small></span></label>
+            <input class="sr-only" id="recipe-file" type="file" accept="application/json,.json" />
+            <div class="import-divider"><span>或者粘贴 JSON</span></div>
+            <label for="recipe-json">菜谱数据</label>
+            <textarea id="recipe-json" rows="9" spellcheck="false" placeholder='例如：{"name":"青椒炒蛋","ingredients":["青椒","鸡蛋"],"steps":["处理食材","炒熟调味"]}'></textarea>
+            <details><summary>查看数据格式说明</summary><p>传统菜谱必填 name、ingredients、steps；完整备份还包含收藏和最近浏览。</p></details>
+            <p id="import-status" class="import-status" role="status" aria-live="polite"></p>
+            <div class="page-actions"><button class="import-submit" type="submit">确认导入</button></div>
+          </form>
+        </div>
+      </section>
+
       <section class="page-view library-view secondary-view" id="view-update" data-view="update" hidden>
-        <div class="section-shell"><div class="subhead page-subhead"><button class="text-button" data-page-back type="button">← 返回我的</button><h1 id="update-title">应用更新</h1><span></span></div><div class="dashboard-card update-card"><div><p id="update-status" role="status">每天自动检查一次，也可以随时手动检查。</p></div><button class="secondary-action" id="check-update" type="button">检查更新</button></div></div>
+        <div class="section-shell"><div class="subhead page-subhead"><button class="text-button" data-page-back type="button">← 返回我的</button><h1 id="update-title">应用更新</h1><span></span></div>
+          <div class="update-page-card">
+            <div class="update-page-head"><div><p class="eyebrow">当前状态</p><h2 id="update-version">一餐 <span id="update-current-version">1.7.0</span></h2></div><button class="secondary-action" id="check-update" type="button">检查更新</button></div>
+            <p id="update-status" role="status">每天自动检查一次，也可以随时手动检查。</p>
+            <p id="update-message" class="update-message"></p>
+            <progress id="update-progress" max="100" value="0" hidden></progress>
+            <div id="release-notes" class="release-notes" hidden></div>
+            <div class="update-actions"><button id="cancel-update" type="button" hidden>取消下载</button><button class="primary-action" id="retry-update" type="button" hidden>重新下载</button><button class="primary-action" id="install-update" type="button" hidden>继续安装</button><button class="primary-action" id="download-update" type="button" hidden>下载并更新</button></div>
+          </div>
+        </div>
       </section>
 
       <section class="page-view library-view detail-view" id="view-recipe" data-view="recipe" hidden>
@@ -141,6 +167,10 @@
           </form>
         </div>
       </section>
+
+      <section class="page-view cooking-view" id="view-cooking" data-view="cooking" hidden>
+        <div id="cooking-content" class="cooking-content"></div>
+      </section>
     </main>
 
     <nav class="bottom-nav" aria-label="主要页面">
@@ -148,31 +178,6 @@
       <button type="button" data-view-target="favorites"><span aria-hidden="true">♡</span><b>收藏</b></button>
       <button type="button" data-view-target="mine"><span aria-hidden="true">人</span><b>我的</b></button>
     </nav>
-
-    <dialog id="cooking-dialog" class="cooking-dialog">
-      <div id="cooking-content" class="cooking-content"></div>
-    </dialog>
-
-    <dialog id="import-dialog" class="recipe-dialog import-dialog">
-      <button class="dialog-close light" data-close="import-dialog" aria-label="关闭导入窗口"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
-      <form id="import-form" class="import-form">
-        <p class="eyebrow">添加到我的菜谱</p><h2>导入与恢复</h2>
-        <p class="import-intro">选择传统菜谱 JSON 或一餐完整备份。恢复采用合并去重，不会覆盖现有内容。</p>
-        <label class="file-picker" for="recipe-file"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m-4 4 4-4 4 4M5 14v5h14v-5"/></svg><span><strong>选择 JSON 文件</strong><small>最大 5 MB</small></span></label>
-        <input class="sr-only" id="recipe-file" type="file" accept="application/json,.json" />
-        <div class="import-divider"><span>或者粘贴 JSON</span></div>
-        <label for="recipe-json">菜谱数据</label>
-        <textarea id="recipe-json" rows="9" spellcheck="false" placeholder='例如：{"name":"青椒炒蛋","ingredients":["青椒","鸡蛋"],"steps":["处理食材","炒熟调味"]}'></textarea>
-        <details><summary>查看数据格式说明</summary><p>传统菜谱必填 name、ingredients、steps；完整备份还包含收藏和最近浏览。</p></details>
-        <p id="import-status" class="import-status" role="status" aria-live="polite"></p>
-        <button class="import-submit" type="submit">确认导入</button>
-      </form>
-    </dialog>
-
-    <dialog id="update-dialog" class="recipe-dialog update-dialog">
-      <button class="dialog-close light" data-close="update-dialog" aria-label="关闭更新窗口"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
-      <div class="update-content"><p class="eyebrow">应用更新</p><h2 id="update-version">一餐新版</h2><p id="update-message"></p><progress id="update-progress" max="100" value="0" hidden></progress><div id="release-notes" class="release-notes"></div><div class="dialog-actions"><button type="button" data-close="update-dialog">稍后</button><button id="cancel-update" type="button" hidden>取消下载</button><button class="primary-action" id="retry-update" type="button" hidden>重新下载</button><button class="primary-action" id="install-update" type="button" hidden>继续安装</button><button class="primary-action" id="download-update" type="button">下载并更新</button></div></div>
-    </dialog>
 
     <script src="./app-core.js"></script>
     <script src="./recipes-suipo.js"></script>
