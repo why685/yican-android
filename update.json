@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "versionCode": 14,
-  "versionName": "1.8.0",
-  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.8.0/YiCan-1.8.0.apk",
+  "versionCode": 15,
+  "versionName": "1.9.0",
+  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.9.0/YiCan-1.9.0.apk",
   "apkUrls": [
-    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.8.0/YiCan-1.8.0.apk",
-    "https://github.com/why685/yican-android/releases/download/v1.8.0/YiCan-1.8.0.apk"
+    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.9.0/YiCan-1.9.0.apk",
+    "https://github.com/why685/yican-android/releases/download/v1.9.0/YiCan-1.9.0.apk"
   ],
-  "sha256": "a6ae791bbb3d68d72691709f394f61fa5c092eff0fea5532ae30e161fc59b546",
-  "releaseNotes": "手机发现页改为紧凑两列布局；功能进入独立页面并按层级返回；更新流程改为页内展示；全屏烹饪保存已完成步骤。"
+  "sha256": "d5f515c1b6e388cf8a1d31e21b93504d046556b5bada1ebd27bb20adf5fa09d5",
+  "releaseNotes": "新增视频链接、分享文字和最多 6 张配方截图快速收集；截图在本机离线识字；收藏、最近、自建与收集箱整合到菜谱库；Release APK 下载体积较未压缩构建减少约一半。"
 }

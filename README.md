@@ -2,13 +2,14 @@
 
 一餐是一款离线可用的 Android 菜谱 App。它支持统一关键词搜索、收藏、最近浏览、个人菜谱管理、完整数据备份，以及通过 GitHub Releases 检查并安装更新。
 
-## 开发中（版本待定）
+## 1.9.0 功能
 
 - 底部导航调整为“发现 / 菜谱库 / 我的”；收藏、最近、自建菜谱和收集箱集中在菜谱库，减少主入口浪费。
 - 支持从视频应用或相册通过 Android 分享菜单发送链接、文案和最多 6 张配方截图到一餐。
 - 配方截图使用随 APK 提供的中文模型在本机识别，不上传图片、不下载整段视频，也不自动读取剪贴板。
 - 分享结果可先存入收集箱，也可自动提取菜名、食材、用量、步骤、Tips 和来源链接后进入三步编辑器复核。
 - 收集箱进入完整备份和合并恢复；未整理内容与正式个人菜谱分开保存。
+- Release APK 压缩原生识字库，保留完整离线识字和四种 CPU 架构兼容，下载体积较未压缩构建减少约一半。
 
 ## 1.8.0 功能
 
@@ -94,11 +95,11 @@ node --test tests/app-core.test.js
 
 ## 发布更新
 
-创建标签格式为 `v1.8.0` 的 GitHub Release，并上传：
+创建标签格式为 `v1.9.0` 的 GitHub Release，并上传：
 
-- `YiCan-1.8.0.apk`
-- `YiCan-1.8.0.apk.sha256`
-- `YiCan-Android-Source-1.8.0.zip`
+- `YiCan-1.9.0.apk`
+- `YiCan-1.9.0.apk.sha256`
+- `YiCan-Android-Source-1.9.0.zip`
 - `update.json`
 
 `update.json` 格式：
@@ -106,15 +107,15 @@ node --test tests/app-core.test.js
 ```json
 {
   "schemaVersion": 1,
-  "versionCode": 14,
-  "versionName": "1.8.0",
-  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.8.0/YiCan-1.8.0.apk",
+  "versionCode": 15,
+  "versionName": "1.9.0",
+  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.9.0/YiCan-1.9.0.apk",
   "apkUrls": [
-    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.8.0/YiCan-1.8.0.apk",
-    "https://github.com/why685/yican-android/releases/download/v1.8.0/YiCan-1.8.0.apk"
+    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.9.0/YiCan-1.9.0.apk",
+    "https://github.com/why685/yican-android/releases/download/v1.9.0/YiCan-1.9.0.apk"
   ],
-  "sha256": "a6ae791bbb3d68d72691709f394f61fa5c092eff0fea5532ae30e161fc59b546",
-  "releaseNotes": "独立页面导航、手机两列菜谱、页内更新和全屏烹饪体验升级"
+  "sha256": "d5f515c1b6e388cf8a1d31e21b93504d046556b5bada1ebd27bb20adf5fa09d5",
+  "releaseNotes": "视频和配方截图快速收集、离线识字、菜谱库整合及安装包减重"
 }
 ```
 
