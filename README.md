@@ -2,7 +2,7 @@
 
 一餐是一款离线可用的 Android 菜谱 App。它支持统一关键词搜索、收藏、最近浏览、个人菜谱管理、完整数据备份，以及通过 GitHub Releases 检查并安装更新。
 
-## 当前开发版
+## 1.9.1 功能
 
 - 依据[中餐菜谱补完计划](https://laocp.tech/)的公开老菜谱索引，完善已有同名菜的食材用量并增加书籍、页码参考入口。
 - 不新增菜谱，不替换隋坡等原来源视频和做法；网站补充的数值统一显示“老菜谱参考”。
@@ -100,11 +100,11 @@ node --test tests/app-core.test.js
 
 ## 发布更新
 
-创建标签格式为 `v1.9.0` 的 GitHub Release，并上传：
+创建标签格式为 `v1.9.1` 的 GitHub Release，并上传：
 
-- `YiCan-1.9.0.apk`
-- `YiCan-1.9.0.apk.sha256`
-- `YiCan-Android-Source-1.9.0.zip`
+- `YiCan-1.9.1.apk`
+- `YiCan-1.9.1.apk.sha256`
+- `YiCan-Android-Source-1.9.1.zip`
 - `update.json`
 
 `update.json` 格式：
@@ -112,15 +112,15 @@ node --test tests/app-core.test.js
 ```json
 {
   "schemaVersion": 1,
-  "versionCode": 15,
-  "versionName": "1.9.0",
-  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.9.0/YiCan-1.9.0.apk",
+  "versionCode": 16,
+  "versionName": "1.9.1",
+  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.9.1/YiCan-1.9.1.apk",
   "apkUrls": [
-    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.9.0/YiCan-1.9.0.apk",
-    "https://github.com/why685/yican-android/releases/download/v1.9.0/YiCan-1.9.0.apk"
+    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.9.1/YiCan-1.9.1.apk",
+    "https://github.com/why685/yican-android/releases/download/v1.9.1/YiCan-1.9.1.apk"
   ],
-  "sha256": "d5f515c1b6e388cf8a1d31e21b93504d046556b5bada1ebd27bb20adf5fa09d5",
-  "releaseNotes": "视频和配方截图快速收集、离线识字、菜谱库整合及安装包减重"
+  "sha256": "6453d50eab74e76132c5e3294b09fbcf6f1b4bcb8c9eb349a97a0e4b4a8eaea3",
+  "releaseNotes": "完善 45 道已有同名菜，整理食材用量并增加老菜谱书名、页码和参考入口"
 }
 ```
 

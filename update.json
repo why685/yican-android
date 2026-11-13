@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "versionCode": 15,
-  "versionName": "1.9.0",
-  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.9.0/YiCan-1.9.0.apk",
+  "versionCode": 16,
+  "versionName": "1.9.1",
+  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.9.1/YiCan-1.9.1.apk",
   "apkUrls": [
-    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.9.0/YiCan-1.9.0.apk",
-    "https://github.com/why685/yican-android/releases/download/v1.9.0/YiCan-1.9.0.apk"
+    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.9.1/YiCan-1.9.1.apk",
+    "https://github.com/why685/yican-android/releases/download/v1.9.1/YiCan-1.9.1.apk"
   ],
-  "sha256": "d5f515c1b6e388cf8a1d31e21b93504d046556b5bada1ebd27bb20adf5fa09d5",
-  "releaseNotes": "新增视频链接、分享文字和最多 6 张配方截图快速收集；截图在本机离线识字；收藏、最近、自建与收集箱整合到菜谱库；Release APK 下载体积较未压缩构建减少约一半。"
+  "sha256": "6453d50eab74e76132c5e3294b09fbcf6f1b4bcb8c9eb349a97a0e4b4a8eaea3",
+  "releaseNotes": "依据中餐菜谱补完计划完善 45 道已有同名菜；整理现有食材用量并增加老菜谱书名、页码和参考入口；不新增菜谱，不改变原来源视频和做法。"
 }
