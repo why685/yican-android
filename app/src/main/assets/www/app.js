@@ -12,13 +12,14 @@ const legacyBuiltInRecipes = [
   {id:11,name:"酸辣土豆丝",emoji:"🥔",time:15,difficulty:"简单",flavors:["酸辣","素食"],source:"特厨隋坡",description:"清爽脆嫩、酸辣开胃，关键是泡去淀粉和大火快炒。",ingredients:[{name:"土豆",amount:"2个"},{name:"青椒",amount:"1个"},{name:"干辣椒",amount:"3个"},{name:"醋",amount:"1勺"},{name:"蒜",amount:"2瓣"}],steps:[["处理土豆","土豆切细丝，多冲洗几遍后泡入清水。"],["爆香配料","热油爆香蒜末和干辣椒。"],["大火快炒","沥干土豆丝，大火炒至断生，沿锅边淋醋并加盐。"]],colors:["#d5a83c","#7d9d43"]},
   {id:12,name:"紫菜蛋花汤",emoji:"🍵",time:8,difficulty:"简单",flavors:["汤羹","快手"],source:"特厨隋坡",description:"清鲜暖胃，八分钟上桌，是忙碌晚餐的好搭档。",ingredients:[{name:"紫菜",amount:"1小把"},{name:"鸡蛋",amount:"1个"},{name:"虾皮",amount:"少许",optional:true},{name:"葱",amount:"1根"},{name:"盐",amount:"适量"}],steps:[["煮汤底","锅中加水烧开，放入紫菜和虾皮。"],["淋蛋液","蛋液沿筷子缓慢淋入沸水，静置几秒。"],["调味","轻轻推散蛋花，加盐，撒葱花即可。"]],colors:["#536d59","#a38555"]}
 ];
-const detailedRecipeIds = new Set((window.SUIPO_RECIPES || []).map(recipe => recipe.id));
+const Core = window.YiCanCore;
+const detailedRecipes = Core.applyRecipeEnrichments(window.SUIPO_RECIPES || [], window.LAOCP_ENRICHMENTS || {});
+const detailedRecipeIds = new Set(detailedRecipes.map(recipe => recipe.id));
 const builtInRecipes = [
   ...legacyBuiltInRecipes.filter(recipe => !detailedRecipeIds.has(recipe.id)),
-  ...(window.SUIPO_RECIPES || [])
+  ...detailedRecipes
 ];
 
-const Core = window.YiCanCore;
 for (const recipe of builtInRecipes) Object.assign(recipe, Core.classifyRecipe(recipe));
 const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]));
 const customRecipes = loadCustomRecipes();
@@ -79,7 +80,10 @@ function loadRecipeOverrides() {
 
 function allRecipes() {
   const overrides = new Map(recipeOverrides.map(recipe => [recipe.id, recipe]));
-  return [...builtInRecipes.map(recipe => overrides.get(recipe.id) || recipe), ...customRecipes];
+  return [...builtInRecipes.map(recipe => {
+    const override = overrides.get(recipe.id);
+    return override ? {...override, reference:override.reference || recipe.reference || null} : recipe;
+  }), ...customRecipes];
 }
 function validRefs() { return new Set(allRecipes().map(Core.recipeRef)); }
 function findRecipe(refOrId) {
@@ -378,11 +382,18 @@ function renderRecipePage(recipe) {
   state.targetServings = targetServings;
   const ratio = targetServings / baseServings;
   const displayServings = Number.isInteger(targetServings) ? targetServings : Number(targetServings.toFixed(1));
+  const sourceLinks = [];
+  if (sourceUrl) sourceLinks.push('<a class="original-link" href="' + escapeHtml(sourceUrl) + '" target="_blank" rel="noopener">查看 ' + escapeHtml(recipe.source) + ' 的来源视频</a>');
+  if (recipe.reference) sourceLinks.push('<a class="reference-link" href="' + escapeHtml(recipe.reference.url) + '" target="_blank" rel="noopener">查看 ' + escapeHtml(recipe.reference.title) + ' 的老菜谱参考</a>');
+  const sourceMarkup = sourceLinks.length
+    ? '<div class="source-links">' + sourceLinks.join("") + (recipe.reference?.note ? '<small>' + escapeHtml(recipe.reference.note) + ' · 参考配方可能与来源视频不同</small>' : "") + '</div>'
+    : '<p class="imported-note">这是一份保存在本机的个人菜谱。</p>';
+  const hasReferenceAmounts = recipe.ingredients.some(item => String(item.amount || "").includes("老菜谱参考"));
   els.recipeContent.innerHTML = `<article class="recipe-page"><div class="dialog-hero compact" style="--dialog-a:${escapeHtml(recipe.colors[0])};--dialog-b:${escapeHtml(recipe.colors[1])}"><span class="dish-emoji" aria-hidden="true">${escapeHtml(recipe.emoji)}</span><div><p>${escapeHtml(recipe.source)}</p><h2>${escapeHtml(recipe.name)}</h2></div></div>
     <div class="dialog-body"><div class="detail-actions"><button class="favorite-action ${isFavorite ? "active" : ""}" data-action="favorite" data-ref="${ref}">${isFavorite ? "♥ 已收藏" : "♡ 收藏"}</button><button class="primary-action" data-action="cook" data-ref="${ref}">开始烹饪</button><button data-action="edit" data-ref="${ref}">修改</button>${recipe.override || recipe.custom ? `<details class="detail-more"><summary>更多</summary><div>${recipe.override?`<button data-action="restore" data-ref="${ref}">恢复原版</button>`:""}${recipe.custom ? `<button class="danger" data-action="delete" data-ref="${ref}">删除</button>` : ""}</div></details>` : ""}</div>
     <div class="detail-tabs" role="tablist">${[["overview","概览"],["ingredients","食材"],["steps","步骤"]].map(([key,label])=>`<button type="button" data-detail-panel="${key}" class="${panel===key?"active":""}">${label}</button>`).join("")}</div>
-    <section class="detail-panel" ${panel!=="overview"?"hidden":""}><p>${escapeHtml(recipe.description)}</p><div class="detail-facts"><span>约 ${recipe.time} 分钟</span><span>${escapeHtml(recipe.difficulty)}</span><span>${escapeHtml(recipe.category)}</span><span>原配方 ${baseServings} 份</span>${recipe.mainIngredients.map(value => `<span>${escapeHtml(value)}</span>`).join("")}${recipe.flavors.map(value => `<span>${escapeHtml(value)}</span>`).join("")}</div>${sourceUrl ? `<a class="original-link" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">查看 ${escapeHtml(recipe.source)} 的来源视频</a>` : `<p class="imported-note">这是一份保存在本机的个人菜谱。</p>`}</section>
-    <section class="detail-panel" ${panel!=="ingredients"?"hidden":""}><div class="serving-control"><div><strong>${displayServings} 份</strong><small>原配方 ${baseServings} 份 · 当前 ${Number(ratio.toFixed(2))} 倍</small></div><div class="serving-presets">${[[.5,"半份"],[1,"原配方"],[1.5,"1.5 倍"],[2,"双份"]].map(([value,label])=>`<button type="button" data-serving-ratio="${value}" class="${Math.abs(ratio-value)<.001?"active":""}">${label}</button>`).join("")}</div><div class="serving-stepper"><button type="button" data-serving-action="minus" aria-label="减少半份">−</button><span>${displayServings} 份</span><button type="button" data-serving-action="plus" aria-label="增加半份">＋</button></div></div><ul class="ingredient-list">${recipe.ingredients.map(item => `<li><span>${escapeHtml(item.name)}${item.optional ? "（可选）" : ""}</span>${item.amount?`<b>${escapeHtml(Core.scaleAmount(item.amount,ratio))}</b>`:""}</li>`).join("")}</ul></section>
+    <section class="detail-panel" ${panel!=="overview"?"hidden":""}><p>${escapeHtml(recipe.description)}</p><div class="detail-facts"><span>约 ${recipe.time} 分钟</span><span>${escapeHtml(recipe.difficulty)}</span><span>${escapeHtml(recipe.category)}</span><span>原配方 ${baseServings} 份</span>${recipe.mainIngredients.map(value => `<span>${escapeHtml(value)}</span>`).join("")}${recipe.flavors.map(value => `<span>${escapeHtml(value)}</span>`).join("")}</div>${sourceMarkup}</section>
+    <section class="detail-panel" ${panel!=="ingredients"?"hidden":""}><div class="serving-control"><div><strong>${displayServings} 份</strong><small>原配方 ${baseServings} 份 · 当前 ${Number(ratio.toFixed(2))} 倍</small></div><div class="serving-presets">${[[.5,"半份"],[1,"原配方"],[1.5,"1.5 倍"],[2,"双份"]].map(([value,label])=>`<button type="button" data-serving-ratio="${value}" class="${Math.abs(ratio-value)<.001?"active":""}">${label}</button>`).join("")}</div><div class="serving-stepper"><button type="button" data-serving-action="minus" aria-label="减少半份">−</button><span>${displayServings} 份</span><button type="button" data-serving-action="plus" aria-label="增加半份">＋</button></div></div><ul class="ingredient-list">${recipe.ingredients.map(item => `<li><span>${escapeHtml(item.name)}${item.optional ? "（可选）" : ""}</span>${item.amount?`<b>${escapeHtml(Core.scaleAmount(item.amount,ratio))}</b>`:""}</li>`).join("")}</ul>${hasReferenceAmounts?'<p class="reference-note">标有“老菜谱参考”的用量来自同名传统菜谱，仅供与来源视频对照。</p>':""}</section>
     <section class="detail-panel" ${panel!=="steps"?"hidden":""}><ol class="steps">${recipe.steps.map((step,index) => `<li><div class="step-heading"><strong>${escapeHtml(step[0])}</strong><span class="step-meta">${step[3]!=null?(seekableVideo?`<a href="${escapeHtml(videoAt(sourceUrl,step[3]))}" target="_blank" rel="noopener">视频 ${formatTimestamp(step[3])}</a>`:`<span>视频 ${formatTimestamp(step[3])}</span>`):""}${step[2]?`<small>建议 ${formatDuration(step[2])}</small>`:""}</span></div><p>${escapeHtml(step[1])}</p><button type="button" data-action="cook-step" data-ref="${ref}" data-step-index="${index}">从这一步开始</button></li>`).join("")}</ol>${recipe.tips?.length?`<aside class="recipe-tips"><strong>Tips</strong><ul>${recipe.tips.map(tip=>`<li>${escapeHtml(tip)}</li>`).join("")}</ul></aside>`:""}</section></div></article>`;
 }
 

@@ -134,8 +134,13 @@ h1 { margin: 0; font-family: "Songti SC", "STSong", serif; font-size: clamp(3rem
 .steps li::before { content: counter(recipe-step); position: absolute; left: 0; top: -1px; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 9px; color: white; background: var(--red); font-size: .78rem; font-weight: 800; }
 .steps strong { display: block; margin-bottom: 2px; }
 .steps p { margin: 0; color: var(--muted); font-size: .9rem; }
-.original-link { display: inline-flex; align-items: center; margin-top: 27px; padding: 10px 14px; border-radius: 10px; color: white; background: var(--red); text-decoration: none; font-size: .88rem; font-weight: 750; }
+.source-links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 27px; }
+.source-links small { flex-basis: 100%; color: var(--muted); font-size: .72rem; }
+.original-link { display: inline-flex; align-items: center; padding: 10px 14px; border-radius: 10px; color: white; background: var(--red); text-decoration: none; font-size: .88rem; font-weight: 750; }
 .original-link:hover { background: var(--red-dark); }
+.reference-link { display: inline-flex; align-items: center; padding: 9px 13px; border: 1px solid #d8c8b9; border-radius: 10px; color: var(--ink); background: #fff9f1; text-decoration: none; font-size: .84rem; font-weight: 700; }
+.reference-link:hover { border-color: var(--red); color: var(--red-dark); }
+.reference-note { margin: 12px 0 0; color: var(--muted); font-size: .74rem; line-height: 1.55; }
 .imported-note { margin: 27px 0 0; padding: 10px 13px; border-radius: 10px; color: var(--green); background: #edf5ed; font-size: .86rem; }
 
 .import-dialog { width: min(650px, calc(100vw - 32px)); }

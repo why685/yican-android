@@ -21,6 +21,39 @@
     return String(value == null ? "" : value).trim();
   }
 
+  function normalizeRecipeReference(raw) {
+    if (!raw || typeof raw !== "object") return null;
+    const title = clean(raw.title).slice(0, 120);
+    const url = clean(raw.url);
+    const note = clean(raw.note).slice(0, 120);
+    if (!title || !/^https:\/\/laocp\.tech\/\?recipe=[a-z0-9_-]+$/i.test(url)) return null;
+    return {title, url, note};
+  }
+
+  function applyRecipeEnrichments(recipes, enrichments) {
+    const source = Array.isArray(recipes) ? recipes : [];
+    const overlays = enrichments && typeof enrichments === "object" ? enrichments : {};
+    return source.map(recipe => {
+      const overlay = overlays[String(recipe?.id)];
+      if (!overlay || typeof overlay !== "object") return recipe;
+      const ingredients = (Array.isArray(recipe.ingredients) ? recipe.ingredients : []).map(item => ({...item}));
+      const operations = (Array.isArray(overlay.operations) ? overlay.operations : [])
+        .map(operation => ({...operation, at:Number(operation?.at)}))
+        .filter(operation => Number.isInteger(operation.at) && operation.at >= 0 && operation.at < ingredients.length && Array.isArray(operation.with))
+        .sort((left, right) => right.at - left.at);
+      for (const operation of operations) {
+        const replacements = operation.with.map(item => ({
+          name:clean(item?.name).slice(0, 120),
+          amount:clean(item?.amount).slice(0, 160),
+          optional:Boolean(item?.optional)
+        })).filter(item => item.name);
+        if (replacements.length) ingredients.splice(operation.at, 1, ...replacements);
+      }
+      const reference = normalizeRecipeReference(overlay.reference);
+      return {...recipe, ingredients, ...(reference ? {reference} : {})};
+    });
+  }
+
   function normalizeBaseServings(value) {
     const number = Number(value);
     if (!Number.isFinite(number)) return 1;
@@ -254,6 +287,7 @@
       tips: (Array.isArray(raw.tips) ? raw.tips : (clean(raw.tips) ? [raw.tips] : []))
         .slice(0, 12).map(value => clean(value).slice(0, 300)).filter(Boolean),
       video: typeof raw.video === "string" && /^https:\/\//i.test(raw.video) ? raw.video : "",
+      reference: normalizeRecipeReference(raw.reference),
       colors: Array.isArray(raw.colors) && raw.colors.length >= 2
         ? [clean(raw.colors[0]), clean(raw.colors[1])]
         : IMPORT_COLORS[index % IMPORT_COLORS.length],
@@ -514,6 +548,8 @@
     RECENT_LIMIT,
     normalizeImportedRecipe,
     normalizeRecipeOverride,
+    normalizeRecipeReference,
+    applyRecipeEnrichments,
     normalizeBaseServings,
     scaleAmount,
     normalizeEditorDraft,
