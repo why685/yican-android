@@ -141,6 +141,9 @@ h1 { margin: 0; font-family: "Songti SC", "STSong", serif; font-size: clamp(3rem
 .reference-link { display: inline-flex; align-items: center; padding: 9px 13px; border: 1px solid #d8c8b9; border-radius: 10px; color: var(--ink); background: #fff9f1; text-decoration: none; font-size: .84rem; font-weight: 700; }
 .reference-link:hover { border-color: var(--red); color: var(--red-dark); }
 .reference-note { margin: 12px 0 0; color: var(--muted); font-size: .74rem; line-height: 1.55; }
+.ingredient-description { min-width: 0; overflow-wrap: anywhere; }
+.ingredient-description small { display: block; margin-top: 3px; color: var(--muted); font-size: .74rem; line-height: 1.5; }
+.ingredient-note { grid-column: 1 / -1; }
 .imported-note { margin: 27px 0 0; padding: 10px 13px; border-radius: 10px; color: var(--green); background: #edf5ed; font-size: .86rem; }
 
 .import-dialog { width: min(650px, calc(100vw - 32px)); }

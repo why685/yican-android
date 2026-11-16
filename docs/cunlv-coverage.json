@@ -1,0 +1,485 @@
+{
+  "checkedAt": "2026-11-16",
+  "upstream": "https://github.com/Ryder-Sun/Cunlv-Skill",
+  "upstreamSha256": "de569c50f632d4f12b492a41febe20a2de6c08d439fc99a5b0317dfc2382c5d3",
+  "catalogExpected": 401,
+  "catalogFetched": 400,
+  "catalogComplete": false,
+  "upstreamCount": 340,
+  "included": 318,
+  "excluded": [
+    {
+      "bvid": "BV1T9Mx6rEiA",
+      "title": "【广：太好吃了‼️适合夏天的麻酱拌冷面‼️】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1gqTf6BEC5",
+      "title": "【广：夏日美食 酸甜爽口东北大冷面】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1af7q6uESH",
+      "title": "【广：一股烧烤味‼️超简单的水煎五花肉‼️】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1Z2jQ6SETD",
+      "title": "【广：浓郁的麻酱混着辣椒油的香味，麻酱拌冷面太适合夏天了！】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1A1jv67EnS",
+      "title": "【广：10分钟搞定，辣椒圈拌面】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1PnJu6JE8Z",
+      "title": "【广：天热不爱做饭，来碗清爽的东北大冷面‼️ 】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1faV46GEQT",
+      "title": "【广：酸甜适中 酱汁浓郁 新品麻酱拌冷面】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1BULi6gEra",
+      "title": "【广：空气炸锅大辣片 肉一样的口感！】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1WwL76fEqP",
+      "title": "【广：又脆又嫩又多汁的空气炸锅烤西葫芦】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1eA5W6bEyu",
+      "title": "【广：煎饼也可以柔软劲道不累牙！改变你对煎饼的印象】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1MCRDBtEMn",
+      "title": "【广：空气炸锅小烧烤 在家实现烧烤自由】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1jZomBMEDo",
+      "title": "【广：犄角旮旯胡同的黏糊麻辣烫，就是小时候的味道‼️ 】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1XRonBsERi",
+      "title": "【广：东北过桥电线！蘸上陈醋麻油加上米线汤】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1nWdBB2Eep",
+      "title": "【广：空气炸锅烤鸡爪，软烂入味，一抿脱骨】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1hn9sBWEre",
+      "title": "【广：克制用油版 焦香土豆丝饼】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1pAwZzWE9E",
+      "title": "【广：真白糖做的蜂蜜大冷面，大酸甜口汤汁都能当饮料喝】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1M9ZuBnE1J",
+      "title": "【祝亲爱的你们，新的一年万事顺遂，平安喜乐】",
+      "reason": "not-a-recipe"
+    },
+    {
+      "bvid": "BV1Zwf9BoEEg",
+      "title": "【广：巨巨巨巨好吃的烧烤味炒蘑菇】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1M1r1ByE68",
+      "title": "【广：空气炸锅解馋小零食又来了！空气炸锅土豆火腿肠！】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1Y3BZByEgx",
+      "title": "【广：这个烧烤料可以空气炸锅一切，今日是空气炸锅烤玉米】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1BHS6BPE7N",
+      "title": "【广：啥都能蘸！东北烧烤料！！】",
+      "reason": "advertisement"
+    },
+    {
+      "bvid": "BV1J7xHzrEcn",
+      "title": "【广：馋啥就拍啥之 今天吃东北过桥电线】",
+      "reason": "advertisement"
+    }
+  ],
+  "missing": [
+    {
+      "bvid": "BV1tXWe6MEAY",
+      "title": "【广：村驴家稻花香2号回归】",
+      "video": "https://www.bilibili.com/video/BV1tXWe6MEAY/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV12yWt6JE3S",
+      "title": "【今天不做饭 也没广告】",
+      "video": "https://www.bilibili.com/video/BV12yWt6JE3S/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1whW46gEEE",
+      "title": "【入冬降温绝味酸菜猪油渣大蒸饺保姆级教程‼️】",
+      "video": "https://www.bilibili.com/video/BV1whW46gEEE/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1Hc4J6tEqT",
+      "title": "【广：上新啦！冰淇淋质感的村驴家椴树蜜n】",
+      "video": "https://www.bilibili.com/video/BV1Hc4J6tEqT/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1Cy4Y6vE6Q",
+      "title": "【好吃到跺脚的羊肉萝卜煲，在家也能轻松做！】",
+      "video": "https://www.bilibili.com/video/BV1Cy4Y6vE6Q/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1YJ4M61E8D",
+      "title": "【更适合咱中国宝宝体质的火山土豆泥‼️ 】",
+      "video": "https://www.bilibili.com/video/BV1YJ4M61E8D/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1aexk6gE2L",
+      "title": "【广：不知不觉，土豆粉卖了三年了】",
+      "video": "https://www.bilibili.com/video/BV1aexk6gE2L/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1HJxY6fEN1",
+      "title": "【非常简单又非常美味的莲藕肉丸子！一定要试试】",
+      "video": "https://www.bilibili.com/video/BV1HJxY6fEN1/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1rJxg68EAo",
+      "title": "【家庭自制辣白菜！精准比例保姆级教程！】",
+      "video": "https://www.bilibili.com/video/BV1rJxg68EAo/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1Y4HV6mE1i",
+      "title": "【天冷了，在家爽吃一顿麻辣烫人均不到10r】",
+      "video": "https://www.bilibili.com/video/BV1Y4HV6mE1i/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1pbHA6iEs7",
+      "title": "【相信我‼️这酱油肉简直是人间美味‼️】",
+      "video": "https://www.bilibili.com/video/BV1pbHA6iEs7/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1Fxni69Eaq",
+      "title": "【寿喜烧保姆级教程，跟店里味道一模一样】",
+      "video": "https://www.bilibili.com/video/BV1Fxni69Eaq/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1cXnT6CER9",
+      "title": "【鲜掉眉毛的清汤牛腩保姆级教程‼️】",
+      "video": "https://www.bilibili.com/video/BV1cXnT6CER9/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV17ZJY63E2c",
+      "title": "【广：卖粉条ᗜ ‸ ᗜ ，猪肉白菜炖粉条】",
+      "video": "https://www.bilibili.com/video/BV17ZJY63E2c/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1dMJS6UEd5",
+      "title": "【广：天气越来越冷了！到了吃东北过桥电线的时候！】",
+      "video": "https://www.bilibili.com/video/BV1dMJS6UEd5/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1fmJ66cEpp",
+      "title": "【我宣布炒火鸡面比煮的更好吃！】",
+      "video": "https://www.bilibili.com/video/BV1fmJ66cEpp/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1oipD6FEcR",
+      "title": "【空气炸锅烤鸡‼️这味道原地出摊吧‼️】",
+      "video": "https://www.bilibili.com/video/BV1oipD6FEcR/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1eqpx6pEKg",
+      "title": "【惊艳味蕾！XO酱保姆级教程】",
+      "video": "https://www.bilibili.com/video/BV1eqpx6pEKg/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1EfHm69EHp",
+      "title": "【广：朝鲜族特色美食温面！在家做如此简单】",
+      "video": "https://www.bilibili.com/video/BV1EfHm69EHp/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV147pT6WEPG",
+      "title": "【广:天冷了，麻辣烫吃上，秋裤也穿上了】",
+      "video": "https://www.bilibili.com/video/BV147pT6WEPG/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1xKpc6qECv",
+      "title": "【酸甜爽脆的腌萝卜保姆级教程来了‼️】",
+      "video": "https://www.bilibili.com/video/BV1xKpc6qECv/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1h8aC6WExm",
+      "title": "【牛肉辣椒酱 保姆级教程来了！】",
+      "video": "https://www.bilibili.com/video/BV1h8aC6WExm/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1zdae6yEjr",
+      "title": "【一口一锅搞定的惊艳美味‼️干蒸排骨‼️】",
+      "video": "https://www.bilibili.com/video/BV1zdae6yEjr/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1Lqah6cE6R",
+      "title": "【广：天气凉了，又到了吃麻辣烫的季节】",
+      "video": "https://www.bilibili.com/video/BV1Lqah6cE6R/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1jzhf6zEPL",
+      "title": "【香辣大闸蟹，饭店水准备配方保姆级教程‼️】",
+      "video": "https://www.bilibili.com/video/BV1jzhf6zEPL/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1Joex6fE8J",
+      "title": "【生炒甜辣鸡架‼️这配方可以出摊‼️】",
+      "video": "https://www.bilibili.com/video/BV1Joex6fE8J/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1eGe76oETP",
+      "title": "【羊肉烩面超详细保姆级教程‼️】",
+      "video": "https://www.bilibili.com/video/BV1eGe76oETP/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1rztv66E2c",
+      "title": "【好吃到流泪‼️简单到有手就会的糯米蒸排骨】",
+      "video": "https://www.bilibili.com/video/BV1rztv66E2c/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1xktE6eE3u",
+      "title": "【广：野苏子酱搭配清炖牛肋条，人间美味！】",
+      "video": "https://www.bilibili.com/video/BV1xktE6eE3u/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1EShc62EYx",
+      "title": "【媲美饭店的啤酒鸭保姆级教程‼️ 】",
+      "video": "https://www.bilibili.com/video/BV1EShc62EYx/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1Lg8i6TEGU",
+      "title": "【以前也不知道蛏子捞饭竟然这么好吃！】",
+      "video": "https://www.bilibili.com/video/BV1Lg8i6TEGU/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1XA8T6EECb",
+      "title": "【广：久等了，我亲爱的朋友们！辣椒油来了‼️】",
+      "video": "https://www.bilibili.com/video/BV1XA8T6EECb/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1FVbf66EGd",
+      "title": "【一定要去试试这个一夜渍小黄瓜，好吃到流泪‼️】",
+      "video": "https://www.bilibili.com/video/BV1FVbf66EGd/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1vTbD6rEUX",
+      "title": "【广：麻辣烫配方调整了哦】",
+      "video": "https://www.bilibili.com/video/BV1vTbD6rEUX/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1aegF6jEcq",
+      "title": "【酸甜微辣软软糯糯的鱼香茄子‼️免油炸‼️】",
+      "video": "https://www.bilibili.com/video/BV1aegF6jEcq/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1qBgJ65ELN",
+      "title": "【广：真正的传统工艺粉条！附全面检测报告】",
+      "video": "https://www.bilibili.com/video/BV1qBgJ65ELN/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1YWuY6MEGp",
+      "title": "【不吐骨头的薯骨鸡翅‼️全家都吃嗨了‼️】",
+      "video": "https://www.bilibili.com/video/BV1YWuY6MEGp/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1D8MS65Euf",
+      "title": "【广：夏天就指这一碗酸甜冰爽的东北大冷面续命了】",
+      "video": "https://www.bilibili.com/video/BV1D8MS65Euf/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1XTGF6DEKp",
+      "title": "【这么热的天气，想吃麻辣烫还是在家舒服啊‼️ 】",
+      "video": "https://www.bilibili.com/video/BV1XTGF6DEKp/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1T53W63EBc",
+      "title": "【夏日大战豆橛子‼️豆角焖面精准比例保姆级教程‼️ 】",
+      "video": "https://www.bilibili.com/video/BV1T53W63EBc/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1omgZ6QEHy",
+      "title": "【懒人减脂餐，地中海饮食油浸彩椒、油浸小番茄‼️】",
+      "video": "https://www.bilibili.com/video/BV1omgZ6QEHy/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV127gb6SEwc",
+      "title": "【大人小孩谁能拒绝！酸甜的果香配上酥脆的排骨！菠萝炒排骨】",
+      "video": "https://www.bilibili.com/video/BV127gb6SEwc/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1bvKt6yECE",
+      "title": "【不一样的西红柿鸡蛋汤‼️酸辣清爽又很简单‼️】",
+      "video": "https://www.bilibili.com/video/BV1bvKt6yECE/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV188NQ6GEir",
+      "title": "【广：夏天在家煮一锅麻辣烫，吹着风扇追个剧‼️】",
+      "video": "https://www.bilibili.com/video/BV188NQ6GEir/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1kb5Z6zEdX",
+      "title": "【吃了就忘不了的牙签牛肉保姆级教程】",
+      "video": "https://www.bilibili.com/video/BV1kb5Z6zEdX/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1NZRpB5E6f",
+      "title": "【再也不用对着屏幕流口水了，八爪鱼拌面保姆级教程来了！】",
+      "video": "https://www.bilibili.com/video/BV1NZRpB5E6f/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1AfFJzyEDM",
+      "title": "【在家做出酒楼味道的梅菜扣肉】",
+      "video": "https://www.bilibili.com/video/BV1AfFJzyEDM/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV16qkNBDEKB",
+      "title": "【世界上这么会有如此好吃的大肉丸子！红烧狮子头保姆级教程】",
+      "video": "https://www.bilibili.com/video/BV16qkNBDEKB/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1Juq2BWEa2",
+      "title": "【拉丝脆皮大肠 保姆级教程】",
+      "video": "https://www.bilibili.com/video/BV1Juq2BWEa2/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1jH2hBaE1J",
+      "title": "【炒不明白牛肉的看过来！泡椒牛肉以及万能腌制牛肉技巧】",
+      "video": "https://www.bilibili.com/video/BV1jH2hBaE1J/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1aeUpBuEvL",
+      "title": "【冬日懒人神菜！蒜蓉粉丝虾滑煲】",
+      "video": "https://www.bilibili.com/video/BV1aeUpBuEvL/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1u4CKB3ESj",
+      "title": "【水煮鱼！！保姆级教程包教包会】",
+      "video": "https://www.bilibili.com/video/BV1u4CKB3ESj/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1ArxBzFETN",
+      "title": "【销魂熏肉大饼！全套保姆级教程！】",
+      "video": "https://www.bilibili.com/video/BV1ArxBzFETN/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1WtWMzzELV",
+      "title": "【水嫩鸡排保姆级教程 巨嫩无比可冷冻】",
+      "video": "https://www.bilibili.com/video/BV1WtWMzzELV/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1BcHrzJE8w",
+      "title": "【巨香无比的牛肉水煎包，保姆级教程包教包会】",
+      "video": "https://www.bilibili.com/video/BV1BcHrzJE8w/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1xgaJzFEBW",
+      "title": "【比豆腐还嫩的酱炒鸡蛋，巨好吃只需10分钟】",
+      "video": "https://www.bilibili.com/video/BV1xgaJzFEBW/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1T2KGeXEmL",
+      "title": "【自制午餐肉 全攻略】",
+      "video": "https://www.bilibili.com/video/BV1T2KGeXEmL/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1uazjYeEKd",
+      "title": "【春川鸡排】外面二百多一盘，在家几十元轻松做！",
+      "video": "https://www.bilibili.com/video/BV1uazjYeEKd/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1kmtHetEc8",
+      "title": "【满屋飘香绝味酱大骨】吃完了嘴巴都留香啊！以及炒糖色保姆级教程！",
+      "video": "https://www.bilibili.com/video/BV1kmtHetEc8/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1zZ421M7Ez",
+      "title": "【果冻般口感的不腻红烧肉】保姆教程，包教包会",
+      "video": "https://www.bilibili.com/video/BV1zZ421M7Ez/",
+      "status": "needs-source-review"
+    }
+  ],
+  "allRecipesComplete": false
+}

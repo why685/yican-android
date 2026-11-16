@@ -250,7 +250,7 @@
         return {name: ingredientName, amount: "适量", optional: false};
       }
       if (!item || typeof item !== "object" || !clean(item.name)) throw new Error(`${name} 的第 ${itemIndex + 1} 项食材无效`);
-      return {name: clean(item.name), amount: clean(item.amount) || "适量", optional: Boolean(item.optional)};
+      return {name: clean(item.name), amount: clean(item.amount) || "适量", optional: Boolean(item.optional), ...(clean(item.note) ? {note:clean(item.note).slice(0,300)} : {})};
     });
     const steps = raw.steps.map((item, stepIndex) => {
       if (typeof item === "string" && clean(item)) return [`第 ${stepIndex + 1} 步`, clean(item)];
@@ -285,9 +285,11 @@
       ingredients,
       steps,
       tips: (Array.isArray(raw.tips) ? raw.tips : (clean(raw.tips) ? [raw.tips] : []))
-        .slice(0, 12).map(value => clean(value).slice(0, 300)).filter(Boolean),
+        .slice(0, 30).map(value => clean(value).slice(0, 300)).filter(Boolean),
       video: typeof raw.video === "string" && /^https:\/\//i.test(raw.video) ? raw.video : "",
       reference: normalizeRecipeReference(raw.reference),
+      ...(raw.timeEstimated === true ? {timeEstimated:true} : {}),
+      ...(raw.provenance?.kind === "community-transcript" && raw.provenance?.url === "https://github.com/Ryder-Sun/Cunlv-Skill" ? {provenance:{kind:"community-transcript",url:raw.provenance.url,note:clean(raw.provenance.note).slice(0,300)}} : {}),
       colors: Array.isArray(raw.colors) && raw.colors.length >= 2
         ? [clean(raw.colors[0]), clean(raw.colors[1])]
         : IMPORT_COLORS[index % IMPORT_COLORS.length],
@@ -344,7 +346,7 @@
     return list.map(recipe => {
       const fields = [
         {label:"菜名", weight:100, values:[recipe.name]},
-        {label:"食材", weight:70, values:(recipe.ingredients || []).flatMap(item => [item?.name, item?.amount])},
+        {label:"食材", weight:70, values:(recipe.ingredients || []).flatMap(item => [item?.name, item?.amount, item?.note])},
         {label:"口味", weight:55, values:recipe.flavors || []},
         {label:"做法", weight:40, values:(recipe.steps || []).flatMap(step => Array.isArray(step) ? [step[0], step[1]] : [step?.title, step?.description, step?.content])},
         {label:"介绍", weight:30, values:[recipe.description]},
