@@ -378,22 +378,94 @@
       "bvid": "BV1HJxY6fEN1",
       "title": "【非常简单又非常美味的莲藕肉丸子！一定要试试】",
       "video": "https://www.bilibili.com/video/BV1HJxY6fEN1/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": false,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1HJxY6fEN1/source.json",
+          "sha256": "27d59b403c530a906a90eababa09b71096d13896043216064ca02b3b2f867956"
+        },
+        {
+          "path": "evidence/BV1HJxY6fEN1/audio.m4a",
+          "sha256": "0433a0dd5f08717130db84fbc72d39035a4b9e578c55d995f5c1b7fbfe590ff3"
+        },
+        {
+          "path": "evidence/BV1HJxY6fEN1/transcript.json",
+          "sha256": "c48f181f24f11094573188d0141edd94d04668a4a338d2bc21bb67d9379ee380"
+        },
+        {
+          "path": "evidence/BV1HJxY6fEN1/review-video.mp4",
+          "sha256": "a545232416763a17b7c7f31a1d9f370fd84c7267bcd92e6a0233328950277314"
+        },
+        {
+          "path": "evidence/BV1HJxY6fEN1/ingredient-check.jpg",
+          "sha256": "2694241d010b0a3576e33034a80b6649cf6ccb1ec06c6ae810a25c31d462d53b"
+        },
+        {
+          "path": "evidence/BV1HJxY6fEN1/review-notes.md",
+          "sha256": "9986f0ba285a74d9f6b4c7455a563b4b6b68a96c763066989db0a53e804fc3ed"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex",
+      "reviewedAt": "2026-11-16",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 11
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 31
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 44
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 65
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 84
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 112
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 126
+        },
+        {
+          "index": 7,
+          "durationSeconds": 120,
+          "videoTimestampSeconds": 146
+        },
+        {
+          "index": 8,
+          "durationSeconds": 60,
+          "videoTimestampSeconds": 184
+        },
+        {
+          "index": 9,
+          "videoTimestampSeconds": 202
+        }
+      ],
+      "contentSha256": "b36dce5f6f65447a82339520c2bfd34bc27243056cbda5a32976eadfc8dc9700"
     },
     {
       "bvid": "BV1rJxg68EAo",
@@ -483,22 +555,103 @@
       "bvid": "BV1cXnT6CER9",
       "title": "【鲜掉眉毛的清汤牛腩保姆级教程‼️】",
       "video": "https://www.bilibili.com/video/BV1cXnT6CER9/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": false,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1cXnT6CER9/source.json",
+          "sha256": "f646792993f5f18baa4b9f72af1eca10312558f2ea2764a727689e2ecd7ea9d9"
+        },
+        {
+          "path": "evidence/BV1cXnT6CER9/audio.m4a",
+          "sha256": "ee05992bff31f60e6d038c9bfb57e420611888c0b200de33480ce46cecd5ebb8"
+        },
+        {
+          "path": "evidence/BV1cXnT6CER9/transcript.json",
+          "sha256": "522bbfca2350d6f03880b20e5b0e1c4101d8dad518d8eaa23fcef95a40d96672"
+        },
+        {
+          "path": "evidence/BV1cXnT6CER9/review-video.mp4",
+          "sha256": "33e2f5da74b73f5ea047bb731b8192a541163dec128a232eff3c444de075e47e"
+        },
+        {
+          "path": "evidence/BV1cXnT6CER9/ingredient-check.jpg",
+          "sha256": "9f1a2235880d7a0be388db7808e8bb770e48d175f07c10076b6c4443158422a9"
+        },
+        {
+          "path": "evidence/BV1cXnT6CER9/review-notes.md",
+          "sha256": "6d6b5139ae46a3f89bc7ba82dae87c15e608f5d896e2a77e6d2193bbd7b71d23"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex",
+      "reviewedAt": "2026-11-16",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 11
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 34
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 59
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 67
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 99
+        },
+        {
+          "index": 5,
+          "durationSeconds": 1200,
+          "videoTimestampSeconds": 122
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 138
+        },
+        {
+          "index": 7,
+          "durationSeconds": 7200,
+          "videoTimestampSeconds": 149
+        },
+        {
+          "index": 8,
+          "videoTimestampSeconds": 171
+        },
+        {
+          "index": 9,
+          "durationSeconds": 1800,
+          "videoTimestampSeconds": 188
+        },
+        {
+          "index": 10,
+          "videoTimestampSeconds": 208
+        },
+        {
+          "index": 11,
+          "videoTimestampSeconds": 232
+        }
+      ],
+      "contentSha256": "edf9a45c5d58136f50f384e843a072584be5adbb7c323ba17f4c2ada4207c38d"
     },
     {
       "bvid": "BV17ZJY63E2c",

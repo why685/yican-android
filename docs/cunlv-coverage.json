@@ -5,9 +5,9 @@
   "catalogExpected": 401,
   "catalogFetched": 400,
   "catalogComplete": false,
-  "upstreamCount": 342,
-  "included": 320,
-  "reviewed": 2,
+  "upstreamCount": 344,
+  "included": 322,
+  "reviewed": 4,
   "excluded": [
     {
       "bvid": "BV1T9Mx6rEiA",
@@ -174,12 +174,6 @@
       "status": "needs-source-review"
     },
     {
-      "bvid": "BV1HJxY6fEN1",
-      "title": "【非常简单又非常美味的莲藕肉丸子！一定要试试】",
-      "video": "https://www.bilibili.com/video/BV1HJxY6fEN1/",
-      "status": "needs-source-review"
-    },
-    {
       "bvid": "BV1rJxg68EAo",
       "title": "【家庭自制辣白菜！精准比例保姆级教程！】",
       "video": "https://www.bilibili.com/video/BV1rJxg68EAo/",
@@ -201,12 +195,6 @@
       "bvid": "BV1Fxni69Eaq",
       "title": "【寿喜烧保姆级教程，跟店里味道一模一样】",
       "video": "https://www.bilibili.com/video/BV1Fxni69Eaq/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1cXnT6CER9",
-      "title": "【鲜掉眉毛的清汤牛腩保姆级教程‼️】",
-      "video": "https://www.bilibili.com/video/BV1cXnT6CER9/",
       "status": "needs-source-review"
     },
     {
@@ -495,7 +483,7 @@
   "allRecipesComplete": false,
   "states": {
     "excluded": 3,
-    "pending-review": 395,
-    "reviewed-included": 2
+    "pending-review": 393,
+    "reviewed-included": 4
   }
 }

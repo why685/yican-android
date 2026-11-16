@@ -58,7 +58,7 @@ const recipes = selected.map(row => {
     time:reviewedTime??row.estimatedMinutes??priorTimes.get(id)??20,timeEstimated:reviewedTime==null,
     difficulty:steps.length > 10 ? '较难' : steps.length > 6 ? '适中' : '简单',baseServings:1,
     flavors:(row.tags || []).slice(0,6),
-    ingredients:row.ingredients.map(item => ({name:String(item.name || '').trim(),amount:String(item.amount || '').trim(),...(item.note ? {note:String(item.note).trim()} : {})})),
+    ingredients:row.ingredients.map(item => ({name:String(item.name || '').trim(),amount:String(item.amount || '').trim(),...(item.note ? {note:String(item.note).trim()} : {}),...(item.optional ? {optional:true} : {})})),
     steps,tips:[...new Set(row.tips || [])],colors:['#9e4b33','#d88c52'],
     provenance:{kind:'community-transcript',url:'https://github.com/Ryder-Sun/Cunlv-Skill',note:'社区文字整理，尚未逐条复核原视频；用时为估算，做菜时请结合原视频核对。'}
   };

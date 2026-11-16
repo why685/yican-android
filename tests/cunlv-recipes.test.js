@@ -72,6 +72,27 @@ test('lamb radish stew preserves the checked split quantities and two-stage cook
   assert.equal(recipe.timeEstimated,true);
 });
 
+test('lotus meatballs use overlay amounts and distinct first and second frying timers',()=>{
+  const recipe=recipes.find(item=>item.video.includes('BV1HJxY6fEN1'));
+  assert.equal(recipe.provenance.kind,'video-reviewed');
+  assert.equal(recipe.ingredients.find(item=>item.name==='小葱').amount,'30克');
+  assert.equal(recipe.ingredients.find(item=>item.name==='玉米淀粉').amount,'50克');
+  assert.equal(recipe.ingredients.find(item=>item.name==='花椒面').optional,true);
+  assert.equal(recipe.steps[7][2],120);
+  assert.equal(recipe.steps[8][2],60);
+});
+
+test('clear beef broth keeps dried seafood, licorice and separate simmer stages',()=>{
+  const recipe=recipes.find(item=>item.video.includes('BV1cXnT6CER9'));
+  assert.equal(recipe.provenance.kind,'video-reviewed');
+  assert.equal(recipe.ingredients.find(item=>item.name==='甘草').amount,'3克');
+  assert.equal(recipe.ingredients.find(item=>item.name==='淡干海米').amount,'30克');
+  assert.equal(recipe.steps[5][2],1200);
+  assert.equal(recipe.steps[7][2],7200);
+  assert.equal(recipe.steps[9][2],1800);
+  assert.ok(recipe.steps[7][1].includes('1—1.5小时'));
+});
+
 test('Cunlv ingredient notes and tips survive editing and full backup restore', () => {
   const recipe = recipes.find(item => item.tips.length > 12);
   const override = core.normalizeRecipeOverride({...recipe,name:recipe.name+'（本机修改）'});
