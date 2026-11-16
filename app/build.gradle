@@ -65,3 +65,12 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.json:json:20240303'
 }
+
+// A successful build must not publish community transcripts as fully reviewed recipes.
+def verifyCunlvRelease = tasks.register('verifyCunlvRelease', Exec) {
+    workingDir rootProject.projectDir
+    commandLine 'node', 'tools/cunlv/check-release.cjs'
+}
+tasks.matching { it.name in ['assembleRelease', 'bundleRelease'] }.configureEach {
+    dependsOn verifyCunlvRelease
+}

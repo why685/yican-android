@@ -30,6 +30,19 @@
     return {title, url, note};
   }
 
+  function normalizeProvenance(raw, video) {
+    if (!raw || typeof raw !== "object") return null;
+    if (raw.kind === "community-transcript" && raw.url === "https://github.com/Ryder-Sun/Cunlv-Skill") {
+      return {kind:raw.kind,url:raw.url,note:clean(raw.note).slice(0,300)};
+    }
+    const date=clean(raw.reviewedAt);
+    const parsedDate=new Date(date);
+    if (raw.kind === "video-reviewed" && raw.url === video && /^https:\/\/www\.bilibili\.com\/video\/BV[A-Za-z0-9]{10}\/$/.test(raw.url) && /^\d{4}-\d{2}-\d{2}$/.test(date) && Number.isFinite(parsedDate.getTime()) && parsedDate.toISOString().slice(0,10)===date) {
+      return {kind:raw.kind,url:raw.url,reviewedAt:date,note:clean(raw.note).slice(0,300)};
+    }
+    return null;
+  }
+
   function applyRecipeEnrichments(recipes, enrichments) {
     const source = Array.isArray(recipes) ? recipes : [];
     const overlays = enrichments && typeof enrichments === "object" ? enrichments : {};
@@ -289,7 +302,7 @@
       video: typeof raw.video === "string" && /^https:\/\//i.test(raw.video) ? raw.video : "",
       reference: normalizeRecipeReference(raw.reference),
       ...(raw.timeEstimated === true ? {timeEstimated:true} : {}),
-      ...(raw.provenance?.kind === "community-transcript" && raw.provenance?.url === "https://github.com/Ryder-Sun/Cunlv-Skill" ? {provenance:{kind:"community-transcript",url:raw.provenance.url,note:clean(raw.provenance.note).slice(0,300)}} : {}),
+      ...(normalizeProvenance(raw.provenance, raw.video) ? {provenance:normalizeProvenance(raw.provenance, raw.video)} : {}),
       colors: Array.isArray(raw.colors) && raw.colors.length >= 2
         ? [clean(raw.colors[0]), clean(raw.colors[1])]
         : IMPORT_COLORS[index % IMPORT_COLORS.length],
@@ -551,6 +564,7 @@
     normalizeImportedRecipe,
     normalizeRecipeOverride,
     normalizeRecipeReference,
+    normalizeProvenance,
     applyRecipeEnrichments,
     normalizeBaseServings,
     scaleAmount,

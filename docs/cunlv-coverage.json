@@ -1,122 +1,145 @@
 {
-  "checkedAt": "2026-11-16",
+  "checkedAt": "2026-11-16T13:18:01.912Z",
   "upstream": "https://github.com/Ryder-Sun/Cunlv-Skill",
   "upstreamSha256": "de569c50f632d4f12b492a41febe20a2de6c08d439fc99a5b0317dfc2382c5d3",
   "catalogExpected": 401,
   "catalogFetched": 400,
   "catalogComplete": false,
-  "upstreamCount": 340,
-  "included": 318,
+  "upstreamCount": 342,
+  "included": 320,
+  "reviewed": 2,
   "excluded": [
     {
       "bvid": "BV1T9Mx6rEiA",
       "title": "【广：太好吃了‼️适合夏天的麻酱拌冷面‼️】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1gqTf6BEC5",
       "title": "【广：夏日美食 酸甜爽口东北大冷面】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1af7q6uESH",
       "title": "【广：一股烧烤味‼️超简单的水煎五花肉‼️】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1Z2jQ6SETD",
       "title": "【广：浓郁的麻酱混着辣椒油的香味，麻酱拌冷面太适合夏天了！】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1A1jv67EnS",
       "title": "【广：10分钟搞定，辣椒圈拌面】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1PnJu6JE8Z",
       "title": "【广：天热不爱做饭，来碗清爽的东北大冷面‼️ 】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1faV46GEQT",
       "title": "【广：酸甜适中 酱汁浓郁 新品麻酱拌冷面】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1BULi6gEra",
       "title": "【广：空气炸锅大辣片 肉一样的口感！】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1WwL76fEqP",
       "title": "【广：又脆又嫩又多汁的空气炸锅烤西葫芦】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1eA5W6bEyu",
       "title": "【广：煎饼也可以柔软劲道不累牙！改变你对煎饼的印象】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1MCRDBtEMn",
       "title": "【广：空气炸锅小烧烤 在家实现烧烤自由】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1jZomBMEDo",
       "title": "【广：犄角旮旯胡同的黏糊麻辣烫，就是小时候的味道‼️ 】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1XRonBsERi",
       "title": "【广：东北过桥电线！蘸上陈醋麻油加上米线汤】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1nWdBB2Eep",
       "title": "【广：空气炸锅烤鸡爪，软烂入味，一抿脱骨】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1hn9sBWEre",
       "title": "【广：克制用油版 焦香土豆丝饼】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1pAwZzWE9E",
       "title": "【广：真白糖做的蜂蜜大冷面，大酸甜口汤汁都能当饮料喝】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1M9ZuBnE1J",
       "title": "【祝亲爱的你们，新的一年万事顺遂，平安喜乐】",
-      "reason": "not-a-recipe"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1Zwf9BoEEg",
       "title": "【广：巨巨巨巨好吃的烧烤味炒蘑菇】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1M1r1ByE68",
       "title": "【广：空气炸锅解馋小零食又来了！空气炸锅土豆火腿肠！】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1Y3BZByEgx",
       "title": "【广：这个烧烤料可以空气炸锅一切，今日是空气炸锅烤玉米】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1BHS6BPE7N",
       "title": "【广：啥都能蘸！东北烧烤料！！】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1J7xHzrEcn",
       "title": "【广：馋啥就拍啥之 今天吃东北过桥电线】",
-      "reason": "advertisement"
+      "status": "pending-review",
+      "reason": "等待复核完整教程，不因广告标签直接排除"
     }
   ],
   "missing": [
@@ -142,18 +165,6 @@
       "bvid": "BV1Hc4J6tEqT",
       "title": "【广：上新啦！冰淇淋质感的村驴家椴树蜜n】",
       "video": "https://www.bilibili.com/video/BV1Hc4J6tEqT/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1Cy4Y6vE6Q",
-      "title": "【好吃到跺脚的羊肉萝卜煲，在家也能轻松做！】",
-      "video": "https://www.bilibili.com/video/BV1Cy4Y6vE6Q/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1YJ4M61E8D",
-      "title": "【更适合咱中国宝宝体质的火山土豆泥‼️ 】",
-      "video": "https://www.bilibili.com/video/BV1YJ4M61E8D/",
       "status": "needs-source-review"
     },
     {
@@ -481,5 +492,10 @@
       "status": "needs-source-review"
     }
   ],
-  "allRecipesComplete": false
+  "allRecipesComplete": false,
+  "states": {
+    "excluded": 3,
+    "pending-review": 395,
+    "reviewed-included": 2
+  }
 }
