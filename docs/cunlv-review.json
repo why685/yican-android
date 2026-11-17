@@ -846,22 +846,84 @@
       "bvid": "BV1zdae6yEjr",
       "title": "【一口一锅搞定的惊艳美味‼️干蒸排骨‼️】",
       "video": "https://www.bilibili.com/video/BV1zdae6yEjr/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": false,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1zdae6yEjr/source.json",
+          "sha256": "34ab8b1970073e3e1f132c09b079c354c0eac08ad58f5a9d5499446700887684"
+        },
+        {
+          "path": "evidence/BV1zdae6yEjr/audio.m4a",
+          "sha256": "8ff536575e17e370a330dd5b4b68e7c82bbb2d643446e8f3be9e8d91270e5df4"
+        },
+        {
+          "path": "evidence/BV1zdae6yEjr/transcript.json",
+          "sha256": "7ee6f93e19b081e4de718f6b331e56054a4f47c271af50dc757b8dd6250cc2c4"
+        },
+        {
+          "path": "evidence/BV1zdae6yEjr/review-video.mp4",
+          "sha256": "c142857fb1949178f7b2ffbea0df2a738d04b09eb0e8a05950a33bb8978b2a9c"
+        },
+        {
+          "path": "evidence/BV1zdae6yEjr/ingredient-check.jpg",
+          "sha256": "0394fd23da8d27d7e0bba48cb4a4ec5cb0c30e5e5677452ede6acdd283934b95"
+        },
+        {
+          "path": "evidence/BV1zdae6yEjr/review-notes.md",
+          "sha256": "40e36c3f7b1e9ff9a3464992cb41327d762c84cdb6bc067b661d67b2bd73bcf2"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex",
+      "reviewedAt": "2026-11-17",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "durationSeconds": 3600,
+          "videoTimestampSeconds": 7
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 27
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 51
+        },
+        {
+          "index": 3,
+          "durationSeconds": 900,
+          "videoTimestampSeconds": 84
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 104
+        },
+        {
+          "index": 5,
+          "durationSeconds": 1380,
+          "videoTimestampSeconds": 138
+        },
+        {
+          "index": 6,
+          "durationSeconds": 120,
+          "videoTimestampSeconds": 163
+        }
+      ],
+      "contentSha256": "694b2f5b5d1730418298f65d84521d6e38cdb9ffa16c77cb89eba604f85ed9d0"
     },
     {
       "bvid": "BV1Lqah6cE6R",
@@ -951,22 +1013,84 @@
       "bvid": "BV1rztv66E2c",
       "title": "【好吃到流泪‼️简单到有手就会的糯米蒸排骨】",
       "video": "https://www.bilibili.com/video/BV1rztv66E2c/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": false,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1rztv66E2c/source.json",
+          "sha256": "dc56a13af4253bbd16833f0eeea4a28dff78c669db93e7bdb3288062197d3950"
+        },
+        {
+          "path": "evidence/BV1rztv66E2c/audio.m4a",
+          "sha256": "c18819ba2961d299d5a14ef5a7d3a1b998ced133633b6e210e40e59f8c731c90"
+        },
+        {
+          "path": "evidence/BV1rztv66E2c/transcript.json",
+          "sha256": "3dbc51150b79ec650305703bf01645bf0f31d1edfbfb760b7e8561e5c6825922"
+        },
+        {
+          "path": "evidence/BV1rztv66E2c/review-video.mp4",
+          "sha256": "46f60aed5cc2ff81f2220ee8ec21d33028cede7be42b7862e26443554f41acea"
+        },
+        {
+          "path": "evidence/BV1rztv66E2c/ingredient-check.jpg",
+          "sha256": "b5e190d745b9ebbbff548c81ac93525a08ed10e9ac34c2227acd95893d0a6e3c"
+        },
+        {
+          "path": "evidence/BV1rztv66E2c/review-notes.md",
+          "sha256": "588c68ae4b154084d20e29ade5006f2674433f5221250ba917da8a73ba7feefe"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex",
+      "reviewedAt": "2026-11-17",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "durationSeconds": 7200,
+          "videoTimestampSeconds": 11
+        },
+        {
+          "index": 1,
+          "durationSeconds": 900,
+          "videoTimestampSeconds": 44
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 89
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 98
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 125
+        },
+        {
+          "index": 5,
+          "durationSeconds": 1200,
+          "videoTimestampSeconds": 138
+        },
+        {
+          "index": 6,
+          "durationSeconds": 2400,
+          "videoTimestampSeconds": 148
+        }
+      ],
+      "contentSha256": "005c7bfc9ae584097e16427ed63e62ba84c2be6170fa506de088833922be7871"
     },
     {
       "bvid": "BV1xktE6eE3u",

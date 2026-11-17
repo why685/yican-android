@@ -7,6 +7,7 @@ from pathlib import Path
 import sys
 import time
 import subprocess
+from datetime import datetime, timezone
 
 ROOT = Path(r'E:\一餐')
 PACKAGES = ROOT / 'toolchain' / 'cunlv-asr' / 'packages'
@@ -27,11 +28,14 @@ parser.add_argument('--model', default='medium')
 parser.add_argument('--batch', action='store_true')
 parser.add_argument('--limit', type=int)
 args = parser.parse_args()
+from job_state import JobState
+job = JobState(ROOT/'quality-assurance'/'cunlv') if args.batch else None
 started = time.monotonic()
 print('Loading local CPU INT8 model: ' + args.model, flush=True)
 model = WhisperModel(args.model, device='cpu', compute_type='int8', cpu_threads=8, num_workers=1,
                      download_root=str(ROOT / 'toolchain' / 'cunlv-asr' / 'models'))
 print('Model ready', flush=True)
+if job:job.update(status='running', stage='model-ready', model=args.model)
 if args.prepare:
     sys.exit(0)
 if not args.batch and (not args.audio or not args.output):
@@ -51,6 +55,7 @@ def transcribe(source, target, verbose=True):
                  'avgLogprob':segment.avg_logprob,'noSpeechProbability':segment.no_speech_prob,
                  'words':[{'start':word.start,'end':word.end,'word':word.word,'probability':word.probability} for word in segment.words or []]})
         if verbose:print(f'{segment.start:.1f}-{segment.end:.1f}: {segment.text}', flush=True)
+        if job:job.update(stage='transcribing', currentBvid=source.parent.name, audioSeconds=info.duration, processedSeconds=segment.end)
     result = {'schemaVersion':1,'status':'unreviewed-transcript','model':args.model,
           'engine':'faster-whisper','computeType':'int8','language':info.language,'duration':info.duration,
           'audioSha256':hashlib.sha256(source.read_bytes()).hexdigest(),
@@ -90,12 +95,17 @@ else:
         idle_started=time.monotonic()
         bvid=next_item['bvid']
         print('Transcribing '+bvid+'; completed '+str(len(done)),flush=True)
+        if job:job.update(stage='transcribing', currentBvid=bvid, completed=len(done), failed=len(failures), processedSeconds=0)
         try:
             transcribe(review_root/next_item['audio'],review_root/'evidence'/bvid/'transcript.json',verbose=False)
             done.add(bvid)
         except Exception as error:
             failures[bvid]=str(error)
             print('Failed '+bvid+': '+str(error),flush=True)
-        report={'model':args.model,'status':'transcription-only-not-reviewed','completed':sorted(done),'failures':failures,'elapsedSeconds':round(time.monotonic()-started,2)}
-        (review_root/'transcription-progress.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        report={'updatedAt':datetime.now(timezone.utc).isoformat(),'model':args.model,'status':'transcription-only-not-reviewed','completed':sorted(done),'failures':failures,'elapsedSeconds':round(time.monotonic()-started,2)}
+        progress_target=review_root/'transcription-progress.json'
+        temporary=progress_target.with_suffix('.tmp.json')
+        temporary.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        temporary.replace(progress_target)
         if args.limit and len(done)>=args.limit:break
+    if job:job.update(status='completed', stage='batch-finished', completed=len(done), failed=len(failures))

@@ -28,6 +28,8 @@ node tools/cunlv/init-review.mjs E:\一餐\quality-assurance\cunlv\catalog-verif
 
 采集与转写均可断点继续。先检查 `acquisition-progress.json`、`transcription-progress.json` 是否仍在更新，避免重复启动任务。转写仅处理本机音轨，不向外部服务上传。
 
+2026-11-17确认旧转写进程停止于49条后，以隐藏独立进程恢复。`transcription-job.json`记录PID、心跳、当前视频与已处理音频秒数；必须同时确认进程存在和心跳更新，不能仅看旧文件中的running字段。新增文件锁阻止重复批任务，stdout/stderr日志保存在核对目录。当前原视频复核数量以逐条清单为准，仍未发布。
+
 ```powershell
 $env:TEMP='E:\一餐\quality-assurance\cunlv\temp'
 $env:TMP=$env:TEMP

@@ -93,6 +93,25 @@ test('clear beef broth keeps dried seafood, licorice and separate simmer stages'
   assert.ok(recipe.steps[7][1].includes('1—1.5小时'));
 });
 
+test('dry-steamed ribs keep cookware instructions and include the final high heat in total time',()=>{
+  const recipe=recipes.find(item=>item.video.includes('BV1zdae6yEjr'));
+  assert.equal(recipe.provenance.reviewedAt,'2026-11-17');
+  assert.equal(recipe.ingredients.find(item=>item.name==='蚝油').amount,'5克');
+  assert.equal(recipe.steps[5][2]+recipe.steps[6][2],25*60);
+  assert.ok(recipe.steps[4][1].includes('不用不粘锅'));
+  assert.ok(recipe.steps[5][1].includes('小块版本先中火15分钟'));
+});
+
+test('sticky rice ribs retain separate seasoning allocations and sequential steaming heat',()=>{
+  const recipe=recipes.find(item=>item.video.includes('BV1rztv66E2c'));
+  assert.equal(recipe.provenance.kind,'video-reviewed');
+  assert.equal(recipe.ingredients.find(item=>item.name==='生抽').amount,'40克');
+  assert.ok(recipe.ingredients.find(item=>item.name==='生抽').note.includes('排骨腌料20克、糯米调味20克'));
+  assert.equal(recipe.ingredients.find(item=>item.name==='味精').amount,'3克');
+  assert.equal(recipe.steps[5][2],20*60);
+  assert.equal(recipe.steps[6][2],40*60);
+});
+
 test('Cunlv ingredient notes and tips survive editing and full backup restore', () => {
   const recipe = recipes.find(item => item.tips.length > 12);
   const override = core.normalizeRecipeOverride({...recipe,name:recipe.name+'（本机修改）'});

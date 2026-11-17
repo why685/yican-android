@@ -5,9 +5,9 @@
   "catalogExpected": 401,
   "catalogFetched": 400,
   "catalogComplete": false,
-  "upstreamCount": 344,
-  "included": 322,
-  "reviewed": 4,
+  "upstreamCount": 346,
+  "included": 324,
+  "reviewed": 6,
   "excluded": [
     {
       "bvid": "BV1T9Mx6rEiA",
@@ -252,12 +252,6 @@
       "status": "needs-source-review"
     },
     {
-      "bvid": "BV1zdae6yEjr",
-      "title": "【一口一锅搞定的惊艳美味‼️干蒸排骨‼️】",
-      "video": "https://www.bilibili.com/video/BV1zdae6yEjr/",
-      "status": "needs-source-review"
-    },
-    {
       "bvid": "BV1Lqah6cE6R",
       "title": "【广：天气凉了，又到了吃麻辣烫的季节】",
       "video": "https://www.bilibili.com/video/BV1Lqah6cE6R/",
@@ -279,12 +273,6 @@
       "bvid": "BV1eGe76oETP",
       "title": "【羊肉烩面超详细保姆级教程‼️】",
       "video": "https://www.bilibili.com/video/BV1eGe76oETP/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1rztv66E2c",
-      "title": "【好吃到流泪‼️简单到有手就会的糯米蒸排骨】",
-      "video": "https://www.bilibili.com/video/BV1rztv66E2c/",
       "status": "needs-source-review"
     },
     {
@@ -483,7 +471,7 @@
   "allRecipesComplete": false,
   "states": {
     "excluded": 3,
-    "pending-review": 393,
-    "reviewed-included": 4
+    "pending-review": 391,
+    "reviewed-included": 6
   }
 }
