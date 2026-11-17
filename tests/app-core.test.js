@@ -263,3 +263,17 @@ test("backup round-trip preserves and de-duplicates the collection inbox", () =>
   assert.equal(restored.inbox.length, 1);
   assert.equal(restored.inbox[0].sourceUrl, "https://b23.tv/recipe");
 });
+test('multi-day recipe times survive edits and backup without expanding step timer limits',()=>{
+  const recipe=core.normalizeImportedRecipe({id:123,name:'长时腌制',time:30600,ingredients:[{name:'白菜',amount:'5千克'}],steps:[['腌制','稳定低温腌21天'],['煮糊','将开时30秒',30]]},0,true);
+  assert.equal(recipe.time,30600);
+  const ref=core.recipeRef(recipe);
+  const backup=core.createBackup([recipe],[ref],[ref]);
+  const result=core.mergeBackup({customRecipes:[],favorites:[],recent:[],recipeOverrides:[]},backup,new Set());
+  assert.equal(result.customRecipes[0].time,30600);
+  assert.equal(core.formatRecipeTime(30600),'21 天 6 小时');
+  assert.equal(core.formatRecipeTime(11790),'8 天 4 小时 30 分钟');
+  assert.equal(core.formatRecipeTime(20),'20 分钟');
+  assert.equal(core.normalizeImportedRecipe({...recipe,time:999999},0,true).time,525600);
+  assert.equal(recipe.steps[0][2],undefined);
+  assert.equal(recipe.steps[1][2],30);
+});

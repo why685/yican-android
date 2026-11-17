@@ -5,9 +5,9 @@
   "catalogExpected": 401,
   "catalogFetched": 400,
   "catalogComplete": false,
-  "upstreamCount": 350,
-  "included": 328,
-  "reviewed": 10,
+  "upstreamCount": 353,
+  "included": 331,
+  "reviewed": 13,
   "excluded": [
     {
       "bvid": "BV1T9Mx6rEiA",
@@ -174,27 +174,9 @@
       "status": "needs-source-review"
     },
     {
-      "bvid": "BV1rJxg68EAo",
-      "title": "【家庭自制辣白菜！精准比例保姆级教程！】",
-      "video": "https://www.bilibili.com/video/BV1rJxg68EAo/",
-      "status": "needs-source-review"
-    },
-    {
       "bvid": "BV1Y4HV6mE1i",
       "title": "【天冷了，在家爽吃一顿麻辣烫人均不到10r】",
       "video": "https://www.bilibili.com/video/BV1Y4HV6mE1i/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1pbHA6iEs7",
-      "title": "【相信我‼️这酱油肉简直是人间美味‼️】",
-      "video": "https://www.bilibili.com/video/BV1pbHA6iEs7/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1Fxni69Eaq",
-      "title": "【寿喜烧保姆级教程，跟店里味道一模一样】",
-      "video": "https://www.bilibili.com/video/BV1Fxni69Eaq/",
       "status": "needs-source-review"
     },
     {
@@ -447,7 +429,7 @@
   "allRecipesComplete": false,
   "states": {
     "excluded": 5,
-    "pending-review": 385,
-    "reviewed-included": 10
+    "pending-review": 382,
+    "reviewed-included": 13
   }
 }

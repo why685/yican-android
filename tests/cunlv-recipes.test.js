@@ -179,3 +179,34 @@ test('Cunlv ingredient notes and tips survive editing and full backup restore', 
   assert.equal(restored.recipeOverrides[0].provenance.url,recipe.provenance.url);
   assert.deepEqual(restored.favorites,[reference]);
 });
+
+test('long curing recipes keep separate ingredient allocations and no multi-day step timers',()=>{
+  const cabbage=recipes.find(item=>item.video.includes('BV1rJxg68EAo'));
+  assert.equal(cabbage.provenance.kind,'video-reviewed');
+  assert.equal(cabbage.ingredients.find(item=>item.name==='白糖').amount,'350—450克');
+  assert.equal(cabbage.ingredients.find(item=>item.name==='萝卜').amount,'850克');
+  assert.ok(cabbage.ingredients.find(item=>item.name==='萝卜').note.includes('150克'));
+  assert.ok(cabbage.ingredients.find(item=>item.name==='萝卜').note.includes('700克'));
+  assert.equal(cabbage.time,30600);
+  assert.equal(cabbage.steps[2][2],900);
+  assert.equal(cabbage.steps[3][2],30);
+  assert.equal(cabbage.steps[8][2],null);
+  const pork=recipes.find(item=>item.video.includes('BV1pbHA6iEs7'));
+  assert.equal(pork.ingredients.find(item=>item.name==='老抽').amount,'700克');
+  assert.equal(pork.time,11790);
+  assert.equal(pork.steps[4][2],null);
+  assert.equal(pork.steps[5][2],null);
+  assert.equal(pork.steps[9][2],1800);
+});
+
+test('sukiyaki keeps dashi allocation separate from its concentrated sauce',()=>{
+  const recipe=recipes.find(item=>item.video.includes('BV1Fxni69Eaq'));
+  assert.equal(recipe.provenance.kind,'video-reviewed');
+  assert.equal(recipe.ingredients.find(item=>item.name==='出汁用清水').amount,'1000毫升');
+  assert.equal(recipe.ingredients.find(item=>item.name==='浓口酱油').amount,'150毫升');
+  assert.equal(recipe.ingredients.find(item=>item.name==='味淋').amount,'100克');
+  assert.equal(recipe.ingredients.find(item=>item.name==='木鱼花').optional,true);
+  assert.ok(recipe.steps[1][1].includes('250克'));
+  assert.ok(recipe.steps[7][1].includes('不是把全部出汁一次用完'));
+  assert.equal(recipe.steps[1][2],1800);
+});

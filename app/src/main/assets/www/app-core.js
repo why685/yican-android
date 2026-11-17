@@ -279,7 +279,7 @@
       }
       throw new Error(`${name} 的第 ${stepIndex + 1} 个步骤无效`);
     });
-    const time = Math.max(1, Math.min(1440, Number.parseInt(raw.time, 10) || 20));
+    const time = Math.max(1, Math.min(525600, Number.parseInt(raw.time, 10) || 20));
     const flavors = Array.isArray(raw.flavors)
       ? raw.flavors.slice(0, 6).map(clean).filter(Boolean)
       : ["我的菜谱"];
@@ -550,7 +550,17 @@
     }
   }
 
+  function formatRecipeTime(minutes) {
+    const value = Math.max(1, Math.min(525600, Number.parseInt(minutes, 10) || 20));
+    if (value < 1440) return `${value} 分钟`;
+    const days = Math.floor(value / 1440);
+    const hours = Math.floor(value % 1440 / 60);
+    const rest = value % 60;
+    return `${days} 天${hours ? ` ${hours} 小时` : ""}${rest ? ` ${rest} 分钟` : ""}`;
+  }
+
   return {
+    formatRecipeTime,
     CUSTOM_STORAGE_KEY,
     FAVORITES_STORAGE_KEY,
     RECENT_STORAGE_KEY,

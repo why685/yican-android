@@ -498,22 +498,94 @@
       "bvid": "BV1rJxg68EAo",
       "title": "【家庭自制辣白菜！精准比例保姆级教程！】",
       "video": "https://www.bilibili.com/video/BV1rJxg68EAo/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": false,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1rJxg68EAo/source.json",
+          "sha256": "8aed0362c1f734016746362f3feaea6bf54ef73bf8dd291bc5f04ebd673a80fc"
+        },
+        {
+          "path": "evidence/BV1rJxg68EAo/audio.m4a",
+          "sha256": "36a2edb10fa6a44b959451601640d0ed18556461aede3c493684f6f5ec449b25"
+        },
+        {
+          "path": "evidence/BV1rJxg68EAo/transcript.json",
+          "sha256": "f2e83b49f286d00901d349b1a039254f2cb4f5bee8b665727edc9b4072728fe3"
+        },
+        {
+          "path": "evidence/BV1rJxg68EAo/review-video.mp4",
+          "sha256": "e222ab35a6682da1b0a392001231d0f26949c456470e338894381d3d2fc92731"
+        },
+        {
+          "path": "evidence/BV1rJxg68EAo/ingredient-check.jpg",
+          "sha256": "29071df97bb8d42a94d8966a2d6dada27224366b24f5284731397560748c09c5"
+        },
+        {
+          "path": "evidence/BV1rJxg68EAo/review-notes.md",
+          "sha256": "46b3b51a9468123ed5e299df27507b0191368aab4144759788a3f5c1d9ccd234"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex",
+      "reviewedAt": "2026-11-17",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 11
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 50
+        },
+        {
+          "index": 2,
+          "durationSeconds": 900,
+          "videoTimestampSeconds": 101
+        },
+        {
+          "index": 3,
+          "durationSeconds": 30,
+          "videoTimestampSeconds": 149
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 195
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 244
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 319
+        },
+        {
+          "index": 7,
+          "videoTimestampSeconds": 348
+        },
+        {
+          "index": 8,
+          "videoTimestampSeconds": 381
+        },
+        {
+          "index": 9,
+          "videoTimestampSeconds": 404
+        }
+      ],
+      "contentSha256": "2a211246523ff8c36443274e979e534760055f8aa9406c2b33c91edd8640bd28"
     },
     {
       "bvid": "BV1Y4HV6mE1i",
@@ -540,43 +612,185 @@
       "bvid": "BV1pbHA6iEs7",
       "title": "【相信我‼️这酱油肉简直是人间美味‼️】",
       "video": "https://www.bilibili.com/video/BV1pbHA6iEs7/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": false,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1pbHA6iEs7/source.json",
+          "sha256": "75bd894690ce53a86968462610f3a9196a7dd7e0c378ee580fdc6c6017907fa8"
+        },
+        {
+          "path": "evidence/BV1pbHA6iEs7/audio.m4a",
+          "sha256": "5718689b38db840a91cec94b525e39dc90d7a075ba9d8ce0fe521b370f17c467"
+        },
+        {
+          "path": "evidence/BV1pbHA6iEs7/transcript.json",
+          "sha256": "f986170780b8bc60cbd099d4afece17dbcdda8ca78b396b6b53d4f3a519f8fb5"
+        },
+        {
+          "path": "evidence/BV1pbHA6iEs7/review-video.mp4",
+          "sha256": "6c96f8f49dc305ab469ef4cd261a585fc21c363f6ebb85f76cfede60c4816de7"
+        },
+        {
+          "path": "evidence/BV1pbHA6iEs7/ingredient-check.jpg",
+          "sha256": "5240a581170efa0add9b1384921ef6d36adf9e87160a0d27594257a3822a6b8c"
+        },
+        {
+          "path": "evidence/BV1pbHA6iEs7/review-notes.md",
+          "sha256": "5b72854e8afe84b3b70d452322838ea4d8c296e2a746fc56459b2c6146bd8c48"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex",
+      "reviewedAt": "2026-11-17",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 12
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 41
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 57
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 110
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 195
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 224
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 261
+        },
+        {
+          "index": 7,
+          "videoTimestampSeconds": 275
+        },
+        {
+          "index": 8,
+          "videoTimestampSeconds": 285
+        },
+        {
+          "index": 9,
+          "durationSeconds": 1800,
+          "videoTimestampSeconds": 303
+        }
+      ],
+      "contentSha256": "bbee60d181c9e7efefca5ca980833f86e695556a6ba1a0e5aa3eefdbfa3fd51f"
     },
     {
       "bvid": "BV1Fxni69Eaq",
       "title": "【寿喜烧保姆级教程，跟店里味道一模一样】",
       "video": "https://www.bilibili.com/video/BV1Fxni69Eaq/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": false,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1Fxni69Eaq/source.json",
+          "sha256": "ab0b75281d248cb05c2b059b2c82954f9b16d2b2b41b82b7650ca6e907596ff6"
+        },
+        {
+          "path": "evidence/BV1Fxni69Eaq/audio.m4a",
+          "sha256": "487a07366cc9ff507fb844bba9a40777a1776e4838de3941f7155043f7c7e53d"
+        },
+        {
+          "path": "evidence/BV1Fxni69Eaq/transcript.json",
+          "sha256": "3531037c556d105451dd98e2a440b96c848685b058a35c5ce1cffeeeafd54d27"
+        },
+        {
+          "path": "evidence/BV1Fxni69Eaq/review-video.mp4",
+          "sha256": "7a866c9128d65605f92d7fd617c9e1a843ca7f43adaecca66aa04c0684739f99"
+        },
+        {
+          "path": "evidence/BV1Fxni69Eaq/ingredient-check.jpg",
+          "sha256": "1a2897e91784c00ed2e1bc328c5552f22a384ec301b08df12def727c3d14e407"
+        },
+        {
+          "path": "evidence/BV1Fxni69Eaq/review-notes.md",
+          "sha256": "8fd067529509d883c1225d2e08c8b664d3b22bd2e8b4050c2cbba279eb394452"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex",
+      "reviewedAt": "2026-11-17",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 12
+        },
+        {
+          "index": 1,
+          "durationSeconds": 1800,
+          "videoTimestampSeconds": 42
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 65
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 115
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 196
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 258
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 276
+        },
+        {
+          "index": 7,
+          "videoTimestampSeconds": 295
+        },
+        {
+          "index": 8,
+          "videoTimestampSeconds": 317
+        },
+        {
+          "index": 9,
+          "videoTimestampSeconds": 376
+        }
+      ],
+      "contentSha256": "b13540df9b326dbd9792be8154b44f82c122cc812e3f392b6d17584df0066b85"
     },
     {
       "bvid": "BV1cXnT6CER9",

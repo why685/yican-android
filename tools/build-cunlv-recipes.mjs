@@ -52,7 +52,7 @@ const recipes = selected.map(row => {
     return result;
   });
   const reviewedTime=reviews.get(row.video_bvid)?.status==='reviewed-included'?reviews.get(row.video_bvid)?.totalMinutes:null;
-  if(reviewedTime!=null && (!Number.isInteger(reviewedTime)||reviewedTime<1||reviewedTime>1440))throw new Error('Invalid reviewed cooking time');
+  if(reviewedTime!=null && (!Number.isInteger(reviewedTime)||reviewedTime<1||reviewedTime>525600))throw new Error('Invalid reviewed cooking time');
   const recipe = {
     id,name:row.dish_name.trim(),source:'村驴',emoji:'🍽️',video:'https://www.bilibili.com/video/' + row.video_bvid + '/',
     description:row.description || '村驴做菜教程文字整理。',
