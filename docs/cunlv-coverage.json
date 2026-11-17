@@ -5,9 +5,9 @@
   "catalogExpected": 401,
   "catalogFetched": 400,
   "catalogComplete": false,
-  "upstreamCount": 349,
-  "included": 327,
-  "reviewed": 9,
+  "upstreamCount": 350,
+  "included": 328,
+  "reviewed": 10,
   "excluded": [
     {
       "bvid": "BV1T9Mx6rEiA",
@@ -195,12 +195,6 @@
       "bvid": "BV1Fxni69Eaq",
       "title": "【寿喜烧保姆级教程，跟店里味道一模一样】",
       "video": "https://www.bilibili.com/video/BV1Fxni69Eaq/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV17ZJY63E2c",
-      "title": "【广：卖粉条ᗜ ‸ ᗜ ，猪肉白菜炖粉条】",
-      "video": "https://www.bilibili.com/video/BV17ZJY63E2c/",
       "status": "needs-source-review"
     },
     {
@@ -452,8 +446,8 @@
   ],
   "allRecipesComplete": false,
   "states": {
-    "excluded": 3,
-    "pending-review": 388,
-    "reviewed-included": 9
+    "excluded": 5,
+    "pending-review": 385,
+    "reviewed-included": 10
   }
 }

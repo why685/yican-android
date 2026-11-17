@@ -151,6 +151,22 @@ test('sweet spicy chicken frames retain high-impact quantities and total cooking
   assert.ok(recipe.steps[7][1].includes('全程至少15分钟'));
 });
 
+test('sponsored cabbage tutorial is included with plain ingredients and no sales pitch',()=>{
+  const recipe=recipes.find(item=>item.video.includes('BV17ZJY63E2c'));
+  assert.equal(recipe.provenance.kind,'video-reviewed');
+  assert.equal(recipe.ingredients.find(item=>item.name==='干粉条').amount,'120克');
+  assert.equal(recipe.ingredients.find(item=>item.name==='大白菜').amount,'600克');
+  assert.equal(recipe.ingredients.find(item=>item.name==='炖煮清水').amount,'1500毫升');
+  assert.equal(recipe.ingredients.find(item=>item.name==='味精').amount,'3克');
+  assert.equal(recipe.steps[6][2],900);
+  assert.equal(recipe.steps[7][2],900);
+  assert.ok(recipe.steps[7][1].includes('根据软熟状态缩短时间'));
+  assert.doesNotMatch(JSON.stringify(recipe),/一单到手|上架|抽检|检测报告|仓储|5000/);
+  for(const bvid of ['BV1aexk6gE2L','BV1dMJS6UEd5']){
+    assert.equal(recipes.some(item=>item.video.includes(bvid)),false);
+  }
+});
+
 test('Cunlv ingredient notes and tips survive editing and full backup restore', () => {
   const recipe = recipes.find(item => item.tips.length > 12);
   const override = core.normalizeRecipeOverride({...recipe,name:recipe.name+'（本机修改）'});

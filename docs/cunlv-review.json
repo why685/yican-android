@@ -357,7 +357,7 @@
       "bvid": "BV1aexk6gE2L",
       "title": "【广：不知不觉，土豆粉卖了三年了】",
       "video": "https://www.bilibili.com/video/BV1aexk6gE2L/",
-      "status": "pending-review",
+      "status": "excluded",
       "hasCommunityTranscript": false,
       "sponsored": true,
       "checks": {
@@ -371,8 +371,35 @@
         "tips": false,
         "promotionRemoved": false
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1aexk6gE2L/source.json",
+          "sha256": "675c960ffe1995121de6e3e614680855daf7e1b9a5c891a04fbdb300982e2232"
+        },
+        {
+          "path": "evidence/BV1aexk6gE2L/audio.m4a",
+          "sha256": "764c8afe0ac52e4fec2575625a14820cfb197a6ae99159b6a9f97a0fdedeee9c"
+        },
+        {
+          "path": "evidence/BV1aexk6gE2L/transcript.json",
+          "sha256": "709f5dc660a849deb65555b800ccd46caabe0b7870071cb4f8997e034bc08c78"
+        },
+        {
+          "path": "evidence/BV1aexk6gE2L/review-video.mp4",
+          "sha256": "31a5e1817640f34d75bba1508eae8b33f6a806aa02d2003d083a424f3fd715ad"
+        },
+        {
+          "path": "evidence/BV1aexk6gE2L/ingredient-check.jpg",
+          "sha256": "5c8e62e0acf8e6e7fc85cccc1b4b388f3684b398b7fbead173b23c21fef410dd"
+        },
+        {
+          "path": "evidence/BV1aexk6gE2L/review-notes.md",
+          "sha256": "82e51113c0fa74915b1212ea8ec579ce3d6fa3ba437eb34d70c1f11dfd0c67ca"
+        }
+      ],
+      "reason": "袋装土豆粉商品煮制及试吃；核心酱料包与其他随商品料包未公开组成和做法，去掉特定商品后无法独立复现完整配方。",
+      "reviewer": "Codex",
+      "reviewedAt": "2026-11-17"
     },
     {
       "bvid": "BV1HJxY6fEN1",
@@ -657,28 +684,96 @@
       "bvid": "BV17ZJY63E2c",
       "title": "【广：卖粉条ᗜ ‸ ᗜ ，猪肉白菜炖粉条】",
       "video": "https://www.bilibili.com/video/BV17ZJY63E2c/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": false,
       "sponsored": true,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV17ZJY63E2c/source.json",
+          "sha256": "3e744ae1f7ad5a9c57e47209f1dcfb47ef13262b2d61b1df9a05af6b04a78d03"
+        },
+        {
+          "path": "evidence/BV17ZJY63E2c/audio.m4a",
+          "sha256": "8a6b1ca62fa0d5235d39d850473b25ad98c01aba4c94bb40bdcd8efb3f6f56e9"
+        },
+        {
+          "path": "evidence/BV17ZJY63E2c/transcript.json",
+          "sha256": "268433f02e38998f3834ca585f731c4ea3a95a32021e230e2f3a2d29c2ee6ec6"
+        },
+        {
+          "path": "evidence/BV17ZJY63E2c/review-video.mp4",
+          "sha256": "a3c6fa6a068b916bf7c4c93a3ea964d7e7edcbccc2e35ce412189d23685d2e83"
+        },
+        {
+          "path": "evidence/BV17ZJY63E2c/ingredient-check.jpg",
+          "sha256": "4691af9ab56280600878c0eb98cca60ed5d672922a1760ca2cbb8ff294d84a51"
+        },
+        {
+          "path": "evidence/BV17ZJY63E2c/review-notes.md",
+          "sha256": "3a953392b8f88fe9c9ed07e29352df9e071014001f5ce12e467c89df96516ee5"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex",
+      "reviewedAt": "2026-11-17",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 7
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 12
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 127
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 142
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 153
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 171
+        },
+        {
+          "index": 6,
+          "durationSeconds": 900,
+          "videoTimestampSeconds": 185
+        },
+        {
+          "index": 7,
+          "durationSeconds": 900,
+          "videoTimestampSeconds": 196
+        },
+        {
+          "index": 8,
+          "videoTimestampSeconds": 213
+        }
+      ],
+      "contentSha256": "50e9759f5a8162f52c62dfc6bb93a8572c594b4b909a3593b1cdb954c9e3378c"
     },
     {
       "bvid": "BV1dMJS6UEd5",
       "title": "【广：天气越来越冷了！到了吃东北过桥电线的时候！】",
       "video": "https://www.bilibili.com/video/BV1dMJS6UEd5/",
-      "status": "pending-review",
+      "status": "excluded",
       "hasCommunityTranscript": false,
       "sponsored": true,
       "checks": {
@@ -692,8 +787,35 @@
         "tips": false,
         "promotionRemoved": false
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1dMJS6UEd5/source.json",
+          "sha256": "de1baf16520bce318643c8442dec80e4f0901770bf9c35b88733cabe8ca8938b"
+        },
+        {
+          "path": "evidence/BV1dMJS6UEd5/audio.m4a",
+          "sha256": "b138cf3fb4ab69bbc67dbc3c8908ed27eeefd4902b76b42b8c7353fe9f61d8d6"
+        },
+        {
+          "path": "evidence/BV1dMJS6UEd5/transcript.json",
+          "sha256": "e636399a634b2e119d768b44154445fb2bd2b564efdf4993124664fbea3d9ac9"
+        },
+        {
+          "path": "evidence/BV1dMJS6UEd5/review-video.mp4",
+          "sha256": "790635483dc510688b5c5ff91ea79d909abe4fbab5bd94597eca8b35e7a56f87"
+        },
+        {
+          "path": "evidence/BV1dMJS6UEd5/ingredient-check.jpg",
+          "sha256": "7946d786bdf8402a87102ce6480e5905b1d216d6e69e9a2ba0b749b1e1cd8336"
+        },
+        {
+          "path": "evidence/BV1dMJS6UEd5/review-notes.md",
+          "sha256": "c46edd34133880a805640a20ccd86c1573aaa11b4aec2bd9c5babd3a3023b018"
+        }
+      ],
+      "reason": "商品过桥米线煮制演示；核心成品酱料包未公开配方与制作方法，不能去除特定商品后独立复现完整汤底。",
+      "reviewer": "Codex",
+      "reviewedAt": "2026-11-17"
     },
     {
       "bvid": "BV1fmJ66cEpp",

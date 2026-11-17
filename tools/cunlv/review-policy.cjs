@@ -2,6 +2,13 @@ const crypto = require('node:crypto');
 const REQUIRED_CHECKS = ['ingredients','amounts','allocation','instructions','heat','durations','videoTimestamps','tips','promotionRemoved'];
 const stableId = bvid => 2000000000 + crypto.createHash('sha256').update('cunlv:' + bvid).digest().readUInt32BE(0);
 const recipeHash = recipe => crypto.createHash('sha256').update(JSON.stringify({name:recipe.name,ingredients:recipe.ingredients,steps:recipe.steps,tips:recipe.tips,video:recipe.video})).digest('hex');
+// A curated sponsored tutorial needs a candidate before its evidence hash can be recorded.
+// Candidate inclusion does not change its review status or relax the release gate.
+function includeCandidate(row, status, curated = false) {
+  return status !== 'excluded' && row.is_recipe === true &&
+    (!row.is_ad || status === 'reviewed-included' || curated) &&
+    Boolean(row.dish_name?.trim() && row.ingredients?.length && row.steps?.length);
+}
 function validEvidence(item) {
   return Boolean(item && typeof item.path === 'string' && item.path && !item.path.includes('..') && !/^(?:[a-z]:|[/\\])/i.test(item.path) && /^[a-f0-9]{64}$/i.test(item.sha256 || ''));
 }
@@ -48,4 +55,4 @@ function releaseErrors(ledger,recipes) {
   if(rows.length!==ledger?.catalog?.fetched)errors.push('复核清单与抓取目录数量不一致');
   return errors;
 }
-module.exports={REQUIRED_CHECKS,stableId,recipeHash,validEvidence,reviewErrors,releaseErrors};
+module.exports={REQUIRED_CHECKS,stableId,recipeHash,includeCandidate,validEvidence,reviewErrors,releaseErrors};

@@ -5,12 +5,13 @@ import vm from 'node:vm';
 import {createRequire} from 'node:module';
 const require = createRequire(import.meta.url);
 const core = require('../app/src/main/assets/www/app-core.js');
-const {stableId,reviewErrors,releaseErrors}=require('./cunlv/review-policy.cjs');
+const {stableId,includeCandidate,reviewErrors,releaseErrors}=require('./cunlv/review-policy.cjs');
 const [input, catalogPath, reportPath, ledgerPath='docs/cunlv-review.json'] = process.argv.slice(2);
 if (!input || !catalogPath || !reportPath) throw new Error('Usage: node tools/build-cunlv-recipes.mjs input.jsonl catalog.json report.json');
 const originalRows = fs.readFileSync(input,'utf8').trim().split(/\r?\n/).map(JSON.parse);
 const correctedPath='data/cunlv-reviewed.jsonl';
 const correctedRows=fs.existsSync(correctedPath)?fs.readFileSync(correctedPath,'utf8').trim().split(/\r?\n/).filter(Boolean).map(JSON.parse):[];
+const correctedBvids=new Set(correctedRows.map(row=>row.video_bvid));
 const rowByBvid=new Map(originalRows.map(row=>[row.video_bvid,row]));
 for(const row of correctedRows)rowByBvid.set(row.video_bvid,row);
 const rows=[...rowByBvid.values()];
@@ -23,7 +24,7 @@ if(fs.existsSync(assetPath))vm.runInNewContext(fs.readFileSync(assetPath,'utf8')
 const priorTimes=new Map((priorContext.window.CUNLV_RECIPES||[]).map(recipe=>[recipe.id,recipe.time]));
 const selected = rows.filter(row => {
   const status=reviews.get(row.video_bvid)?.status;
-  return status!=='excluded' && row.is_recipe === true && (!row.is_ad || status==='reviewed-included') && row.dish_name?.trim() && row.ingredients?.length && row.steps?.length;
+  return includeCandidate(row,status,correctedBvids.has(row.video_bvid));
 });
 const ids = new Set();
 const recipes = selected.map(row => {

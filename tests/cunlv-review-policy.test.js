@@ -1,7 +1,7 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const core=require('../app/src/main/assets/www/app-core.js');
-const {REQUIRED_CHECKS,recipeHash,stableId,releaseErrors}=require('../tools/cunlv/review-policy.cjs');
+const {REQUIRED_CHECKS,recipeHash,stableId,includeCandidate,releaseErrors}=require('../tools/cunlv/review-policy.cjs');
 const bvid='BV1YJ4M61E8D';
 const recipe={id:stableId(bvid),name:'测试菜',source:'村驴',video:'https://www.bilibili.com/video/'+bvid+'/',ingredients:[{name:'土豆',amount:'700克',note:'去皮'}],steps:[['蒸熟','大火蒸15分钟',900,26]],tips:['水开后计时'],provenance:{kind:'video-reviewed',reviewedAt:'2026-11-16'}};
 function reviewed(){return {schemaVersion:1,catalog:{complete:true,fetched:1},items:[{bvid,status:'reviewed-included',reviewer:'test-reviewer',reviewedAt:'2026-11-16',checks:Object.fromEntries(REQUIRED_CHECKS.map(key=>[key,true])),contentSha256:recipeHash(recipe),evidence:[{path:'evidence/'+bvid+'/source.json',sha256:'a'.repeat(64)}]}]};}
@@ -21,6 +21,17 @@ test('release gate rejects stale checks, missing dishes, duplicate sources and u
   const catalog=reviewed();catalog.catalog.complete=false;
   assert.ok(releaseErrors(catalog,[recipe]).some(error=>error.includes('目录计数')));
 });
+test('curated sponsored candidates can be prepared without approving their release',()=>{
+  const row={is_recipe:true,is_ad:true,dish_name:'完整教程',ingredients:[{name:'白菜'}],steps:[{detail:'炖熟'}]};
+  assert.equal(includeCandidate(row,'pending-review'),false);
+  assert.equal(includeCandidate(row,'pending-review',true),true);
+  assert.equal(includeCandidate(row,'excluded',true),false);
+  assert.equal(includeCandidate({...row,is_recipe:false},'pending-review',true),false);
+  assert.equal(includeCandidate({...row,steps:[]},'pending-review',true),false);
+  const ledger=reviewed();ledger.items[0].status='pending-review';
+  assert.ok(releaseErrors(ledger,[{...recipe,provenance:{kind:'community-transcript'}}]).some(error=>error.includes('待核对')));
+});
+
 test('a sponsored tutorial can pass review; exclusions require a reason and evidence',()=>{
   const sponsored=reviewed();sponsored.items[0].sponsored=true;
   assert.deepEqual(releaseErrors(sponsored,[recipe]),[]);
