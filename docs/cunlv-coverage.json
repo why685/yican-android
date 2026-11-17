@@ -5,9 +5,9 @@
   "catalogExpected": 401,
   "catalogFetched": 400,
   "catalogComplete": false,
-  "upstreamCount": 346,
-  "included": 324,
-  "reviewed": 6,
+  "upstreamCount": 349,
+  "included": 327,
+  "reviewed": 9,
   "excluded": [
     {
       "bvid": "BV1T9Mx6rEiA",
@@ -264,12 +264,6 @@
       "status": "needs-source-review"
     },
     {
-      "bvid": "BV1Joex6fE8J",
-      "title": "【生炒甜辣鸡架‼️这配方可以出摊‼️】",
-      "video": "https://www.bilibili.com/video/BV1Joex6fE8J/",
-      "status": "needs-source-review"
-    },
-    {
       "bvid": "BV1eGe76oETP",
       "title": "【羊肉烩面超详细保姆级教程‼️】",
       "video": "https://www.bilibili.com/video/BV1eGe76oETP/",
@@ -279,12 +273,6 @@
       "bvid": "BV1xktE6eE3u",
       "title": "【广：野苏子酱搭配清炖牛肋条，人间美味！】",
       "video": "https://www.bilibili.com/video/BV1xktE6eE3u/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1EShc62EYx",
-      "title": "【媲美饭店的啤酒鸭保姆级教程‼️ 】",
-      "video": "https://www.bilibili.com/video/BV1EShc62EYx/",
       "status": "needs-source-review"
     },
     {
@@ -309,12 +297,6 @@
       "bvid": "BV1vTbD6rEUX",
       "title": "【广：麻辣烫配方调整了哦】",
       "video": "https://www.bilibili.com/video/BV1vTbD6rEUX/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1aegF6jEcq",
-      "title": "【酸甜微辣软软糯糯的鱼香茄子‼️免油炸‼️】",
-      "video": "https://www.bilibili.com/video/BV1aegF6jEcq/",
       "status": "needs-source-review"
     },
     {
@@ -471,7 +453,7 @@
   "allRecipesComplete": false,
   "states": {
     "excluded": 3,
-    "pending-review": 391,
-    "reviewed-included": 6
+    "pending-review": 388,
+    "reviewed-included": 9
   }
 }

@@ -971,22 +971,95 @@
       "bvid": "BV1Joex6fE8J",
       "title": "【生炒甜辣鸡架‼️这配方可以出摊‼️】",
       "video": "https://www.bilibili.com/video/BV1Joex6fE8J/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": false,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1Joex6fE8J/source.json",
+          "sha256": "59eb7605162b066a146e910570456f14064bdd1e2b6446afcd8d4282b54eace1"
+        },
+        {
+          "path": "evidence/BV1Joex6fE8J/audio.m4a",
+          "sha256": "208715192c799b308b379690fbce8e22527b1393cb185c8bad6c6adfe585c9e0"
+        },
+        {
+          "path": "evidence/BV1Joex6fE8J/transcript.json",
+          "sha256": "0fd63b3924b8e30ac062fcdf8b89070661cd0562919019fa66bde4953cd82cfe"
+        },
+        {
+          "path": "evidence/BV1Joex6fE8J/review-video.mp4",
+          "sha256": "e9b792d490f9d6a5ddbb9c1235c6241069bd5e5cb06f86e91e77230f065f5cb1"
+        },
+        {
+          "path": "evidence/BV1Joex6fE8J/ingredient-check.jpg",
+          "sha256": "0be6a27ecdb0be6cbfe76fa0f39ca823928469e374353a01a4511a3e7f94f93e"
+        },
+        {
+          "path": "evidence/BV1Joex6fE8J/detail-check.jpg",
+          "sha256": "95c4c6189901d4d6198f8bb4f1b212d7a4545573cfe56fd7391dfa3c71491e7a"
+        },
+        {
+          "path": "evidence/BV1Joex6fE8J/review-notes.md",
+          "sha256": "021466f059d3e405ff71372a7df7932fcde04f46b339caca0df03663859dd19b"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex",
+      "reviewedAt": "2026-11-17",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "durationSeconds": 3600,
+          "videoTimestampSeconds": 11
+        },
+        {
+          "index": 1,
+          "durationSeconds": 300,
+          "videoTimestampSeconds": 95
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 99
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 128
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 150
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 164
+        },
+        {
+          "index": 6,
+          "durationSeconds": 600,
+          "videoTimestampSeconds": 173
+        },
+        {
+          "index": 7,
+          "videoTimestampSeconds": 195
+        },
+        {
+          "index": 8,
+          "videoTimestampSeconds": 209
+        }
+      ],
+      "contentSha256": "4c990368fab4e3fb4f7fe5c7407837abae7fd2db2ba11c6d16fc271abea6f1b0"
     },
     {
       "bvid": "BV1eGe76oETP",
@@ -1117,22 +1190,99 @@
       "bvid": "BV1EShc62EYx",
       "title": "【媲美饭店的啤酒鸭保姆级教程‼️ 】",
       "video": "https://www.bilibili.com/video/BV1EShc62EYx/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": false,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1EShc62EYx/source.json",
+          "sha256": "e53c6128a2dcf6aa52bb4c0e0549d2346cad7a4e9fb6e9f016c1de129a6fe7ad"
+        },
+        {
+          "path": "evidence/BV1EShc62EYx/audio.m4a",
+          "sha256": "f2426a235eb5e672ad4f8a8cb5df2633ade64efc63aa353fe91410d8469bf261"
+        },
+        {
+          "path": "evidence/BV1EShc62EYx/transcript.json",
+          "sha256": "99b986d25aa2eb0653c64d2a959e08388633a553b129947acb0fdbeb682ac122"
+        },
+        {
+          "path": "evidence/BV1EShc62EYx/review-video.mp4",
+          "sha256": "6d7922bec990528bbd58ef1fcd09becef59f0e71a353ea68aaf6f67b77a2b417"
+        },
+        {
+          "path": "evidence/BV1EShc62EYx/ingredient-check.jpg",
+          "sha256": "1370ed5d1a209da77e79261c5510b3898b841f1d69b4985597aa837ff4574d40"
+        },
+        {
+          "path": "evidence/BV1EShc62EYx/detail-check.jpg",
+          "sha256": "a18f0a75bb924e4f657dfc56bf08368377e2b9b1da7ec0be17b3ba29c14f7dee"
+        },
+        {
+          "path": "evidence/BV1EShc62EYx/review-notes.md",
+          "sha256": "24c2571fc63ba74fb83852e478714c30961611b6b2dcb786b181390356ecadee"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex",
+      "reviewedAt": "2026-11-17",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "durationSeconds": 3600,
+          "videoTimestampSeconds": 17
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 44
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 130
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 162
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 174
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 187
+        },
+        {
+          "index": 6,
+          "durationSeconds": 1800,
+          "videoTimestampSeconds": 199
+        },
+        {
+          "index": 7,
+          "videoTimestampSeconds": 205
+        },
+        {
+          "index": 8,
+          "durationSeconds": 120,
+          "videoTimestampSeconds": 216
+        },
+        {
+          "index": 9,
+          "videoTimestampSeconds": 221
+        }
+      ],
+      "contentSha256": "3aca934f6007320bace5223c9e01f9a28073b2a4cf20b5be34790472afa44c2f"
     },
     {
       "bvid": "BV1Lg8i6TEGU",
@@ -1222,22 +1372,93 @@
       "bvid": "BV1aegF6jEcq",
       "title": "【酸甜微辣软软糯糯的鱼香茄子‼️免油炸‼️】",
       "video": "https://www.bilibili.com/video/BV1aegF6jEcq/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": false,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1aegF6jEcq/source.json",
+          "sha256": "529841108a841682f8bcc161e76567aece623443afad39d38ebdc38eebff5c36"
+        },
+        {
+          "path": "evidence/BV1aegF6jEcq/audio.m4a",
+          "sha256": "6fa093fbabc7190a9c7f2ea42ba205bf8f9c675c68ea97f0778072342e308cc4"
+        },
+        {
+          "path": "evidence/BV1aegF6jEcq/transcript.json",
+          "sha256": "768a41d3b257edb99b8cbf410316326b8625eb18f6af595dd795aaecf5f4ac53"
+        },
+        {
+          "path": "evidence/BV1aegF6jEcq/review-video.mp4",
+          "sha256": "3f7ab6c67dc88d416a6ea9b9b4806349599eb583af9aca7146d7a0f465b01654"
+        },
+        {
+          "path": "evidence/BV1aegF6jEcq/ingredient-check.jpg",
+          "sha256": "0ed70b17dc481865ec430a7b65a78ea7a268a0f102968fb0db352afd909100c5"
+        },
+        {
+          "path": "evidence/BV1aegF6jEcq/detail-check.jpg",
+          "sha256": "fd8a724b1394f0bf639624319eeb5a819efeb5d662d090d584c5cdae07babcf9"
+        },
+        {
+          "path": "evidence/BV1aegF6jEcq/review-notes.md",
+          "sha256": "46135ebd717d280daf78869d7e4ce66f1975dd59309d6f5e7e03eb78571ea742"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex",
+      "reviewedAt": "2026-11-17",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 14
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 38
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 80
+        },
+        {
+          "index": 3,
+          "durationSeconds": 240,
+          "videoTimestampSeconds": 104
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 134
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 149
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 167
+        },
+        {
+          "index": 7,
+          "videoTimestampSeconds": 180
+        },
+        {
+          "index": 8,
+          "videoTimestampSeconds": 189
+        }
+      ],
+      "contentSha256": "6090b0fd14ddac473a0806409bec3c1449d465b5b2b4c60121babd349ef789f2"
     },
     {
       "bvid": "BV1qBgJ65ELN",

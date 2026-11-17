@@ -112,6 +112,45 @@ test('sticky rice ribs retain separate seasoning allocations and sequential stea
   assert.equal(recipe.steps[6][2],40*60);
 });
 
+test('beer duck keeps shannai and conditional salt rather than transcription guesses',()=>{
+  const recipe=recipes.find(item=>item.video.includes('BV1EShc62EYx'));
+  assert.equal(recipe.provenance.kind,'video-reviewed');
+  assert.equal(recipe.ingredients.find(item=>item.name==='山奈').amount,'2克');
+  assert.equal(recipe.ingredients.some(item=>item.name==='香叶'||item.name==='白纸'),false);
+  assert.equal(recipe.ingredients.find(item=>item.name==='盐').optional,true);
+  assert.equal(recipe.ingredients.find(item=>item.name==='食用油').amount,'原视频未明确');
+  assert.equal(recipe.steps[6][2],1800);
+  assert.equal(recipe.steps[8][2],120);
+  assert.equal(recipe.steps[7][2],null,'A 3–5 minute range must not become an invented exact timer');
+});
+
+test('fish-fragrant eggplant preserves split water and stirs sauces without inventing salt',()=>{
+  const recipe=recipes.find(item=>item.video.includes('BV1aegF6jEcq'));
+  assert.equal(recipe.provenance.kind,'video-reviewed');
+  assert.equal(recipe.category,'荤');
+  assert.equal(recipe.ingredients.find(item=>item.name==='清水').amount,'80克');
+  assert.ok(recipe.ingredients.find(item=>item.name==='清水').note.includes('50克'));
+  assert.ok(recipe.ingredients.find(item=>item.name==='清水').note.includes('30克'));
+  assert.equal(recipe.ingredients.find(item=>item.name==='老抽').amount,'4克');
+  assert.equal(recipe.ingredients.some(item=>item.name==='盐'),false);
+  assert.ok(recipe.steps[7][1].includes('重新搅匀'));
+  assert.ok(recipe.steps[8][1].includes('重新搅匀'));
+  assert.equal(recipe.steps[3][2],240);
+});
+
+test('sweet spicy chicken frames retain high-impact quantities and total cooking minimum',()=>{
+  const recipe=recipes.find(item=>item.video.includes('BV1Joex6fE8J'));
+  assert.equal(recipe.provenance.kind,'video-reviewed');
+  assert.equal(recipe.ingredients.find(item=>item.name==='白糖').amount,'60克');
+  assert.equal(recipe.ingredients.find(item=>item.name==='丁香').amount,'1克');
+  assert.equal(recipe.ingredients.find(item=>item.name==='味精').amount,'10克');
+  assert.equal(recipe.ingredients.find(item=>item.name==='食用油').amount,'150克');
+  assert.equal(recipe.ingredients.some(item=>item.name==='盐'),false);
+  assert.equal(recipe.steps[6][2],600);
+  assert.ok(recipe.steps[6][1].includes('总时间不能少于15分钟'));
+  assert.ok(recipe.steps[7][1].includes('全程至少15分钟'));
+});
+
 test('Cunlv ingredient notes and tips survive editing and full backup restore', () => {
   const recipe = recipes.find(item => item.tips.length > 12);
   const override = core.normalizeRecipeOverride({...recipe,name:recipe.name+'（本机修改）'});
