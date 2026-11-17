@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
+import path from 'node:path';
 import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url);
 const {REQUIRED_CHECKS}=require('./review-policy.cjs');
@@ -16,7 +17,7 @@ const items=catalog.items.map(item=>previous.get(item.bvid)||{
   checks:Object.fromEntries(REQUIRED_CHECKS.map(key=>[key,false])),evidence:[],reason:''
 });
 const ledger={schemaVersion:1,scopeCutoff:'2026-11-16T23:59:59+08:00',sourceMid:417298480,
-  catalog:{fetched:items.length,expected:catalog.expected,complete:catalog.complete,observedTotals:catalog.observedTotals,indexGaps:catalog.indexGaps,snapshotSha256:crypto.createHash('sha256').update(fs.readFileSync(catalogPath)).digest('hex'),resolution:current?.catalog?.resolution||null},
+  catalog:{fetched:items.length,expected:catalog.expected,complete:catalog.complete,observedTotals:catalog.observedTotals,indexGaps:catalog.indexGaps,snapshotFile:path.basename(catalogPath),snapshotSha256:crypto.createHash('sha256').update(fs.readFileSync(catalogPath)).digest('hex'),resolution:current?.catalog?.resolution||null},
   policy:{sponsoredRecipes:'include-independent-recipe-remove-promotion',release:'all-review-complete'},items};
 fs.writeFileSync(outputPath,JSON.stringify(ledger,null,2)+'\n');
 console.log(JSON.stringify({items:items.length,statuses:items.reduce((all,row)=>(all[row.status]=(all[row.status]||0)+1,all),{})}));

@@ -20,6 +20,12 @@ test('release gate rejects stale checks, missing dishes, duplicate sources and u
   assert.ok(releaseErrors(reviewed(),[recipe,recipe]).some(error=>error.includes('重复')));
   const catalog=reviewed();catalog.catalog.complete=false;
   assert.ok(releaseErrors(catalog,[recipe]).some(error=>error.includes('目录计数')));
+  const supplemented=reviewed();supplemented.catalog.snapshotFile='catalog-scope-20261116.json';
+  assert.deepEqual(releaseErrors(supplemented,[recipe]),[]);
+  for(const file of ['../catalog.json','E:/private.json','sub/catalog.json','..\\catalog.json']){
+    supplemented.catalog.snapshotFile=file;
+    assert.ok(releaseErrors(supplemented,[recipe]).some(error=>error.includes('快照文件名')));
+  }
 });
 test('curated sponsored candidates can be prepared without approving their release',()=>{
   const row={is_recipe:true,is_ad:true,dish_name:'完整教程',ingredients:[{name:'白菜'}],steps:[{detail:'炖熟'}]};

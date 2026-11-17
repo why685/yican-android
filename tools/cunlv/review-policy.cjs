@@ -2,6 +2,7 @@ const crypto = require('node:crypto');
 const REQUIRED_CHECKS = ['ingredients','amounts','allocation','instructions','heat','durations','videoTimestamps','tips','promotionRemoved'];
 const stableId = bvid => 2000000000 + crypto.createHash('sha256').update('cunlv:' + bvid).digest().readUInt32BE(0);
 const recipeHash = recipe => crypto.createHash('sha256').update(JSON.stringify({name:recipe.name,ingredients:recipe.ingredients,steps:recipe.steps,tips:recipe.tips,video:recipe.video})).digest('hex');
+const validSnapshotName = value => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]*\.json$/.test(value) && !value.includes('..');
 // A curated sponsored tutorial needs a candidate before its evidence hash can be recorded.
 // Candidate inclusion does not change its review status or relax the release gate.
 function includeCandidate(row, status, curated = false) {
@@ -27,6 +28,7 @@ function reviewErrors(record, recipe) {
 function releaseErrors(ledger,recipes) {
   const errors=[];
   if(ledger?.schemaVersion!==1)errors.push('复核清单格式无效');
+  if(ledger?.catalog?.snapshotFile!=null&&!validSnapshotName(ledger.catalog.snapshotFile))errors.push('目录快照文件名无效');
   const resolution=ledger?.catalog?.resolution;
   if(ledger?.catalog?.complete!==true && !(resolution?.accepted===true && resolution.reason?.trim() && resolution.evidence?.length && resolution.evidence.every(validEvidence)))errors.push('目录计数差异尚未有证据解释');
   const rows=Array.isArray(ledger?.items)?ledger.items:[];
@@ -55,4 +57,4 @@ function releaseErrors(ledger,recipes) {
   if(rows.length!==ledger?.catalog?.fetched)errors.push('复核清单与抓取目录数量不一致');
   return errors;
 }
-module.exports={REQUIRED_CHECKS,stableId,recipeHash,includeCandidate,validEvidence,reviewErrors,releaseErrors};
+module.exports={REQUIRED_CHECKS,stableId,recipeHash,includeCandidate,validEvidence,validSnapshotName,reviewErrors,releaseErrors};

@@ -1,13 +1,13 @@
 {
-  "checkedAt": "2026-11-16T13:18:01.912Z",
+  "checkedAt": "2026-11-17T04:05:56.899Z",
   "upstream": "https://github.com/Ryder-Sun/Cunlv-Skill",
   "upstreamSha256": "de569c50f632d4f12b492a41febe20a2de6c08d439fc99a5b0317dfc2382c5d3",
-  "catalogExpected": 401,
-  "catalogFetched": 400,
+  "catalogExpected": 402,
+  "catalogFetched": 401,
   "catalogComplete": false,
-  "upstreamCount": 371,
-  "included": 352,
-  "reviewed": 40,
+  "upstreamCount": 382,
+  "included": 367,
+  "reviewed": 71,
   "excluded": [
     {
       "bvid": "BV1gqTf6BEC5",
@@ -34,28 +34,10 @@
       "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
-      "bvid": "BV1BULi6gEra",
-      "title": "【广：空气炸锅大辣片 肉一样的口感！】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
-    },
-    {
-      "bvid": "BV1WwL76fEqP",
-      "title": "【广：又脆又嫩又多汁的空气炸锅烤西葫芦】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
-    },
-    {
       "bvid": "BV1eA5W6bEyu",
       "title": "【广：煎饼也可以柔软劲道不累牙！改变你对煎饼的印象】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
-    },
-    {
-      "bvid": "BV1MCRDBtEMn",
-      "title": "【广：空气炸锅小烧烤 在家实现烧烤自由】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
+      "status": "excluded",
+      "reason": "成品手工五粮煎饼商品介绍与试吃、卷现成小串等食用建议，无粮食比例、制糊发酵或摊饼完整教程。"
     },
     {
       "bvid": "BV1jZomBMEDo",
@@ -66,14 +48,8 @@
     {
       "bvid": "BV1XRonBsERi",
       "title": "【广：东北过桥电线！蘸上陈醋麻油加上米线汤】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
-    },
-    {
-      "bvid": "BV1nWdBB2Eep",
-      "title": "【广：空气炸锅烤鸡爪，软烂入味，一抿脱骨】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
+      "status": "excluded",
+      "reason": "过桥米线商品料包煮制及调蘸汁演示，核心汤底来自未公开配方的专属成品底料包，不能去掉商品后独立复现汤底。"
     },
     {
       "bvid": "BV1hn9sBWEre",
@@ -138,12 +114,6 @@
       "status": "needs-source-review"
     },
     {
-      "bvid": "BV1whW46gEEE",
-      "title": "【入冬降温绝味酸菜猪油渣大蒸饺保姆级教程‼️】",
-      "video": "https://www.bilibili.com/video/BV1whW46gEEE/",
-      "status": "needs-source-review"
-    },
-    {
       "bvid": "BV1Hc4J6tEqT",
       "title": "【广：上新啦！冰淇淋质感的村驴家椴树蜜n】",
       "video": "https://www.bilibili.com/video/BV1Hc4J6tEqT/",
@@ -168,12 +138,6 @@
       "status": "needs-source-review"
     },
     {
-      "bvid": "BV1fmJ66cEpp",
-      "title": "【我宣布炒火鸡面比煮的更好吃！】",
-      "video": "https://www.bilibili.com/video/BV1fmJ66cEpp/",
-      "status": "needs-source-review"
-    },
-    {
       "bvid": "BV1EfHm69EHp",
       "title": "【广：朝鲜族特色美食温面！在家做如此简单】",
       "video": "https://www.bilibili.com/video/BV1EfHm69EHp/",
@@ -189,18 +153,6 @@
       "bvid": "BV1Lqah6cE6R",
       "title": "【广：天气凉了，又到了吃麻辣烫的季节】",
       "video": "https://www.bilibili.com/video/BV1Lqah6cE6R/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1jzhf6zEPL",
-      "title": "【香辣大闸蟹，饭店水准备配方保姆级教程‼️】",
-      "video": "https://www.bilibili.com/video/BV1jzhf6zEPL/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1eGe76oETP",
-      "title": "【羊肉烩面超详细保姆级教程‼️】",
-      "video": "https://www.bilibili.com/video/BV1eGe76oETP/",
       "status": "needs-source-review"
     },
     {
@@ -234,39 +186,9 @@
       "status": "needs-source-review"
     },
     {
-      "bvid": "BV1T53W63EBc",
-      "title": "【夏日大战豆橛子‼️豆角焖面精准比例保姆级教程‼️ 】",
-      "video": "https://www.bilibili.com/video/BV1T53W63EBc/",
-      "status": "needs-source-review"
-    },
-    {
       "bvid": "BV188NQ6GEir",
       "title": "【广：夏天在家煮一锅麻辣烫，吹着风扇追个剧‼️】",
       "video": "https://www.bilibili.com/video/BV188NQ6GEir/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1kb5Z6zEdX",
-      "title": "【吃了就忘不了的牙签牛肉保姆级教程】",
-      "video": "https://www.bilibili.com/video/BV1kb5Z6zEdX/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1AfFJzyEDM",
-      "title": "【在家做出酒楼味道的梅菜扣肉】",
-      "video": "https://www.bilibili.com/video/BV1AfFJzyEDM/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1Juq2BWEa2",
-      "title": "【拉丝脆皮大肠 保姆级教程】",
-      "video": "https://www.bilibili.com/video/BV1Juq2BWEa2/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1jH2hBaE1J",
-      "title": "【炒不明白牛肉的看过来！泡椒牛肉以及万能腌制牛肉技巧】",
-      "video": "https://www.bilibili.com/video/BV1jH2hBaE1J/",
       "status": "needs-source-review"
     },
     {
@@ -282,28 +204,22 @@
       "status": "needs-source-review"
     },
     {
-      "bvid": "BV1BcHrzJE8w",
-      "title": "【巨香无比的牛肉水煎包，保姆级教程包教包会】",
-      "video": "https://www.bilibili.com/video/BV1BcHrzJE8w/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1T2KGeXEmL",
-      "title": "【自制午餐肉 全攻略】",
-      "video": "https://www.bilibili.com/video/BV1T2KGeXEmL/",
-      "status": "needs-source-review"
-    },
-    {
       "bvid": "BV1kmtHetEc8",
       "title": "【满屋飘香绝味酱大骨】吃完了嘴巴都留香啊！以及炒糖色保姆级教程！",
       "video": "https://www.bilibili.com/video/BV1kmtHetEc8/",
+      "status": "needs-source-review"
+    },
+    {
+      "bvid": "BV1AEsK6QEQf",
+      "title": "【好吃到灵魂颤抖的酱香甜辣鸭舌一定要去做‼️】",
+      "video": "https://www.bilibili.com/video/BV1AEsK6QEQf/",
       "status": "needs-source-review"
     }
   ],
   "allRecipesComplete": false,
   "states": {
-    "excluded": 16,
-    "pending-review": 344,
-    "reviewed-included": 40
+    "excluded": 20,
+    "reviewed-included": 71,
+    "pending-review": 310
   }
 }

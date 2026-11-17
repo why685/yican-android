@@ -11,9 +11,12 @@ import time
 parser=argparse.ArgumentParser()
 parser.add_argument('--root',default=r'E:\一餐\quality-assurance\cunlv')
 parser.add_argument('--limit',type=int)
+parser.add_argument('--catalog',default='catalog-verified.json')
 args=parser.parse_args()
 root=Path(args.root).resolve()
-catalog=json.loads((root/'catalog-verified.json').read_text(encoding='utf-8'))
+if Path(args.catalog).name!=args.catalog or not args.catalog.endswith('.json'):
+    parser.error('catalog must be a JSON filename under the evidence root')
+catalog=json.loads((root/args.catalog).read_text(encoding='utf-8'))
 upstream={row['video_bvid'] for row in map(json.loads,(root/'upstream-recipes.jsonl').read_text(encoding='utf-8').strip().splitlines())}
 items=sorted(catalog['items'],key=lambda item:(item['bvid'] in upstream,item['index']))
 if args.limit:items=items[:args.limit]

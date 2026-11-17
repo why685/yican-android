@@ -2,7 +2,7 @@ const fs=require('node:fs');
 const vm=require('node:vm');
 const path=require('node:path');
 const crypto=require('node:crypto');
-const {releaseErrors}=require('./review-policy.cjs');
+const {releaseErrors,validSnapshotName}=require('./review-policy.cjs');
 const ledger=JSON.parse(fs.readFileSync('docs/cunlv-review.json','utf8'));
 const context={window:{}};
 vm.runInNewContext(fs.readFileSync('app/src/main/assets/www/recipes-cunlv.js','utf8'),context);
@@ -10,7 +10,9 @@ const errors=releaseErrors(ledger,context.window.CUNLV_RECIPES||[]);
 const evidenceRoot=process.argv[2]||'E:/一餐/quality-assurance/cunlv';
 const digest=file=>crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 try{
-  if(digest(path.join(evidenceRoot,'catalog-verified.json'))!==ledger.catalog.snapshotSha256)errors.push('原始目录快照与复核清单不一致');
+  const snapshotFile=ledger.catalog.snapshotFile||'catalog-verified.json';
+  if(!validSnapshotName(snapshotFile))throw new Error('目录快照文件名无效');
+  if(digest(path.join(evidenceRoot,snapshotFile))!==ledger.catalog.snapshotSha256)errors.push('原始目录快照与复核清单不一致');
   for(const record of ledger.items){
     if(!['reviewed-included','excluded'].includes(record.status))continue;
     for(const item of record.evidence||[]){

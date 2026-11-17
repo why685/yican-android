@@ -238,3 +238,25 @@ test('a two-use octopus sauce is not treated as one serving and partial ads keep
   assert.ok(infused.steps[6][1].includes('4天内'));
   assert.doesNotMatch(JSON.stringify(infused),/可保存半个月|冷藏半个月/);
 });
+
+test('lunch meat retains checked starch allocation, mixing count and separate steaming/rest stages',()=>{
+  const recipe=recipes.find(item=>item.video.includes('BV1T2KGeXEmL'));
+  assert.equal(recipe.ingredients.find(x=>x.name==='土豆淀粉').amount,'25克');
+  assert.ok(recipe.ingredients.find(x=>x.name==='土豆淀粉').note.includes('肉片5克，肉浆20克'));
+  assert.equal(recipe.ingredients.find(x=>x.name==='清水').amount,'80克');
+  assert.ok(recipe.steps[4][1].includes('45次'));
+  assert.equal(recipe.steps[7][2],2400);
+  assert.equal(recipe.steps[8][2],900);
+});
+
+test('spiced salt uses alternative hot/cold portions and cooked intestine drying uses cold storage',()=>{
+  const beef=recipes.find(item=>item.video.includes('BV1BH5P6yENz'));
+  assert.equal(beef.ingredients.find(x=>x.name==='食盐').amount,'80克');
+  assert.ok(beef.steps[2][1].includes('取炒香盐50克'));
+  assert.ok(beef.steps[4][1].includes('热吃放20克'));
+  assert.ok(beef.steps[4][1].includes('冷却切片吃放30克'));
+  const intestine=recipes.find(item=>item.video.includes('BV1Juq2BWEa2'));
+  assert.ok(intestine.steps[5][1].includes('冷藏至表皮干爽'));
+  assert.ok(intestine.steps[6][1].includes('中心约74℃'));
+  assert.equal(intestine.steps[5][2],null);
+});
