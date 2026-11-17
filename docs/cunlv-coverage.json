@@ -5,45 +5,27 @@
   "catalogExpected": 401,
   "catalogFetched": 400,
   "catalogComplete": false,
-  "upstreamCount": 353,
-  "included": 331,
-  "reviewed": 13,
+  "upstreamCount": 371,
+  "included": 352,
+  "reviewed": 40,
   "excluded": [
-    {
-      "bvid": "BV1T9Mx6rEiA",
-      "title": "【广：太好吃了‼️适合夏天的麻酱拌冷面‼️】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
-    },
     {
       "bvid": "BV1gqTf6BEC5",
       "title": "【广：夏日美食 酸甜爽口东北大冷面】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
-    },
-    {
-      "bvid": "BV1af7q6uESH",
-      "title": "【广：一股烧烤味‼️超简单的水煎五花肉‼️】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
+      "status": "excluded",
+      "reason": "冷面商品说明及煮制；核心专属料包未公开完整组成、比例和制作方法，无法去除特定商品后独立复现。"
     },
     {
       "bvid": "BV1Z2jQ6SETD",
       "title": "【广：浓郁的麻酱混着辣椒油的香味，麻酱拌冷面太适合夏天了！】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
-    },
-    {
-      "bvid": "BV1A1jv67EnS",
-      "title": "【广：10分钟搞定，辣椒圈拌面】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
+      "status": "excluded",
+      "reason": "麻酱冷面商品拌制；核心专属料包未公开完整组成、比例和制作方法，无法去除特定商品后独立复现。"
     },
     {
       "bvid": "BV1PnJu6JE8Z",
       "title": "【广：天热不爱做饭，来碗清爽的东北大冷面‼️ 】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
+      "status": "excluded",
+      "reason": "冷面商品说明及煮制；核心专属料包未公开完整组成、比例和制作方法，无法去除特定商品后独立复现。"
     },
     {
       "bvid": "BV1faV46GEQT",
@@ -192,18 +174,6 @@
       "status": "needs-source-review"
     },
     {
-      "bvid": "BV1oipD6FEcR",
-      "title": "【空气炸锅烤鸡‼️这味道原地出摊吧‼️】",
-      "video": "https://www.bilibili.com/video/BV1oipD6FEcR/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1eqpx6pEKg",
-      "title": "【惊艳味蕾！XO酱保姆级教程】",
-      "video": "https://www.bilibili.com/video/BV1eqpx6pEKg/",
-      "status": "needs-source-review"
-    },
-    {
       "bvid": "BV1EfHm69EHp",
       "title": "【广：朝鲜族特色美食温面！在家做如此简单】",
       "video": "https://www.bilibili.com/video/BV1EfHm69EHp/",
@@ -213,18 +183,6 @@
       "bvid": "BV147pT6WEPG",
       "title": "【广:天冷了，麻辣烫吃上，秋裤也穿上了】",
       "video": "https://www.bilibili.com/video/BV147pT6WEPG/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1xKpc6qECv",
-      "title": "【酸甜爽脆的腌萝卜保姆级教程来了‼️】",
-      "video": "https://www.bilibili.com/video/BV1xKpc6qECv/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1h8aC6WExm",
-      "title": "【牛肉辣椒酱 保姆级教程来了！】",
-      "video": "https://www.bilibili.com/video/BV1h8aC6WExm/",
       "status": "needs-source-review"
     },
     {
@@ -246,27 +204,9 @@
       "status": "needs-source-review"
     },
     {
-      "bvid": "BV1xktE6eE3u",
-      "title": "【广：野苏子酱搭配清炖牛肋条，人间美味！】",
-      "video": "https://www.bilibili.com/video/BV1xktE6eE3u/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1Lg8i6TEGU",
-      "title": "【以前也不知道蛏子捞饭竟然这么好吃！】",
-      "video": "https://www.bilibili.com/video/BV1Lg8i6TEGU/",
-      "status": "needs-source-review"
-    },
-    {
       "bvid": "BV1XA8T6EECb",
       "title": "【广：久等了，我亲爱的朋友们！辣椒油来了‼️】",
       "video": "https://www.bilibili.com/video/BV1XA8T6EECb/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1FVbf66EGd",
-      "title": "【一定要去试试这个一夜渍小黄瓜，好吃到流泪‼️】",
-      "video": "https://www.bilibili.com/video/BV1FVbf66EGd/",
       "status": "needs-source-review"
     },
     {
@@ -279,12 +219,6 @@
       "bvid": "BV1qBgJ65ELN",
       "title": "【广：真正的传统工艺粉条！附全面检测报告】",
       "video": "https://www.bilibili.com/video/BV1qBgJ65ELN/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1YWuY6MEGp",
-      "title": "【不吐骨头的薯骨鸡翅‼️全家都吃嗨了‼️】",
-      "video": "https://www.bilibili.com/video/BV1YWuY6MEGp/",
       "status": "needs-source-review"
     },
     {
@@ -306,24 +240,6 @@
       "status": "needs-source-review"
     },
     {
-      "bvid": "BV1omgZ6QEHy",
-      "title": "【懒人减脂餐，地中海饮食油浸彩椒、油浸小番茄‼️】",
-      "video": "https://www.bilibili.com/video/BV1omgZ6QEHy/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV127gb6SEwc",
-      "title": "【大人小孩谁能拒绝！酸甜的果香配上酥脆的排骨！菠萝炒排骨】",
-      "video": "https://www.bilibili.com/video/BV127gb6SEwc/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1bvKt6yECE",
-      "title": "【不一样的西红柿鸡蛋汤‼️酸辣清爽又很简单‼️】",
-      "video": "https://www.bilibili.com/video/BV1bvKt6yECE/",
-      "status": "needs-source-review"
-    },
-    {
       "bvid": "BV188NQ6GEir",
       "title": "【广：夏天在家煮一锅麻辣烫，吹着风扇追个剧‼️】",
       "video": "https://www.bilibili.com/video/BV188NQ6GEir/",
@@ -336,21 +252,9 @@
       "status": "needs-source-review"
     },
     {
-      "bvid": "BV1NZRpB5E6f",
-      "title": "【再也不用对着屏幕流口水了，八爪鱼拌面保姆级教程来了！】",
-      "video": "https://www.bilibili.com/video/BV1NZRpB5E6f/",
-      "status": "needs-source-review"
-    },
-    {
       "bvid": "BV1AfFJzyEDM",
       "title": "【在家做出酒楼味道的梅菜扣肉】",
       "video": "https://www.bilibili.com/video/BV1AfFJzyEDM/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV16qkNBDEKB",
-      "title": "【世界上这么会有如此好吃的大肉丸子！红烧狮子头保姆级教程】",
-      "video": "https://www.bilibili.com/video/BV16qkNBDEKB/",
       "status": "needs-source-review"
     },
     {
@@ -366,12 +270,6 @@
       "status": "needs-source-review"
     },
     {
-      "bvid": "BV1aeUpBuEvL",
-      "title": "【冬日懒人神菜！蒜蓉粉丝虾滑煲】",
-      "video": "https://www.bilibili.com/video/BV1aeUpBuEvL/",
-      "status": "needs-source-review"
-    },
-    {
       "bvid": "BV1u4CKB3ESj",
       "title": "【水煮鱼！！保姆级教程包教包会】",
       "video": "https://www.bilibili.com/video/BV1u4CKB3ESj/",
@@ -384,21 +282,9 @@
       "status": "needs-source-review"
     },
     {
-      "bvid": "BV1WtWMzzELV",
-      "title": "【水嫩鸡排保姆级教程 巨嫩无比可冷冻】",
-      "video": "https://www.bilibili.com/video/BV1WtWMzzELV/",
-      "status": "needs-source-review"
-    },
-    {
       "bvid": "BV1BcHrzJE8w",
       "title": "【巨香无比的牛肉水煎包，保姆级教程包教包会】",
       "video": "https://www.bilibili.com/video/BV1BcHrzJE8w/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1xgaJzFEBW",
-      "title": "【比豆腐还嫩的酱炒鸡蛋，巨好吃只需10分钟】",
-      "video": "https://www.bilibili.com/video/BV1xgaJzFEBW/",
       "status": "needs-source-review"
     },
     {
@@ -408,28 +294,16 @@
       "status": "needs-source-review"
     },
     {
-      "bvid": "BV1uazjYeEKd",
-      "title": "【春川鸡排】外面二百多一盘，在家几十元轻松做！",
-      "video": "https://www.bilibili.com/video/BV1uazjYeEKd/",
-      "status": "needs-source-review"
-    },
-    {
       "bvid": "BV1kmtHetEc8",
       "title": "【满屋飘香绝味酱大骨】吃完了嘴巴都留香啊！以及炒糖色保姆级教程！",
       "video": "https://www.bilibili.com/video/BV1kmtHetEc8/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1zZ421M7Ez",
-      "title": "【果冻般口感的不腻红烧肉】保姆教程，包教包会",
-      "video": "https://www.bilibili.com/video/BV1zZ421M7Ez/",
       "status": "needs-source-review"
     }
   ],
   "allRecipesComplete": false,
   "states": {
-    "excluded": 5,
-    "pending-review": 382,
-    "reviewed-included": 13
+    "excluded": 16,
+    "pending-review": 344,
+    "reviewed-included": 40
   }
 }

@@ -27,12 +27,34 @@ parser.add_argument('--prepare', action='store_true')
 parser.add_argument('--model', default='medium')
 parser.add_argument('--batch', action='store_true')
 parser.add_argument('--limit', type=int)
+parser.add_argument('--cpu-threads', type=int, default=8)
+parser.add_argument('--transcript-name', default='transcript.json')
+parser.add_argument('--job-name', default='')
+parser.add_argument('--skip-primary', action='store_true')
+parser.add_argument('--skip-transcript', default='')
+parser.add_argument('--beam-size', type=int, default=5)
+parser.add_argument('--no-word-timestamps', action='store_true')
 args = parser.parse_args()
+if not 1 <= args.cpu_threads <= 16:
+    parser.error('cpu-threads must be between 1 and 16')
+if Path(args.transcript_name).name != args.transcript_name or not args.transcript_name.endswith('.json'):
+    parser.error('transcript-name must be a JSON filename without directories')
+if args.job_name and (not args.job_name.isalnum() or len(args.job_name) > 24):
+    parser.error('job-name must be a short alphanumeric name')
+if args.skip_primary and args.transcript_name == 'transcript.json':
+    parser.error('skip-primary requires a separate transcript filename')
+if args.skip_transcript and (Path(args.skip_transcript).name != args.skip_transcript or not args.skip_transcript.endswith('.json') or args.skip_transcript == args.transcript_name):
+    parser.error('skip-transcript must be another JSON filename')
+if not 1 <= args.beam_size <= 5:
+    parser.error('beam-size must be between 1 and 5')
 from job_state import JobState
-job = JobState(ROOT/'quality-assurance'/'cunlv') if args.batch else None
+state_root = ROOT/'quality-assurance'/'cunlv'
+if args.job_name:
+    state_root = state_root/('asr-'+args.job_name)
+job = JobState(state_root) if args.batch else None
 started = time.monotonic()
 print('Loading local CPU INT8 model: ' + args.model, flush=True)
-model = WhisperModel(args.model, device='cpu', compute_type='int8', cpu_threads=8, num_workers=1,
+model = WhisperModel(args.model, device='cpu', compute_type='int8', cpu_threads=args.cpu_threads, num_workers=1,
                      download_root=str(ROOT / 'toolchain' / 'cunlv-asr' / 'models'))
 print('Model ready', flush=True)
 if job:job.update(status='running', stage='model-ready', model=args.model)
@@ -47,8 +69,8 @@ def transcribe(source, target, verbose=True):
     target.parent.mkdir(parents=True, exist_ok=True)
     decoded = subprocess.run([str(ffmpeg), '-v', 'error', '-i', str(source), '-f', 'f32le', '-acodec', 'pcm_f32le', '-ar', '16000', '-ac', '1', '-'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     audio = np.frombuffer(decoded.stdout, dtype=np.float32).copy()
-    segments, info = model.transcribe(audio, language='zh', beam_size=5, vad_filter=True,
-                                  word_timestamps=True, condition_on_previous_text=False)
+    segments, info = model.transcribe(audio, language='zh', beam_size=args.beam_size, vad_filter=True,
+                                  word_timestamps=not args.no_word_timestamps, condition_on_previous_text=False)
     rows = []
     for segment in segments:
         rows.append({'start':segment.start,'end':segment.end,'text':segment.text,
@@ -58,6 +80,7 @@ def transcribe(source, target, verbose=True):
         if job:job.update(stage='transcribing', currentBvid=source.parent.name, audioSeconds=info.duration, processedSeconds=segment.end)
     result = {'schemaVersion':1,'status':'unreviewed-transcript','model':args.model,
           'engine':'faster-whisper','computeType':'int8','language':info.language,'duration':info.duration,
+          'options':{'beamSize':args.beam_size,'wordTimestamps':not args.no_word_timestamps},
           'audioSha256':hashlib.sha256(source.read_bytes()).hexdigest(),
           'elapsedSeconds':round(time.monotonic()-started,2),'segments':rows}
     temporary=target.with_suffix('.tmp.json')
@@ -79,7 +102,21 @@ else:
         next_item=None
         for row in available:
             if row['bvid'] in done or row['bvid'] in failures:continue
-            output=review_root/'evidence'/row['bvid']/'transcript.json'
+            if args.skip_transcript:
+                other=review_root/'evidence'/row['bvid']/args.skip_transcript
+                if other.exists():
+                    cached=json.loads(other.read_text(encoding='utf-8'))
+                    if cached.get('audioSha256')==row['audioSha256']:
+                        done.add(row['bvid'])
+                        continue
+            if args.skip_primary:
+                primary=review_root/'evidence'/row['bvid']/'transcript.json'
+                if primary.exists():
+                    cached=json.loads(primary.read_text(encoding='utf-8'))
+                    if cached.get('audioSha256')==row['audioSha256']:
+                        done.add(row['bvid'])
+                        continue
+            output=review_root/'evidence'/row['bvid']/args.transcript_name
             if output.exists():
                 cached=json.loads(output.read_text(encoding='utf-8'))
                 if cached.get('audioSha256')==row['audioSha256'] and cached.get('model')==args.model:
@@ -97,13 +134,13 @@ else:
         print('Transcribing '+bvid+'; completed '+str(len(done)),flush=True)
         if job:job.update(stage='transcribing', currentBvid=bvid, completed=len(done), failed=len(failures), processedSeconds=0)
         try:
-            transcribe(review_root/next_item['audio'],review_root/'evidence'/bvid/'transcript.json',verbose=False)
+            transcribe(review_root/next_item['audio'],review_root/'evidence'/bvid/args.transcript_name,verbose=False)
             done.add(bvid)
         except Exception as error:
             failures[bvid]=str(error)
             print('Failed '+bvid+': '+str(error),flush=True)
         report={'updatedAt':datetime.now(timezone.utc).isoformat(),'model':args.model,'status':'transcription-only-not-reviewed','completed':sorted(done),'failures':failures,'elapsedSeconds':round(time.monotonic()-started,2)}
-        progress_target=review_root/'transcription-progress.json'
+        progress_target=state_root/'transcription-progress.json'
         temporary=progress_target.with_suffix('.tmp.json')
         temporary.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
         temporary.replace(progress_target)

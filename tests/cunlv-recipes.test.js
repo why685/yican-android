@@ -210,3 +210,31 @@ test('sukiyaki keeps dashi allocation separate from its concentrated sauce',()=>
   assert.ok(recipe.steps[7][1].includes('不是把全部出汁一次用完'));
   assert.equal(recipe.steps[1][2],1800);
 });
+
+test('reviewed sauces and casseroles keep net weights and split seasoning quantities',()=>{
+  const tofu=recipes.find(item=>item.video.includes('BV1NCjx6oEhT'));
+  assert.equal(tofu.ingredients.find(x=>x.name==='豆腐').amount,'300克');
+  assert.equal(tofu.ingredients.find(x=>x.name==='土豆淀粉').amount,'6克');
+  const chicken=recipes.find(item=>item.video.includes('BV18BTP6EEdM'));
+  assert.equal(chicken.ingredients.find(x=>x.name==='大蒜').amount,'45克');
+  assert.equal(chicken.ingredients.find(x=>x.name==='生抽').amount,'25克');
+  assert.equal(chicken.ingredients.find(x=>x.name==='老抽').amount,'9克');
+  const casserole=recipes.find(item=>item.video.includes('BV1aeUpBuEvL'));
+  assert.equal(casserole.ingredients.find(x=>x.name==='生抽').amount,'35克');
+  assert.equal(casserole.ingredients.find(x=>x.name==='白糖').amount,'7克');
+  assert.equal(casserole.steps[4][2],120);
+  assert.equal(casserole.steps[6][2],180);
+});
+
+test('a two-use octopus sauce is not treated as one serving and partial ads keep independent tutorials',()=>{
+  const octopus=recipes.find(item=>item.video.includes('BV1NZRpB5E6f'));
+  assert.ok(octopus.steps[3][1].includes('本次先取一半'));
+  assert.ok(octopus.steps[5][1].includes('半份'));
+  const peanuts=recipes.find(item=>item.video.includes('BV1T9Mx6rEiA'));
+  assert.equal(peanuts.name,'空气炸锅花生米');
+  assert.equal(peanuts.steps[1][2],360);
+  assert.equal(peanuts.ingredients.find(x=>x.name==='生花生米').amount,'原视频未明确');
+  const infused=recipes.find(item=>item.video.includes('BV1omgZ6QEHy'));
+  assert.ok(infused.steps[6][1].includes('4天内'));
+  assert.doesNotMatch(JSON.stringify(infused),/可保存半个月|冷藏半个月/);
+});
