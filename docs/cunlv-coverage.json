@@ -5,9 +5,9 @@
   "catalogExpected": 402,
   "catalogFetched": 401,
   "catalogComplete": false,
-  "upstreamCount": 382,
-  "included": 367,
-  "reviewed": 71,
+  "upstreamCount": 385,
+  "included": 372,
+  "reviewed": 91,
   "excluded": [
     {
       "bvid": "BV1gqTf6BEC5",
@@ -30,8 +30,8 @@
     {
       "bvid": "BV1faV46GEQT",
       "title": "【广：酸甜适中 酱汁浓郁 新品麻酱拌冷面】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
+      "status": "excluded",
+      "reason": "特定商品料包煮制或拌制演示，核心酱料未公开完整组成及制作配比，去掉指定商品后不能独立复现。"
     },
     {
       "bvid": "BV1eA5W6bEyu",
@@ -42,8 +42,8 @@
     {
       "bvid": "BV1jZomBMEDo",
       "title": "【广：犄角旮旯胡同的黏糊麻辣烫，就是小时候的味道‼️ 】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
+      "status": "excluded",
+      "reason": "特定商品料包煮制或拌制演示，核心酱料未公开完整组成及制作配比，去掉指定商品后不能独立复现。"
     },
     {
       "bvid": "BV1XRonBsERi",
@@ -52,32 +52,20 @@
       "reason": "过桥米线商品料包煮制及调蘸汁演示，核心汤底来自未公开配方的专属成品底料包，不能去掉商品后独立复现汤底。"
     },
     {
-      "bvid": "BV1hn9sBWEre",
-      "title": "【广：克制用油版 焦香土豆丝饼】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
-    },
-    {
       "bvid": "BV1pAwZzWE9E",
       "title": "【广：真白糖做的蜂蜜大冷面，大酸甜口汤汁都能当饮料喝】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
+      "status": "excluded",
+      "reason": "成品蜂蜜冷面料包的煮制、稀释及配菜展示；浓缩汤包和其余料包均未公开完整配方，无法去除指定商品后独立复现冷面汤。"
     },
     {
       "bvid": "BV1M9ZuBnE1J",
       "title": "【祝亲爱的你们，新的一年万事顺遂，平安喜乐】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
+      "status": "excluded",
+      "reason": "全片约15.7秒为新年问候祝福，无菜肴食材、配方或操作教程。"
     },
     {
       "bvid": "BV1Zwf9BoEEg",
       "title": "【广：巨巨巨巨好吃的烧烤味炒蘑菇】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
-    },
-    {
-      "bvid": "BV1M1r1ByE68",
-      "title": "【广：空气炸锅解馋小零食又来了！空气炸锅土豆火腿肠！】",
       "status": "pending-review",
       "reason": "等待复核完整教程，不因广告标签直接排除"
     },
@@ -192,34 +180,16 @@
       "status": "needs-source-review"
     },
     {
-      "bvid": "BV1u4CKB3ESj",
-      "title": "【水煮鱼！！保姆级教程包教包会】",
-      "video": "https://www.bilibili.com/video/BV1u4CKB3ESj/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1ArxBzFETN",
-      "title": "【销魂熏肉大饼！全套保姆级教程！】",
-      "video": "https://www.bilibili.com/video/BV1ArxBzFETN/",
-      "status": "needs-source-review"
-    },
-    {
       "bvid": "BV1kmtHetEc8",
       "title": "【满屋飘香绝味酱大骨】吃完了嘴巴都留香啊！以及炒糖色保姆级教程！",
       "video": "https://www.bilibili.com/video/BV1kmtHetEc8/",
-      "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1AEsK6QEQf",
-      "title": "【好吃到灵魂颤抖的酱香甜辣鸭舌一定要去做‼️】",
-      "video": "https://www.bilibili.com/video/BV1AEsK6QEQf/",
       "status": "needs-source-review"
     }
   ],
   "allRecipesComplete": false,
   "states": {
-    "excluded": 20,
-    "reviewed-included": 71,
-    "pending-review": 310
+    "excluded": 24,
+    "reviewed-included": 91,
+    "pending-review": 286
   }
 }
