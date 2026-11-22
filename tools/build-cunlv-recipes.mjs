@@ -75,7 +75,9 @@ const recipes = selected.map(row => {
 }).sort((a,b) => a.id-b.id);
 const selectedBvids = new Set(selected.map(row => row.video_bvid));
 const upstreamBvids = new Set(rows.map(row => row.video_bvid));
-const missing = catalog.items.filter(item => !upstreamBvids.has(item.bvid)).map(({bvid,title}) => ({bvid,title,video:'https://www.bilibili.com/video/' + bvid + '/',status:'needs-source-review'}));
+// Missing community text does not imply an unresolved review: a video may have
+// been inspected directly and excluded with evidence (for example, pure sales).
+const missing = catalog.items.filter(item => !upstreamBvids.has(item.bvid)).map(({bvid,title}) => ({bvid,title,video:'https://www.bilibili.com/video/' + bvid + '/',status:reviews.get(bvid)?.status||'needs-source-review',...(reviews.get(bvid)?.reason?{reason:reviews.get(bvid).reason}:{})}));
 const report = {checkedAt:catalog.checkedAt||catalog.capturedAt,upstream:'https://github.com/Ryder-Sun/Cunlv-Skill',upstreamSha256:crypto.createHash('sha256').update(fs.readFileSync(input)).digest('hex'),catalogExpected:catalog.expected,catalogFetched:catalog.items.length,catalogComplete:catalog.complete,upstreamCount:rows.length,included:recipes.length,reviewed:recipes.filter(recipe=>recipe.provenance?.kind==='video-reviewed').length,excluded:rows.filter(row => !selectedBvids.has(row.video_bvid)).map(row => ({bvid:row.video_bvid,title:row.video_title,status:reviews.get(row.video_bvid)?.status||'pending-review',reason:reviews.get(row.video_bvid)?.reason||'等待复核完整教程，不因广告标签直接排除'})),missing,allRecipesComplete:false};
 report.states=(ledger?.items||[]).reduce((states,record)=>(states[record.status]=(states[record.status]||0)+1,states),{});
 report.allRecipesComplete=Boolean(ledger && releaseErrors(ledger,recipes).length===0);

@@ -12,6 +12,16 @@ for (const file of ['recipes-suipo.js','recipes-laocp.js','recipes-cunlv.js']) {
 const recipes = context.window.CUNLV_RECIPES;
 const coverage=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../docs/cunlv-coverage.json'),'utf8'));
 
+test('coverage preserves direct review decisions even without community text',()=>{
+  const ledger=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../docs/cunlv-review.json'),'utf8'));
+  for(const missing of coverage.missing){
+    const record=ledger.items.find(item=>item.bvid===missing.bvid);
+    assert.equal(missing.status,record.status);
+    if(record.status==='excluded')assert.equal(missing.reason,record.reason);
+  }
+  assert.equal(coverage.reviewed,ledger.items.filter(item=>item.status==='reviewed-included').length);
+});
+
 test('reviewed noodle sauce does not turn a sauce serving suggestion into extra salt',()=>{
   const recipe=recipes.find(item=>item.video.includes('BV1WVViz4Er7'));
   assert.equal(recipe.provenance.kind,'video-reviewed');

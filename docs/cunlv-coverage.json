@@ -7,7 +7,7 @@
   "catalogComplete": false,
   "upstreamCount": 386,
   "included": 375,
-  "reviewed": 352,
+  "reviewed": 375,
   "excluded": [
     {
       "bvid": "BV1gqTf6BEC5",
@@ -81,97 +81,111 @@
       "bvid": "BV1tXWe6MEAY",
       "title": "【广：村驴家稻花香2号回归】",
       "video": "https://www.bilibili.com/video/BV1tXWe6MEAY/",
-      "status": "needs-source-review"
+      "status": "excluded",
+      "reason": "整条为特定大米的包装、品质检测、口感与购买说明；虽提到该产品蒸饭水米比例，但没有独立完整的制作教程，按纯商品介绍排除。"
     },
     {
       "bvid": "BV12yWt6JE3S",
       "title": "【今天不做饭 也没广告】",
       "video": "https://www.bilibili.com/video/BV12yWt6JE3S/",
-      "status": "needs-source-review"
+      "status": "excluded",
+      "reason": "日常拍摄、造型和幕后画面，完整音轨没有教学口播，画面未展示食材或完整做菜教程。"
     },
     {
       "bvid": "BV1Hc4J6tEqT",
       "title": "【广：上新啦！冰淇淋质感的村驴家椴树蜜n】",
       "video": "https://www.bilibili.com/video/BV1Hc4J6tEqT/",
-      "status": "needs-source-review"
+      "status": "excluded",
+      "reason": "完整内容为蜂蜜新品、品质检测、口感和购买介绍，仅泛泛提及冲饮与烤鸡用途，没有独立完整的菜谱教程，按纯商品介绍排除。"
     },
     {
       "bvid": "BV1aexk6gE2L",
       "title": "【广：不知不觉，土豆粉卖了三年了】",
       "video": "https://www.bilibili.com/video/BV1aexk6gE2L/",
-      "status": "needs-source-review"
+      "status": "excluded",
+      "reason": "袋装土豆粉商品煮制及试吃；核心酱料包与其他随商品料包未公开组成和做法，去掉特定商品后无法独立复现完整配方。"
     },
     {
       "bvid": "BV1Y4HV6mE1i",
       "title": "【天冷了，在家爽吃一顿麻辣烫人均不到10r】",
       "video": "https://www.bilibili.com/video/BV1Y4HV6mE1i/",
-      "status": "needs-source-review"
+      "status": "excluded",
+      "reason": "麻辣烫商品煮制；核心专属料包未公开完整组成、比例和制作方法，无法去除特定商品后独立复现。"
     },
     {
       "bvid": "BV1dMJS6UEd5",
       "title": "【广：天气越来越冷了！到了吃东北过桥电线的时候！】",
       "video": "https://www.bilibili.com/video/BV1dMJS6UEd5/",
-      "status": "needs-source-review"
+      "status": "excluded",
+      "reason": "商品过桥米线煮制演示；核心成品酱料包未公开配方与制作方法，不能去除特定商品后独立复现完整汤底。"
     },
     {
       "bvid": "BV1EfHm69EHp",
       "title": "【广：朝鲜族特色美食温面！在家做如此简单】",
       "video": "https://www.bilibili.com/video/BV1EfHm69EHp/",
-      "status": "needs-source-review"
+      "status": "excluded",
+      "reason": "温面成品苏子酱商品演示，核心调味依赖作者售卖的已调味酱料，未公开酱的配比和熬制方法；去掉专属商品后无法独立复现完整配方。"
     },
     {
       "bvid": "BV147pT6WEPG",
       "title": "【广:天冷了，麻辣烫吃上，秋裤也穿上了】",
       "video": "https://www.bilibili.com/video/BV147pT6WEPG/",
-      "status": "needs-source-review"
+      "status": "excluded",
+      "reason": "麻辣烫商品煮制；核心专属料包未公开完整组成、比例和制作方法，无法去除特定商品后独立复现。"
     },
     {
       "bvid": "BV1Lqah6cE6R",
       "title": "【广：天气凉了，又到了吃麻辣烫的季节】",
       "video": "https://www.bilibili.com/video/BV1Lqah6cE6R/",
-      "status": "needs-source-review"
+      "status": "excluded",
+      "reason": "麻辣烫商品煮制；核心专属料包未公开完整组成、比例和制作方法，无法去除特定商品后独立复现。"
     },
     {
       "bvid": "BV1XA8T6EECb",
       "title": "【广：久等了，我亲爱的朋友们！辣椒油来了‼️】",
       "video": "https://www.bilibili.com/video/BV1XA8T6EECb/",
-      "status": "needs-source-review"
+      "status": "excluded",
+      "reason": "成品辣椒油上架介绍、试吃及检测/发货宣传；未公开香料比例、原料用量或制作过程，抹馒头拌面仅食用展示，不构成可独立复现的完整教程。"
     },
     {
       "bvid": "BV1vTbD6rEUX",
       "title": "【广：麻辣烫配方调整了哦】",
       "video": "https://www.bilibili.com/video/BV1vTbD6rEUX/",
-      "status": "needs-source-review"
+      "status": "excluded",
+      "reason": "麻辣烫商品配方说明及煮制；核心专属料包未公开完整组成、比例和制作方法，无法去除特定商品后独立复现。"
     },
     {
       "bvid": "BV1qBgJ65ELN",
       "title": "【广：真正的传统工艺粉条！附全面检测报告】",
       "video": "https://www.bilibili.com/video/BV1qBgJ65ELN/",
-      "status": "needs-source-review"
+      "status": "excluded",
+      "reason": "粉条商品的配料、工艺、检测报告和售价介绍，无粉条制作配比或独立菜肴完整做法，仅引导到其他投稿查教程。"
     },
     {
       "bvid": "BV1D8MS65Euf",
       "title": "【广：夏天就指这一碗酸甜冰爽的东北大冷面续命了】",
       "video": "https://www.bilibili.com/video/BV1D8MS65Euf/",
-      "status": "needs-source-review"
+      "status": "excluded",
+      "reason": "冷面商品煮制；核心专属料包未公开完整组成、比例和制作方法，无法去除特定商品后独立复现。"
     },
     {
       "bvid": "BV1XTGF6DEKp",
       "title": "【这么热的天气，想吃麻辣烫还是在家舒服啊‼️ 】",
       "video": "https://www.bilibili.com/video/BV1XTGF6DEKp/",
-      "status": "needs-source-review"
+      "status": "excluded",
+      "reason": "麻辣烫商品煮制；核心专属料包未公开完整组成、比例和制作方法，无法去除特定商品后独立复现。"
     },
     {
       "bvid": "BV188NQ6GEir",
       "title": "【广：夏天在家煮一锅麻辣烫，吹着风扇追个剧‼️】",
       "video": "https://www.bilibili.com/video/BV188NQ6GEir/",
-      "status": "needs-source-review"
+      "status": "excluded",
+      "reason": "麻辣烫商品煮制；核心专属料包未公开完整组成、比例和制作方法，无法去除特定商品后独立复现。"
     }
   ],
   "allRecipesComplete": false,
   "states": {
     "excluded": 26,
-    "reviewed-included": 352,
-    "pending-review": 23
+    "reviewed-included": 375
   }
 }
