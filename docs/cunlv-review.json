@@ -13516,22 +13516,85 @@
       "bvid": "BV1sMbhzJEm7",
       "title": "【软嫩爆汁 清炖牛肋条保姆级教程】",
       "video": "https://www.bilibili.com/video/BV1sMbhzJEm7/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1sMbhzJEm7/source.json",
+          "sha256": "fbdbba3d8f5f9771eac4484d1b761f47a7140a7d05889d73d3cd807689c80712"
+        },
+        {
+          "path": "evidence/BV1sMbhzJEm7/audio.m4a",
+          "sha256": "9e4e23eee6ae35e88e962311266e76f1ef00d4ed81c946a1b47e72af2c0224fa"
+        },
+        {
+          "path": "evidence/BV1sMbhzJEm7/transcript-small.json",
+          "sha256": "ce9dabd5a09ad2f282f522613ef5ef6ec693b2d74e8866795c814194f1eba145"
+        },
+        {
+          "path": "evidence/BV1sMbhzJEm7/review-video.mp4",
+          "sha256": "b37bd913f427c0ee001adaae2d544fbaec75d06e4372e698c443e60522d769b9"
+        },
+        {
+          "path": "evidence/BV1sMbhzJEm7/ingredient-check.jpg",
+          "sha256": "2678831551fdf715d100d0a1e7ead6509b78483da26f7deeeb5931686175b7cc"
+        },
+        {
+          "path": "evidence/BV1sMbhzJEm7/review-notes.md",
+          "sha256": "8ed55eeb95d5bc97d17f314fa59a6aff82e0576a7923b9db42b947ddbf402418"
+        },
+        {
+          "path": "evidence/BV1sMbhzJEm7/sauce-check.png",
+          "sha256": "9049972d82fcb26dea615dec2159271d9781ab68b87e779285bbbe8d1c36a642"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex/parallel-a",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 9
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 27
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 43,
+          "durationSeconds": 5400
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 80
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 103
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 134
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 175
+        }
+      ],
+      "contentSha256": "08ef2be6e0f5b0a92db42ab6534c9e6dfc450fa38e7a67e8881de9f2892c2b27"
     },
     {
       "bvid": "BV1TgbGzKEiQ",
@@ -13768,64 +13831,229 @@
       "bvid": "BV1zGtuzVEtE",
       "title": "【相信我！这不是黑暗料理！】",
       "video": "https://www.bilibili.com/video/BV1zGtuzVEtE/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1zGtuzVEtE/source.json",
+          "sha256": "9e2bf99463d30199169eaa9077f8292c6c9235a331b2474658399be0b5039f60"
+        },
+        {
+          "path": "evidence/BV1zGtuzVEtE/audio.m4a",
+          "sha256": "6c65932f26501d83a8ca7a4c76b102a5481891d1554850218e7b39f4ae5c4699"
+        },
+        {
+          "path": "evidence/BV1zGtuzVEtE/transcript-small.json",
+          "sha256": "35f78a8907eca9beae87f5f32138bc608922f1a3a6e1f7b17c66148dce091ad5"
+        },
+        {
+          "path": "evidence/BV1zGtuzVEtE/review-video.mp4",
+          "sha256": "9614c9d4dfda019564c7f1c41d649dd635d45acdd635d34d628213bc867f7709"
+        },
+        {
+          "path": "evidence/BV1zGtuzVEtE/ingredient-check.jpg",
+          "sha256": "55eea34f818370eeaf9c042c90539fc4268227bf4e07bb8d219123563f6828d6"
+        },
+        {
+          "path": "evidence/BV1zGtuzVEtE/review-notes.md",
+          "sha256": "504e88b61f0e92c5a1e52ca7a62ce88de56cdcc53b1db19928cf5d256fd055f3"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex/parallel-a",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 13,
+          "durationSeconds": 300
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 31
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 42
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 75
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 79
+        }
+      ],
+      "contentSha256": "0d1e25ba2e6729266a3c645bf5f436138949c06ed9d24b8e5e3dc9400c4b7cce"
     },
     {
       "bvid": "BV1AshbzmEV9",
       "title": "【五花肉炖豆角 30多年都没吃够啊】",
       "video": "https://www.bilibili.com/video/BV1AshbzmEV9/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1AshbzmEV9/source.json",
+          "sha256": "f3fb817403423f250c4cd2af5d6a2a793080ebb4d9087011c6cbff08a1c09a88"
+        },
+        {
+          "path": "evidence/BV1AshbzmEV9/audio.m4a",
+          "sha256": "0c924f775586b0943ac51b36285335bf60facf8633fd8f8de615560e3c71be3d"
+        },
+        {
+          "path": "evidence/BV1AshbzmEV9/transcript-small.json",
+          "sha256": "4991194f84e277c78a673be804fbbf1097ee1190b3ab0f9a0df04458692bc4e7"
+        },
+        {
+          "path": "evidence/BV1AshbzmEV9/review-video.mp4",
+          "sha256": "ad136527f3adf5b3177d70c078ebad0caa6aede5ec77bd24772022b81fde28da"
+        },
+        {
+          "path": "evidence/BV1AshbzmEV9/agent-b-check.jpg",
+          "sha256": "fd2f040ad62f41d7aff7cb26e0e960f498ad740d69476423d47c2da62be7ba86"
+        },
+        {
+          "path": "evidence/BV1AshbzmEV9/agent-b-review-notes.md",
+          "sha256": "e60ab3ca08fab6d6369fa8aa2d72327ba367a35d431730fd242a4bc493c12d7c"
+        }
+      ],
+      "reason": "",
+      "reviewer": "cunlv_review_b",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 12
+        },
+        {
+          "index": 1,
+          "durationSeconds": 180,
+          "videoTimestampSeconds": 50
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 103
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 131
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 162
+        }
+      ],
+      "contentSha256": "09b88a884e1c99287dab07cfb2d0586c1e1fb6ce2791aded6560d16fd10ab4dd"
     },
     {
       "bvid": "BV13L8fzGEzS",
       "title": "【糖醋口的凉拌鸡架 嗦上就停不下来】",
       "video": "https://www.bilibili.com/video/BV13L8fzGEzS/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV13L8fzGEzS/source.json",
+          "sha256": "54ea870bf3e963db688fe1213ecad3f05e6e19809cf48392298e93ea44ca5a11"
+        },
+        {
+          "path": "evidence/BV13L8fzGEzS/transcript-small.json",
+          "sha256": "ed4efcd52db524bf39b1fc969810033ab1aa256e393c29492fd4e660587f2037"
+        },
+        {
+          "path": "evidence/BV13L8fzGEzS/review-video.mp4",
+          "sha256": "c23ad9dbb7514e30af8e9adb7ef04310939a790eb1ece3eeef20d036acd57b83"
+        },
+        {
+          "path": "evidence/BV13L8fzGEzS/review-c-check.jpg",
+          "sha256": "301e9db5a5679baccbcb086aa3f20e7b266292f154619f3a4d6d40904af003cb"
+        },
+        {
+          "path": "evidence/BV13L8fzGEzS/review-c-notes.md",
+          "sha256": "203de47e13291e3a73ac5dc3ae8040202e90e64e6361e5435214b20835dd6e78"
+        }
+      ],
+      "reason": "",
+      "reviewer": "cunlv_review_c",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 11
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 28
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 35
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 57
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 69,
+          "durationSeconds": 600
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 89
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 118
+        },
+        {
+          "index": 7,
+          "videoTimestampSeconds": 129
+        },
+        {
+          "index": 8,
+          "videoTimestampSeconds": 162
+        }
+      ],
+      "contentSha256": "014e36659c7be8f6cc6149d9ce709a104ef089d0fd875d097ad2f6d4baafe73a"
     },
     {
       "bvid": "BV1Lm8LzhEm8",
@@ -13915,148 +14143,534 @@
       "bvid": "BV1vfbmzJEY9",
       "title": "【干煸土豆丝饼 外酥里糯 零失误教程】",
       "video": "https://www.bilibili.com/video/BV1vfbmzJEY9/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1vfbmzJEY9/source.json",
+          "sha256": "113668fccb2de689aabb0341224a71fb1abe37460438d1f49f31667a37545d8e"
+        },
+        {
+          "path": "evidence/BV1vfbmzJEY9/audio.m4a",
+          "sha256": "462d6b8a1f097541231111d71028f655b4c8521934fd0b037d87d70deaa6b1b6"
+        },
+        {
+          "path": "evidence/BV1vfbmzJEY9/transcript-small.json",
+          "sha256": "04c940564a361225e5fbbf706b6e6c072b5c97a3bca881ecb1373f3370d47a4c"
+        },
+        {
+          "path": "evidence/BV1vfbmzJEY9/review-video.mp4",
+          "sha256": "59756d4f0d249db871d0095fcc664c1f3f8c247dc5b8651b84c618423e741006"
+        },
+        {
+          "path": "evidence/BV1vfbmzJEY9/ingredient-check.jpg",
+          "sha256": "c25ef19f53d76d61ef23e1800871490b759da85dfefc6a059437d03af134f8fa"
+        },
+        {
+          "path": "evidence/BV1vfbmzJEY9/review-notes.md",
+          "sha256": "a3ec0e06ea8f27c568738ad3fbf7120b8534e3d9c22eee3204a319e38a3888f0"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex/parallel-a",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 8
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 35
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 67
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 92,
+          "durationSeconds": 60
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 97,
+          "durationSeconds": 240
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 120,
+          "durationSeconds": 240
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 129
+        }
+      ],
+      "contentSha256": "29be201122ff9cfe09b75198ca8762b0a1ee0f006946cf55fa4149265e62fada"
     },
     {
       "bvid": "BV11dbdzWEMM",
       "title": "【口口爆汁 爆汁牛肉大蒸饺】",
       "video": "https://www.bilibili.com/video/BV11dbdzWEMM/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV11dbdzWEMM/source.json",
+          "sha256": "b8daf4b32825b0bf8f03a131f0751e211699d8a521bb868ccb329293e0739196"
+        },
+        {
+          "path": "evidence/BV11dbdzWEMM/audio.m4a",
+          "sha256": "092525bb688d83b6630b827227e7908f4d4f1f2b00613838436c3e23a560e33d"
+        },
+        {
+          "path": "evidence/BV11dbdzWEMM/transcript-small.json",
+          "sha256": "1df9d69ab442d578cb3533c60f2a02fdd9ac20331e3ede9e3655397574fe3bef"
+        },
+        {
+          "path": "evidence/BV11dbdzWEMM/review-video.mp4",
+          "sha256": "bdd87d7ab125e0291b8bf3e297dd2a77ced9c3c2a604587efe8b3b0cd6dbc888"
+        },
+        {
+          "path": "evidence/BV11dbdzWEMM/agent-b-check.jpg",
+          "sha256": "1184ce3be057946b99bd0055599e4fedfff7ad05019b6c9ef13294d2966933dd"
+        },
+        {
+          "path": "evidence/BV11dbdzWEMM/agent-b-review-notes.md",
+          "sha256": "737e5ae80b2c055039dd6592bdf6b2a2a3a33af0ad8f08269cc8de40d7b4ed3d"
+        }
+      ],
+      "reason": "",
+      "reviewer": "cunlv_review_b",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 11
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 47
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 58
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 133
+        },
+        {
+          "index": 4,
+          "durationSeconds": 600,
+          "videoTimestampSeconds": 149
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 188
+        },
+        {
+          "index": 6,
+          "durationSeconds": 1200,
+          "videoTimestampSeconds": 228
+        }
+      ],
+      "contentSha256": "c22ded2b13c71f8b9b16f4bfbab331ecca0e892a2523ccf25b5a174311cc35a3"
     },
     {
       "bvid": "BV18bguzDEKv",
       "title": "【猪肝竟可以又脆又嫩！凉拌猪肝保姆级教程】",
       "video": "https://www.bilibili.com/video/BV18bguzDEKv/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV18bguzDEKv/source.json",
+          "sha256": "dea3fcfd7e12fe0e7e87eef39448f1830c1ff31c09a651bd801bdb891c0089c8"
+        },
+        {
+          "path": "evidence/BV18bguzDEKv/transcript-small.json",
+          "sha256": "2460a23bd1c6bda04a57f3b64c3688192d3d018ab99d1b95ca1f6b3b678d0399"
+        },
+        {
+          "path": "evidence/BV18bguzDEKv/review-video.mp4",
+          "sha256": "7629fcd6535961cf3b2e5b83b0bcfc1aa31207836764860853152f32e2903b51"
+        },
+        {
+          "path": "evidence/BV18bguzDEKv/review-c-check.jpg",
+          "sha256": "39fa9be4081ad980b90587b32895e3d4211ebe9df08d91ff0a493d55e1c4a709"
+        },
+        {
+          "path": "evidence/BV18bguzDEKv/review-c-notes.md",
+          "sha256": "9bb2d10c23b8fc79b2870adf4b37b2dd156dcf4c1bb441ecb1feb822dbbe2ec6"
+        }
+      ],
+      "reason": "",
+      "reviewer": "cunlv_review_c",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 10
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 32
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 57
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 81
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 96
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 113
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 144
+        }
+      ],
+      "contentSha256": "af7df1edbdef7270436a41a211f6546cc05e8792b8f361b8dd74d821a52b86d0"
     },
     {
       "bvid": "BV1TAuEziEC8",
       "title": "【酱烧排骨 饭店招牌菜家庭做法】",
       "video": "https://www.bilibili.com/video/BV1TAuEziEC8/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1TAuEziEC8/source.json",
+          "sha256": "175045c9230cacbf6c2b801426dd36b53f80a614595b593e5a7a1d83ae1a11f7"
+        },
+        {
+          "path": "evidence/BV1TAuEziEC8/transcript-small.json",
+          "sha256": "a0742c4c0654ecd3ac715b6ff9593563d2773a84a6c1029a625539435fa33dfa"
+        },
+        {
+          "path": "evidence/BV1TAuEziEC8/review-video.mp4",
+          "sha256": "58b39cd4a8a9c0f30ccbdb0b50c3a96934c408c89e56cabf03ea62149f567c42"
+        },
+        {
+          "path": "evidence/BV1TAuEziEC8/root-check.jpg",
+          "sha256": "c1a45b014bfda83a5fd61056d0ddfbfa9267c76b2f6e94c3fb594da14f44346e"
+        },
+        {
+          "path": "evidence/BV1TAuEziEC8/root-review-notes.md",
+          "sha256": "54241ff143460ff03cb402293bfcea8a5f4f077de6485891d9e80e262f46d0a2"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex/root",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 18
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 28
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 49
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 88
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 115
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 129,
+          "durationSeconds": 3600
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 149
+        }
+      ],
+      "contentSha256": "e62aa8b888f90ad6403af63ab515a40de28814097682079ac3b8cc50bf6df243"
     },
     {
       "bvid": "BV1pBGMzkEon",
       "title": "【我不允许任何关注我的小朋友不会做糖醋排骨】",
       "video": "https://www.bilibili.com/video/BV1pBGMzkEon/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1pBGMzkEon/source.json",
+          "sha256": "addd214b91129e9e8ad2ba909f8150228729e86836cf57801ac0a43dac5b3ba0"
+        },
+        {
+          "path": "evidence/BV1pBGMzkEon/audio.m4a",
+          "sha256": "5b683460998d3cdd7bbdbcb89d3aa080f0be7f1182b0921ef961477984d3ec46"
+        },
+        {
+          "path": "evidence/BV1pBGMzkEon/transcript-small.json",
+          "sha256": "736cbfd435923aaeb7e695765e1de75d54e77340836f01a96c50206f961cecd7"
+        },
+        {
+          "path": "evidence/BV1pBGMzkEon/review-video.mp4",
+          "sha256": "2f5325df9132d793f1b0feeefa110f717322acc35616b7655d9046ffe254316e"
+        },
+        {
+          "path": "evidence/BV1pBGMzkEon/ingredient-check.jpg",
+          "sha256": "d1bdf1892387cc6995844ce33c13d863bfeb2d9a1fa062774279495d630ab177"
+        },
+        {
+          "path": "evidence/BV1pBGMzkEon/review-notes.md",
+          "sha256": "82b0aa4db879458b71d5693b59418f567b44d0709f2a1e8ef7530a334ad3d693"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex/parallel-a",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 11
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 41
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 83
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 118
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 134
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 150
+        }
+      ],
+      "contentSha256": "a35da4df4cdb2317d104abb327da18ae79a9d8d24e8f565006a6267616826f08"
     },
     {
       "bvid": "BV1mAGjzBEaZ",
       "title": "【2分钟爆炒出饭店味！手撕包菜】",
       "video": "https://www.bilibili.com/video/BV1mAGjzBEaZ/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1mAGjzBEaZ/source.json",
+          "sha256": "ebad4f16915a389c943d25f03a607603dd441b0a277885ea1ca7660bcc4a6865"
+        },
+        {
+          "path": "evidence/BV1mAGjzBEaZ/audio.m4a",
+          "sha256": "d8242deb14b7c3e4fa9b26f69f53ec907816f65eda79cfbff9c4c7d9ef1d5d0c"
+        },
+        {
+          "path": "evidence/BV1mAGjzBEaZ/transcript-small.json",
+          "sha256": "eedb8bc588504d97080f0f7dfc304ceba3fede8e13138e8d2c9cfca6af781a54"
+        },
+        {
+          "path": "evidence/BV1mAGjzBEaZ/review-video.mp4",
+          "sha256": "95cfed29814388b7da8c4b5b4ef3d46d6dfee4592fec9ff64d1234eff4509a6a"
+        },
+        {
+          "path": "evidence/BV1mAGjzBEaZ/agent-b-check.jpg",
+          "sha256": "7df048f4491a889843cd3b99166cf1878dcee832d7212283fd1b431f9d215649"
+        },
+        {
+          "path": "evidence/BV1mAGjzBEaZ/agent-b-review-notes.md",
+          "sha256": "99aa365163d0f15690045db7aaea3549ebc35ae4e6de90cf496afdbe0b2c3582"
+        }
+      ],
+      "reason": "",
+      "reviewer": "cunlv_review_b",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 11
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 50
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 66
+        },
+        {
+          "index": 3,
+          "durationSeconds": 120,
+          "videoTimestampSeconds": 99
+        }
+      ],
+      "contentSha256": "8ebbda05a0a90dd7f63b9366879aadf78f0c0c92439f915dae528b60ce3749e3"
     },
     {
       "bvid": "BV1jo3LzSEY7",
       "title": "【自律期重口味美食 干拌牛肉 麻辣过瘾】",
       "video": "https://www.bilibili.com/video/BV1jo3LzSEY7/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1jo3LzSEY7/source.json",
+          "sha256": "0b51b9281482125bb086523864da47e9607646b10f6bc8a37d24e23418fe9c9d"
+        },
+        {
+          "path": "evidence/BV1jo3LzSEY7/transcript-small.json",
+          "sha256": "8a80391d09b64211933d6ebd2f9b5c7558fca7ee371a8909ab322ad757cd9da7"
+        },
+        {
+          "path": "evidence/BV1jo3LzSEY7/review-video.mp4",
+          "sha256": "cc9fdd01f36f37a00e955fecf80a1a9d0ed10c5def8bdbe7cb0269adc0658498"
+        },
+        {
+          "path": "evidence/BV1jo3LzSEY7/review-c-check.jpg",
+          "sha256": "971a8ddf01af2964e3c5797cb74215bace488bd75602df89c10ecd03add4dba4"
+        },
+        {
+          "path": "evidence/BV1jo3LzSEY7/review-c-notes.md",
+          "sha256": "0cc009e169ea4b1a09b64403848e137d78d35d6f6019c59c55e7cf876dc09b72"
+        }
+      ],
+      "reason": "",
+      "reviewer": "cunlv_review_c",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 9
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 41,
+          "durationSeconds": 3600
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 58
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 70
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 116
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 138
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 154
+        }
+      ],
+      "contentSha256": "5517a2e0c5a6b47a7057bd455a8f288e6d26db37cea56a4568ad1e68d0b35e09"
     },
     {
       "bvid": "BV1TD3WzdE53",
@@ -14125,22 +14739,77 @@
       "bvid": "BV1B7KEzLE3A",
       "title": "【上火的夏天一定要试试凉拌苦菊】",
       "video": "https://www.bilibili.com/video/BV1B7KEzLE3A/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1B7KEzLE3A/source.json",
+          "sha256": "e82a58cf937d7afaac17dd3aa60b98dd4ab062e3007ad40fe104613e0ca2ba0c"
+        },
+        {
+          "path": "evidence/BV1B7KEzLE3A/transcript-small.json",
+          "sha256": "d43b5dedbedcdb9cdaa74566b1b342de8e589134c5ddea3d853d46bc52c96682"
+        },
+        {
+          "path": "evidence/BV1B7KEzLE3A/review-video.mp4",
+          "sha256": "ef4c381bbb378de68a692f04076ef3276845c2d302194b2b98566a610a16ed4c"
+        },
+        {
+          "path": "evidence/BV1B7KEzLE3A/review-c-check.jpg",
+          "sha256": "4fcc964154ce50661c10b936b0fd895f982c309a148744db9315fd4412a79513"
+        },
+        {
+          "path": "evidence/BV1B7KEzLE3A/review-c-notes.md",
+          "sha256": "29db86c3db9f5aba9ad16a765fe9d46d907e2483c2624453122b92641a63d5e8"
+        }
+      ],
+      "reason": "",
+      "reviewer": "cunlv_review_c",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 9,
+          "durationSeconds": 360
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 15
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 28
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 44
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 54
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 62
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 84
+        }
+      ],
+      "contentSha256": "0b1d47377c732e82ed539a9c988eb6f23747f4897214e5718bcc71f0d7dd3aee"
     },
     {
       "bvid": "BV1fZK8z2E5P",
@@ -17850,22 +18519,80 @@
       "bvid": "BV1DM4m127yr",
       "title": "【这道菜征服了我家所有不爱吃鱼的人】精准比例，手把手教你做熏鱼！",
       "video": "https://www.bilibili.com/video/BV1DM4m127yr/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1DM4m127yr/source.json",
+          "sha256": "f5712728aeee03355477e6d2c60af4f69bc4c0e9325b05393e4ad314e002cfc0"
+        },
+        {
+          "path": "evidence/BV1DM4m127yr/transcript-small.json",
+          "sha256": "c488c7445594a8df15a6d3b7e022a438d19ad4b57468c7ddb5615e92183d85fd"
+        },
+        {
+          "path": "evidence/BV1DM4m127yr/review-video.mp4",
+          "sha256": "e12dfaf7e4f8817b86bd47563bb39a1d057ea61f7bbe00263fa03a5f63207853"
+        },
+        {
+          "path": "evidence/BV1DM4m127yr/review-c-check.jpg",
+          "sha256": "212b6704d549664a31a456180a0c102ebfa26fca5e780f1c840fb69b987e97a4"
+        },
+        {
+          "path": "evidence/BV1DM4m127yr/review-c-notes.md",
+          "sha256": "0a36cc7820274712b5336d36d4c8cd4410005d2584c41b096ef73edcf06784a1"
+        }
+      ],
+      "reason": "",
+      "reviewer": "cunlv_review_c",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 7
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 32
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 49
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 56
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 83
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 97
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 135
+        },
+        {
+          "index": 7,
+          "videoTimestampSeconds": 148
+        }
+      ],
+      "contentSha256": "aa777083749e727a2f17cf5429a8f2d69ecf34ea3f9e15689fd718a873a6b1c5"
     },
     {
       "bvid": "BV1tf421q7zt",
@@ -17934,22 +18661,73 @@
       "bvid": "BV1CH4y1F7Vd",
       "title": "【姥姥那一辈传下来的腌黄瓜配方】脆到震耳欲聋，配料非常简单！巨好吃！",
       "video": "https://www.bilibili.com/video/BV1CH4y1F7Vd/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1CH4y1F7Vd/source.json",
+          "sha256": "f8fad8c1db627866dccc37fc5706a3f12406e0f9eaada6343783f77198b18c97"
+        },
+        {
+          "path": "evidence/BV1CH4y1F7Vd/transcript-small.json",
+          "sha256": "198d6a797203141272819d93c622f5d508d761d11233bcc6a93d9e2ba94993ce"
+        },
+        {
+          "path": "evidence/BV1CH4y1F7Vd/review-video.mp4",
+          "sha256": "f3a81a6e6f1649b611ec8bb800e869e0af648777fe9a84ff463ba8fee735242f"
+        },
+        {
+          "path": "evidence/BV1CH4y1F7Vd/review-c-check.jpg",
+          "sha256": "37c71502ad840b5540b02970d2074d21245f36ea1a7a70e0e69c6f09cd95a581"
+        },
+        {
+          "path": "evidence/BV1CH4y1F7Vd/review-c-notes.md",
+          "sha256": "daa37440ab655c1e1444d84935bee930a1acc02f8fdb203b86470454b3bfb7bb"
+        }
+      ],
+      "reason": "",
+      "reviewer": "cunlv_review_c",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 7
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 29,
+          "durationSeconds": 10800
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 40
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 61
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 82
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 98
+        }
+      ],
+      "contentSha256": "b3c797b25cc72473198625c432aa864aec52fc3db9c0d252fde3a82d980c64fe"
     },
     {
       "bvid": "BV1ji421e7JM",
@@ -18018,22 +18796,73 @@
       "bvid": "BV1MM4m1U7sq",
       "title": "【老式茶叶蛋】用料很少，做法简单，手把手教，我看谁还学不会？",
       "video": "https://www.bilibili.com/video/BV1MM4m1U7sq/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1MM4m1U7sq/source.json",
+          "sha256": "08a1f32aeb30f1aca24f9cdedf2d8c8e8096affe42550d787157ba954c8437df"
+        },
+        {
+          "path": "evidence/BV1MM4m1U7sq/transcript-small.json",
+          "sha256": "e05191ae0e415e300b68a864faefb058b7ecb04f5d69ec8eab918b1620551b7b"
+        },
+        {
+          "path": "evidence/BV1MM4m1U7sq/review-video.mp4",
+          "sha256": "04ab2961d7f580bef10202b27cef898827bc9aae1b6fad87fd40fc15f977462f"
+        },
+        {
+          "path": "evidence/BV1MM4m1U7sq/review-c-check.jpg",
+          "sha256": "91f9e0f59e0df641fddc89a3bbff7bdf2d65904386dea2ca0601627792ca0b99"
+        },
+        {
+          "path": "evidence/BV1MM4m1U7sq/review-c-notes.md",
+          "sha256": "9205798c9cbc108d3bd35498408ae517fe0e98cd12dd4354bc19f43e131a006d"
+        }
+      ],
+      "reason": "",
+      "reviewer": "cunlv_review_c",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 8
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 19
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 28
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 49,
+          "durationSeconds": 600
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 60
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 78
+        }
+      ],
+      "contentSha256": "dbb86f0e5d33ca8babfc317a8257739897ad72af52991c56adc22c6f2f2940bc"
     },
     {
       "bvid": "BV1HS411A7a7",
@@ -18060,43 +18889,146 @@
       "bvid": "BV1FT421Y7YY",
       "title": "【名副其实懒人下饭菜 酱焖辣椒辣椒】我家一个月必吃好几次！",
       "video": "https://www.bilibili.com/video/BV1FT421Y7YY/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1FT421Y7YY/source.json",
+          "sha256": "fa6990fa4bd28427522be2661bf4d15b70085598577db3813b364de777b90fcf"
+        },
+        {
+          "path": "evidence/BV1FT421Y7YY/audio.m4a",
+          "sha256": "7bb9cab3eeaa55b96b02f29e289ffcca10c11d4553b140d874a1b60795f6ec8d"
+        },
+        {
+          "path": "evidence/BV1FT421Y7YY/transcript-small.json",
+          "sha256": "50239edada7a825a7c8637b93fcd18fa13961651bf79599009707eab2410d441"
+        },
+        {
+          "path": "evidence/BV1FT421Y7YY/review-video.mp4",
+          "sha256": "31cbd758dfa6b425be9da16565ee92c5d480042ce1413c81a0d05bd7c8b5aa60"
+        },
+        {
+          "path": "evidence/BV1FT421Y7YY/ingredient-check.jpg",
+          "sha256": "6612fffad2612e4ac63cf7df085b000357fefa832b4103078c05c3a0a2b7fd85"
+        },
+        {
+          "path": "evidence/BV1FT421Y7YY/review-notes.md",
+          "sha256": "5fc4dde3ad6776a8408595beff538e8d5f72db60b2f7e89ceea73535a8ce81a6"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex/parallel-a",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 9
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 25
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 39
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 54,
+          "durationSeconds": 60
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 64
+        }
+      ],
+      "contentSha256": "8b170ac63e4189aa855c13d9bb8e3f58c3fd7117e80d8c01cf9744fac9d88ed9"
     },
     {
       "bvid": "BV1Dy411z7jU",
       "title": "【不用炒糖色的糖醋排骨】手把手教，包教包会",
       "video": "https://www.bilibili.com/video/BV1Dy411z7jU/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1Dy411z7jU/source.json",
+          "sha256": "88b56899dbf62af62e637afa8ad39cbe5cb2a21fbeeaf810a970b2d3678039d5"
+        },
+        {
+          "path": "evidence/BV1Dy411z7jU/audio.m4a",
+          "sha256": "f345054e0dc305506920aeadfe5acdfaa6a60b311f502637268e726b1f5d793f"
+        },
+        {
+          "path": "evidence/BV1Dy411z7jU/transcript-small.json",
+          "sha256": "45bc6ecd97e61ddb0a4a871a8fdf1414410165bbd62dbb8eb20dfd74cb3cfa90"
+        },
+        {
+          "path": "evidence/BV1Dy411z7jU/review-video.mp4",
+          "sha256": "5d35106f02796a8f41637206d205de5f0ab493d648bc37149c522f33d2869b66"
+        },
+        {
+          "path": "evidence/BV1Dy411z7jU/agent-b-check.jpg",
+          "sha256": "f006adbe856413249c642406943b69823d59910cc6e348cb860f48f390fc015b"
+        },
+        {
+          "path": "evidence/BV1Dy411z7jU/agent-b-review-notes.md",
+          "sha256": "a42cce960c9c268b23330506df13c777c31bf3672128a4525197c75bdb1aea5b"
+        }
+      ],
+      "reason": "",
+      "reviewer": "cunlv_review_b",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 6
+        },
+        {
+          "index": 1,
+          "durationSeconds": 2400,
+          "videoTimestampSeconds": 14
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 27
+        },
+        {
+          "index": 3,
+          "durationSeconds": 600,
+          "videoTimestampSeconds": 44
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 69
+        }
+      ],
+      "contentSha256": "c30a70345bf41c4bae9dc30a401ce55d1c78bbe909aad264c92e885a8d5d65a2"
     },
     {
       "bvid": "BV1PZ421M7Bn",
@@ -18123,211 +19055,797 @@
       "bvid": "BV1JJ4m1T7S1",
       "title": "【冰糖肘子保姆级教程 从挑肘子开始教】保姆级教程包教包会！",
       "video": "https://www.bilibili.com/video/BV1JJ4m1T7S1/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1JJ4m1T7S1/source.json",
+          "sha256": "06ed1d8a27b8c2c0bdb030d518de910bcb477d11aa4c92fc6c348420ee1d3cb8"
+        },
+        {
+          "path": "evidence/BV1JJ4m1T7S1/transcript-small.json",
+          "sha256": "17b29fca21dc36184455c1e92da95f20480003c606f2ed5cf04bea46974c4282"
+        },
+        {
+          "path": "evidence/BV1JJ4m1T7S1/review-video.mp4",
+          "sha256": "a408cfb81826cd8f5380193858aed22ac481e7a17f1e8361b7ebef524f0e22f8"
+        },
+        {
+          "path": "evidence/BV1JJ4m1T7S1/root-check.jpg",
+          "sha256": "34a7a8d4162a2f2839ca8ceb1d092f6a019a790c59f04bd59c6f97bfd8be6ad3"
+        },
+        {
+          "path": "evidence/BV1JJ4m1T7S1/root-review-notes.md",
+          "sha256": "e6dab515d7451a7a15fd00ec2e689727e4d9a01fb27a95d31f1f0fb18691d49c"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex/root",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 14
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 35
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 46
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 57
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 82
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 91,
+          "durationSeconds": 3600
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 114
+        }
+      ],
+      "contentSha256": "977b19bdfb9b34e375ad2d7567e27bf85002778ae290938797df254a72ecd5b3"
     },
     {
       "bvid": "BV1pf421B7j5",
       "title": "【气泡感的酥脆牛肉土豆盒】附带万能气泡脆炸糊精准比例教程！包教包会！",
       "video": "https://www.bilibili.com/video/BV1pf421B7j5/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1pf421B7j5/source.json",
+          "sha256": "cf650b4a00373aa02dcdc1750228b357ac373800fdd3d110cc7c77e35b8c63c8"
+        },
+        {
+          "path": "evidence/BV1pf421B7j5/audio.m4a",
+          "sha256": "2094a284ac9c7ac0410935d2764339b06c4cc8e39a663ed9f8f47bf85bdffabe"
+        },
+        {
+          "path": "evidence/BV1pf421B7j5/transcript-small.json",
+          "sha256": "5cc17513f2a9ffd90707f1027ddeb3e025688e037b17fe70ace12ddf9fd57672"
+        },
+        {
+          "path": "evidence/BV1pf421B7j5/review-video.mp4",
+          "sha256": "396e90ccf027a6a17d5fea454381be9dd8c63f5a919dcdbb30bbbc93a9c835e6"
+        },
+        {
+          "path": "evidence/BV1pf421B7j5/ingredient-check.jpg",
+          "sha256": "c2d458718596f6acf3073b4990b769ea175997c43aea2cc16d0b12b2fa66dad6"
+        },
+        {
+          "path": "evidence/BV1pf421B7j5/review-notes.md",
+          "sha256": "c7a7f29b159d0af98b28eb0176d77d42968578fceaa880ab2528df5aeeb0acdf"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex/parallel-a",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 12
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 46
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 70
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 80
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 94,
+          "durationSeconds": 120
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 129,
+          "durationSeconds": 60
+        }
+      ],
+      "contentSha256": "ff34fec0952915dd0310b4b88399d87521005bf43bf2b63a54de3ba3f2d3299d"
     },
     {
       "bvid": "BV1cE421N7fb",
       "title": "【这哪是咸菜，分明就是下饭菜！】东北呼咸菜精准配比教程，包教包会！",
       "video": "https://www.bilibili.com/video/BV1cE421N7fb/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1cE421N7fb/source.json",
+          "sha256": "269bab0c145e5a75f6338b600769252df702972c6dc5de29eec6b81c0e8ab9ae"
+        },
+        {
+          "path": "evidence/BV1cE421N7fb/audio.m4a",
+          "sha256": "950628c563ea0b4e38678d974ba82cf6f4ba4da8dea793602a58ce9376cfc1c6"
+        },
+        {
+          "path": "evidence/BV1cE421N7fb/transcript-small.json",
+          "sha256": "78649c41dceb50a2c7771c7743f2547ea3768a38e082b3436624a5961509dea7"
+        },
+        {
+          "path": "evidence/BV1cE421N7fb/review-video.mp4",
+          "sha256": "fbc1f6a2317d417b921cb73e1c99b2245cc09dbe16b6cfc418b6d4d7c3a634b7"
+        },
+        {
+          "path": "evidence/BV1cE421N7fb/agent-b-check.jpg",
+          "sha256": "cc4baf409cb3c1939c87ca78a119358c5a8f3095275544ddb6b0227232a5ca57"
+        },
+        {
+          "path": "evidence/BV1cE421N7fb/agent-b-review-notes.md",
+          "sha256": "9c91df698c4d25dbbffbc2b36742ba9fa6a10c3ac23d1e404808060b3871b27f"
+        }
+      ],
+      "reason": "",
+      "reviewer": "cunlv_review_b",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 10
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 28
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 37
+        },
+        {
+          "index": 3,
+          "durationSeconds": 1200,
+          "videoTimestampSeconds": 55
+        },
+        {
+          "index": 4,
+          "durationSeconds": 1200,
+          "videoTimestampSeconds": 73
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 82
+        }
+      ],
+      "contentSha256": "9716e3ea692329381a0d3771505e50ee34da1a089481b2de5d2e8c67fb5ac925"
     },
     {
       "bvid": "BV1n1421r7s2",
       "title": "【我做出了红烧牛肉面味的蚂蚁上树】干香十足，回味无穷！保姆级教程，包教包会！",
       "video": "https://www.bilibili.com/video/BV1n1421r7s2/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1n1421r7s2/source.json",
+          "sha256": "b3c3a4b228b3990bf972d713aefa7f789fa45a2d513e00739a1f27164eb70134"
+        },
+        {
+          "path": "evidence/BV1n1421r7s2/transcript-small.json",
+          "sha256": "48d3661d6ca644319775c19756243c2ee55925d10e7dd385d4a1d7b6ab69e4d1"
+        },
+        {
+          "path": "evidence/BV1n1421r7s2/review-video.mp4",
+          "sha256": "510479cd9aea2da2a341e60be48baa445bb346290f27396527ce49762851d36b"
+        },
+        {
+          "path": "evidence/BV1n1421r7s2/review-c-check.jpg",
+          "sha256": "cd9e58ef7d46e8736595a5f0dd45d5fbf359713c0ddd002f5dd58c29bfff6642"
+        },
+        {
+          "path": "evidence/BV1n1421r7s2/review-c-notes.md",
+          "sha256": "a77431db04fbedfc77f4fe8e10c9c3ae1ce66bb3d909183554cfe7d7e4da4479"
+        }
+      ],
+      "reason": "",
+      "reviewer": "cunlv_review_c",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 10,
+          "durationSeconds": 3600
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 16
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 25
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 35
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 38,
+          "durationSeconds": 50
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 44
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 53
+        },
+        {
+          "index": 7,
+          "videoTimestampSeconds": 65
+        },
+        {
+          "index": 8,
+          "videoTimestampSeconds": 73
+        },
+        {
+          "index": 9,
+          "videoTimestampSeconds": 81
+        },
+        {
+          "index": 10,
+          "videoTimestampSeconds": 85
+        },
+        {
+          "index": 11,
+          "videoTimestampSeconds": 89
+        },
+        {
+          "index": 12,
+          "videoTimestampSeconds": 97
+        },
+        {
+          "index": 13,
+          "videoTimestampSeconds": 107
+        }
+      ],
+      "contentSha256": "d814f7b082712d3269e6bc0912362d3c1f157dd491202f0d0f73f48f2b83abca"
     },
     {
       "bvid": "BV17y411z7uD",
       "title": "【麻婆豆腐保姆级教程】包教包会！",
       "video": "https://www.bilibili.com/video/BV17y411z7uD/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV17y411z7uD/source.json",
+          "sha256": "79109f58773def48b43176fae067fc813db429b20e7a6553eb662b642608f4ee"
+        },
+        {
+          "path": "evidence/BV17y411z7uD/transcript-small.json",
+          "sha256": "8576b620156c5cfe44f5c2639402365bb139a6e576531da51ba2aa32ecadea4e"
+        },
+        {
+          "path": "evidence/BV17y411z7uD/review-video.mp4",
+          "sha256": "e2dda24e2a60358d8245de759262d1a857cbde17184966f92b1ac6224bf3cb74"
+        },
+        {
+          "path": "evidence/BV17y411z7uD/root-check.jpg",
+          "sha256": "39db88bd938bf99cdd209753d74c28f6250683f088bd5884e9dc2c74a58f0b13"
+        },
+        {
+          "path": "evidence/BV17y411z7uD/root-review-notes.md",
+          "sha256": "ccc398d04e2cccf335ac3a7230bd69b824e5d287b0d308b3110808bfd407ba84"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex/root",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 6
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 24
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 51
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 65
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 78
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 93
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 114
+        }
+      ],
+      "contentSha256": "56ec370dbeaa4c5bfaaa5a6b64d4aacd1fb32718be3beb483d0dc1fcc7432599"
     },
     {
       "bvid": "BV1Pi421v77y",
       "title": "【外酥里嫩海鲜泡菜饼】学会了就不用下馆子了，保姆级详细教程，包教包会！",
       "video": "https://www.bilibili.com/video/BV1Pi421v77y/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1Pi421v77y/source.json",
+          "sha256": "6eca30b430ab7970fe5eb52f0fa4c6236bad1eee0a5818ffc07e275d65714d71"
+        },
+        {
+          "path": "evidence/BV1Pi421v77y/audio.m4a",
+          "sha256": "7d040944c7218fdc705eb85890b18df131d9eea0bfe13562d01cb43ff4736f0a"
+        },
+        {
+          "path": "evidence/BV1Pi421v77y/transcript-small.json",
+          "sha256": "003bc4119c7bf1b16c2a0136be0e6681c39bb9872481dff2cf69b97a6f4a876a"
+        },
+        {
+          "path": "evidence/BV1Pi421v77y/review-video.mp4",
+          "sha256": "c7ece53c7c5f75b1a877d0b2d46fd5967d9dd79287e16d84a37b0385805f3afd"
+        },
+        {
+          "path": "evidence/BV1Pi421v77y/ingredient-check.jpg",
+          "sha256": "b61933bbe04a42cb90d7f6158404dcf4a79162fe266b871f5c2ce2ef982acd55"
+        },
+        {
+          "path": "evidence/BV1Pi421v77y/review-notes.md",
+          "sha256": "e11ed9102f4b84a50b3a7fb8078f795717e5dee2dfa75a2d6f9ad7484b307a41"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex/parallel-a",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 8
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 25
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 45
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 61
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 79
+        }
+      ],
+      "contentSha256": "ad537e869c34b5d7d8ee2cbe901df842c9a5371b5510f48281a01b7ba5b98039"
     },
     {
       "bvid": "BV1kn4y1X72E",
       "title": "【新疆大盘鸡保姆级教程】完美还原饭店味道 包教包会！",
       "video": "https://www.bilibili.com/video/BV1kn4y1X72E/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1kn4y1X72E/source.json",
+          "sha256": "675442fcdc7d3284d3e53c6fcea0bc0817077a1b04c386e3a97cc5150012d59e"
+        },
+        {
+          "path": "evidence/BV1kn4y1X72E/audio.m4a",
+          "sha256": "469168562dfc577b8f5ff82488c3251ebba505c7ab283bba275009a9ec01b69c"
+        },
+        {
+          "path": "evidence/BV1kn4y1X72E/transcript-small.json",
+          "sha256": "e22e4f31909b2f3d830a282f115aac6f59b7e6225ca6f1e467dec7bbc869f61b"
+        },
+        {
+          "path": "evidence/BV1kn4y1X72E/review-video.mp4",
+          "sha256": "049f0a7249edabdbafed9e63d8af605c9bb6723ee79b13a3b467289183898fae"
+        },
+        {
+          "path": "evidence/BV1kn4y1X72E/agent-b-check.jpg",
+          "sha256": "0ac5b2b8cfd4e293e0ac8bb79b70de97f85d486209556d05bfcf41718723fc29"
+        },
+        {
+          "path": "evidence/BV1kn4y1X72E/agent-b-review-notes.md",
+          "sha256": "35ada54a9ebe6cb325faaf09d5a256433d7539d74dd5b68c259f0f864939e89b"
+        }
+      ],
+      "reason": "",
+      "reviewer": "cunlv_review_b",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 10
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 47
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 75
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 93
+        },
+        {
+          "index": 4,
+          "durationSeconds": 1800,
+          "videoTimestampSeconds": 118
+        },
+        {
+          "index": 5,
+          "durationSeconds": 1200,
+          "videoTimestampSeconds": 123
+        },
+        {
+          "index": 6,
+          "durationSeconds": 60,
+          "videoTimestampSeconds": 128
+        }
+      ],
+      "contentSha256": "96015a7b05d2155ff34091041acd732de60366ceb9746036c854c6b89a4abfde"
     },
     {
       "bvid": "BV1mn4y1X7nj",
       "title": "【可商用可家用 椒麻酸辣无骨鸡爪配方毫无保留的分享】不是标题党！！！",
       "video": "https://www.bilibili.com/video/BV1mn4y1X7nj/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1mn4y1X7nj/source.json",
+          "sha256": "bb9c9d88e87292114d97ac89cb250ea4a921801763a522bdd069a62007121660"
+        },
+        {
+          "path": "evidence/BV1mn4y1X7nj/transcript-small.json",
+          "sha256": "8c4a88c0effc14f13f0a3842a35a0580867da2cf4a6e5359fccc12422a909f37"
+        },
+        {
+          "path": "evidence/BV1mn4y1X7nj/review-video.mp4",
+          "sha256": "10ec4ae034cba2962e780fdd2eb923b0f1f024a45d4310323a92c1bc81fb6458"
+        },
+        {
+          "path": "evidence/BV1mn4y1X7nj/review-c-check.jpg",
+          "sha256": "44cef6321542fa9f94e4ea7afff53fcb9b1b7d290877a8f53a635a6b9c74239d"
+        },
+        {
+          "path": "evidence/BV1mn4y1X7nj/review-c-notes.md",
+          "sha256": "6d4178cba125b6c90f99fdffb0043fa29d898364adf68dce3cfa9a7a209d8e6c"
+        }
+      ],
+      "reason": "",
+      "reviewer": "cunlv_review_c",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 11,
+          "durationSeconds": 420
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 28,
+          "durationSeconds": 420
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 34,
+          "durationSeconds": 1800
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 43
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 103
+        }
+      ],
+      "contentSha256": "5f1c69973f9f3ccffe5923a8fe6c838b0081af3bd1bf6cc45c56f6c3c658cd55"
     },
     {
       "bvid": "BV1cs421M7AM",
       "title": "【北方版鱼香肉丝详细但不啰嗦全讲解】保姆级教程包教包会",
       "video": "https://www.bilibili.com/video/BV1cs421M7AM/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1cs421M7AM/source.json",
+          "sha256": "b8195f95884695fe6aec93e20ad63b177bd5c11d230b4ebbc1f399fad810b08b"
+        },
+        {
+          "path": "evidence/BV1cs421M7AM/transcript-small.json",
+          "sha256": "ac68826caecca7aeb7d9a43ee861d34a87fa07025028e83dec20f5d303dcf044"
+        },
+        {
+          "path": "evidence/BV1cs421M7AM/review-video.mp4",
+          "sha256": "632e5eb8ceba7c54a10ac4bb94629385e635aba5b242246ea0771e1fe984cf53"
+        },
+        {
+          "path": "evidence/BV1cs421M7AM/root-check.jpg",
+          "sha256": "65fcb9b4e431f1e90da8cdb5d637dd083fec971d315291da96715361cf18dcf2"
+        },
+        {
+          "path": "evidence/BV1cs421M7AM/root-review-notes.md",
+          "sha256": "e32567dfc945f33618966d931acb132b76662b2f31741e9a7da92ed92b36c2cf"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex/root",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 7
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 19
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 25
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 47
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 71
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 85
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 103
+        },
+        {
+          "index": 7,
+          "videoTimestampSeconds": 109
+        },
+        {
+          "index": 8,
+          "videoTimestampSeconds": 120
+        }
+      ],
+      "contentSha256": "d473caf4b31e425c52c658e5dcf30afe913461a79c633a048d32420218e8984b"
     },
     {
       "bvid": "BV11x4y147dD",
       "title": "【大道至简 西红柿土豆炖牛腩】做了19年的拿手菜，试一次你会回来感谢我！",
       "video": "https://www.bilibili.com/video/BV11x4y147dD/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV11x4y147dD/source.json",
+          "sha256": "a167d584535bb6d79fbbd001bf2505df6b309f5a1d4c68a269448b18b030a7fe"
+        },
+        {
+          "path": "evidence/BV11x4y147dD/audio.m4a",
+          "sha256": "1354729eb9f6e1aaa28d7b6cbe5de5cfb980254e9acffb53b3d6cf92c2d230c4"
+        },
+        {
+          "path": "evidence/BV11x4y147dD/transcript-small.json",
+          "sha256": "a1ae7ab6fc0e28ad155a36943ded7fa8416092a64adfeeedbbdfd07e68412386"
+        },
+        {
+          "path": "evidence/BV11x4y147dD/review-video.mp4",
+          "sha256": "0aa268d0a544a419edbf5ce41c099a336eecdf63f94c93cf200af1a0feb0e534"
+        },
+        {
+          "path": "evidence/BV11x4y147dD/ingredient-check.jpg",
+          "sha256": "4441d04d790a65aa4cbede08836a1f8c315fa6e9c8e7d4837478645e6ce4f498"
+        },
+        {
+          "path": "evidence/BV11x4y147dD/review-notes.md",
+          "sha256": "768929c123a6887f32f174a4c8cbc6493f486bab11880e79ed31dfbcc5c1cc88"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex/parallel-a",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 10
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 29
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 38
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 54
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 68
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 73,
+          "durationSeconds": 1800
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 82
+        }
+      ],
+      "contentSha256": "db766a62a5f958330f609b2b6ee3e01d1601c2d0ee8eae7f0e49336262c40025"
     },
     {
       "bvid": "BV1zZ421M7Ez",
@@ -18494,22 +20012,72 @@
       "bvid": "BV1m1421C7h7",
       "title": "【大酸甜口精准比例凉拌菜】家里开饭店时桌桌必点的一道菜，包教包会！",
       "video": "https://www.bilibili.com/video/BV1m1421C7h7/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1m1421C7h7/source.json",
+          "sha256": "ae2902332caaffcbe7fcf19408902c4301f5b4aa9d5a42efc74d26437078da2a"
+        },
+        {
+          "path": "evidence/BV1m1421C7h7/transcript-small.json",
+          "sha256": "f8211f70aa56f9025935f2650ce7c89d80c2a107a9c92cd1866cfb35463cc878"
+        },
+        {
+          "path": "evidence/BV1m1421C7h7/review-video.mp4",
+          "sha256": "d552a823da71802e81ed480d6a592602364456f916e96d2da1c7e1fc7b892f35"
+        },
+        {
+          "path": "evidence/BV1m1421C7h7/root-check.jpg",
+          "sha256": "8ae1e409f729e25065eeadb0026fd85564cf1b2de814a4b79a191e8b196ef259"
+        },
+        {
+          "path": "evidence/BV1m1421C7h7/root-review-notes.md",
+          "sha256": "fd6ebb7481c96c346265e05843b00ecaca767641209d23f6fbd6d5fd0ad49913"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex/root",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 13
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 25
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 38
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 47
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 53
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 71
+        }
+      ],
+      "contentSha256": "ff086c935300ac2b9411aaa4b2f9877d921b461cec0a6e421602eaf8327b05fe"
     },
     {
       "bvid": "BV12y411q7aj",
@@ -18634,43 +20202,166 @@
       "bvid": "BV1r1421r7A1",
       "title": "夏日神仙小菜，老醋花生，包教包会的保姆级教程",
       "video": "https://www.bilibili.com/video/BV1r1421r7A1/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV1r1421r7A1/source.json",
+          "sha256": "e418934fd4f3007556d3932b94d39d1dd47530f91baffe484dc6a58ecb844adc"
+        },
+        {
+          "path": "evidence/BV1r1421r7A1/transcript-small.json",
+          "sha256": "005666e3cf83e4504e36a019863e25e87348d1fdf6b2ad29a334a9ca0eedd00f"
+        },
+        {
+          "path": "evidence/BV1r1421r7A1/review-video.mp4",
+          "sha256": "4285af8f0ead7b25482a0f6e1f4091c5e5d503980b1dea82d47d83d4867cb96b"
+        },
+        {
+          "path": "evidence/BV1r1421r7A1/root-check.jpg",
+          "sha256": "7fd859e573b78e53d66d47eca038818e20c1c9c74a331f0567eed69301575297"
+        },
+        {
+          "path": "evidence/BV1r1421r7A1/root-review-notes.md",
+          "sha256": "2c641199cfe070de4874b8fde2c060ff3d776cbc35e10bd4c2ea4effaea72a43"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex/root",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 7
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 11
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 16
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 37
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 57
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 74
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 78
+        }
+      ],
+      "contentSha256": "b71630bb25f367f7018cb5a0ae2d7c2498de3a00eaa55119446f18d8f2d6770c"
     },
     {
       "bvid": "BV16y411z7Sm",
       "title": "真正跟鱼丸一样脆弹的鸡胸肉丸，去腥的关键，搅打多少下，都明确的告诉您，保姆级包会教程！",
       "video": "https://www.bilibili.com/video/BV16y411z7Sm/",
-      "status": "pending-review",
+      "status": "reviewed-included",
       "hasCommunityTranscript": true,
       "sponsored": false,
       "checks": {
-        "ingredients": false,
-        "amounts": false,
-        "allocation": false,
-        "instructions": false,
-        "heat": false,
-        "durations": false,
-        "videoTimestamps": false,
-        "tips": false,
-        "promotionRemoved": false
+        "ingredients": true,
+        "amounts": true,
+        "allocation": true,
+        "instructions": true,
+        "heat": true,
+        "durations": true,
+        "videoTimestamps": true,
+        "tips": true,
+        "promotionRemoved": true
       },
-      "evidence": [],
-      "reason": ""
+      "evidence": [
+        {
+          "path": "evidence/BV16y411z7Sm/source.json",
+          "sha256": "577c71f8a54faad069bc11651d55703cfd5b32e3ce4a2cd2ad3837abf93d5d0c"
+        },
+        {
+          "path": "evidence/BV16y411z7Sm/audio.m4a",
+          "sha256": "97cccbf5d3c6d1595bd1116cd4d4cbb5ce507501dc93d3d2550c7e6707b78582"
+        },
+        {
+          "path": "evidence/BV16y411z7Sm/transcript-small.json",
+          "sha256": "707c527b7139c7d80372f65041670e090a394cf963ff021ba5a60e81533588f4"
+        },
+        {
+          "path": "evidence/BV16y411z7Sm/review-video.mp4",
+          "sha256": "a24ffc38e061a4d274fd78ca756a78595c0490dd54b92b351042e04955fffa87"
+        },
+        {
+          "path": "evidence/BV16y411z7Sm/ingredient-check.jpg",
+          "sha256": "cfd9a81b0d011f080c99c67de0f190dbe2ce9032a18607aa5f0f8dab22b7397a"
+        },
+        {
+          "path": "evidence/BV16y411z7Sm/review-notes.md",
+          "sha256": "8bb376903165f2a0272893d1e2e67ac38fa2c6384c1b2620447aa50e9c15a3bc"
+        },
+        {
+          "path": "evidence/BV16y411z7Sm/ingredient-native.png",
+          "sha256": "6a601ea8033d5a2fada68e065495ec1ed5b38792172ac0a0815e5eaf4ca2a2a4"
+        }
+      ],
+      "reason": "",
+      "reviewer": "Codex/parallel-a",
+      "reviewedAt": "2026-11-22",
+      "stepMetadata": [
+        {
+          "index": 0,
+          "videoTimestampSeconds": 11
+        },
+        {
+          "index": 1,
+          "videoTimestampSeconds": 23,
+          "durationSeconds": 7200
+        },
+        {
+          "index": 2,
+          "videoTimestampSeconds": 41
+        },
+        {
+          "index": 3,
+          "videoTimestampSeconds": 59
+        },
+        {
+          "index": 4,
+          "videoTimestampSeconds": 83
+        },
+        {
+          "index": 5,
+          "videoTimestampSeconds": 113
+        },
+        {
+          "index": 6,
+          "videoTimestampSeconds": 132,
+          "durationSeconds": 480
+        },
+        {
+          "index": 7,
+          "videoTimestampSeconds": 151,
+          "durationSeconds": 60
+        }
+      ],
+      "contentSha256": "5f810ccaa1c9588b09a0a753870fd8aa43a607de8de4323d57fc0332e0481062"
     },
     {
       "bvid": "BV1yw4m1v7Sy",
