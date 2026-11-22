@@ -7,7 +7,7 @@
   "catalogComplete": false,
   "upstreamCount": 386,
   "included": 375,
-  "reviewed": 325,
+  "reviewed": 352,
   "excluded": [
     {
       "bvid": "BV1gqTf6BEC5",
@@ -171,7 +171,7 @@
   "allRecipesComplete": false,
   "states": {
     "excluded": 26,
-    "reviewed-included": 325,
-    "pending-review": 50
+    "reviewed-included": 352,
+    "pending-review": 23
   }
 }
