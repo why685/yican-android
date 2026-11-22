@@ -6,8 +6,8 @@
   "catalogFetched": 401,
   "catalogComplete": false,
   "upstreamCount": 385,
-  "included": 372,
-  "reviewed": 91,
+  "included": 374,
+  "reviewed": 106,
   "excluded": [
     {
       "bvid": "BV1gqTf6BEC5",
@@ -62,18 +62,6 @@
       "title": "【祝亲爱的你们，新的一年万事顺遂，平安喜乐】",
       "status": "excluded",
       "reason": "全片约15.7秒为新年问候祝福，无菜肴食材、配方或操作教程。"
-    },
-    {
-      "bvid": "BV1Zwf9BoEEg",
-      "title": "【广：巨巨巨巨好吃的烧烤味炒蘑菇】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
-    },
-    {
-      "bvid": "BV1Y3BZByEgx",
-      "title": "【广：这个烧烤料可以空气炸锅一切，今日是空气炸锅烤玉米】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
     },
     {
       "bvid": "BV1BHS6BPE7N",
@@ -189,7 +177,7 @@
   "allRecipesComplete": false,
   "states": {
     "excluded": 24,
-    "reviewed-included": 91,
-    "pending-review": 286
+    "reviewed-included": 106,
+    "pending-review": 271
   }
 }
