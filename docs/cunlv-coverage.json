@@ -5,9 +5,9 @@
   "catalogExpected": 402,
   "catalogFetched": 401,
   "catalogComplete": false,
-  "upstreamCount": 385,
-  "included": 374,
-  "reviewed": 135,
+  "upstreamCount": 386,
+  "included": 375,
+  "reviewed": 159,
   "excluded": [
     {
       "bvid": "BV1gqTf6BEC5",
@@ -166,18 +166,12 @@
       "title": "【广：夏天在家煮一锅麻辣烫，吹着风扇追个剧‼️】",
       "video": "https://www.bilibili.com/video/BV188NQ6GEir/",
       "status": "needs-source-review"
-    },
-    {
-      "bvid": "BV1kmtHetEc8",
-      "title": "【满屋飘香绝味酱大骨】吃完了嘴巴都留香啊！以及炒糖色保姆级教程！",
-      "video": "https://www.bilibili.com/video/BV1kmtHetEc8/",
-      "status": "needs-source-review"
     }
   ],
   "allRecipesComplete": false,
   "states": {
     "excluded": 26,
-    "reviewed-included": 135,
-    "pending-review": 240
+    "reviewed-included": 159,
+    "pending-review": 216
   }
 }

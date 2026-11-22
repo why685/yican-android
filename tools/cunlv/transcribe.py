@@ -26,6 +26,7 @@ parser.add_argument('--output')
 parser.add_argument('--prepare', action='store_true')
 parser.add_argument('--model', default='medium')
 parser.add_argument('--batch', action='store_true')
+parser.add_argument('--reverse-queue', action='store_true', help='Process the other end of the acquisition queue to reduce duplicate work')
 parser.add_argument('--limit', type=int)
 parser.add_argument('--cpu-threads', type=int, default=8)
 parser.add_argument('--transcript-name', default='transcript.json')
@@ -99,6 +100,8 @@ else:
     while True:
         progress=json.loads((review_root/'acquisition-progress.json').read_text(encoding='utf-8'))
         available=sorted([row for row in progress['items'] if row.get('status')=='evidence-acquired'],key=lambda row:row['bvid'] in upstream)
+        if args.reverse_queue:
+            available.reverse()
         next_item=None
         for row in available:
             if row['bvid'] in done or row['bvid'] in failures:continue

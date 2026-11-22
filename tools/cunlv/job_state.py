@@ -5,6 +5,7 @@ import json
 import msvcrt
 import os
 from pathlib import Path
+import time
 
 
 class JobState:
@@ -31,7 +32,16 @@ class JobState:
         self.value['updatedAt'] = datetime.now(timezone.utc).isoformat()
         temporary = self.path.with_suffix('.tmp.json')
         temporary.write_text(json.dumps(self.value, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
-        temporary.replace(self.path)
+        # Windows readers may briefly hold a handle without delete sharing.
+        # Keep the atomic write, but allow the reader to close before replacing.
+        for attempt in range(8):
+            try:
+                temporary.replace(self.path)
+                break
+            except PermissionError:
+                if attempt == 7:
+                    raise
+                time.sleep(0.05 * (attempt + 1))
 
     def close(self):
         if self.lock.closed:
