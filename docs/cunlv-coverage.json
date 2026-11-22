@@ -7,7 +7,7 @@
   "catalogComplete": false,
   "upstreamCount": 385,
   "included": 374,
-  "reviewed": 126,
+  "reviewed": 135,
   "excluded": [
     {
       "bvid": "BV1gqTf6BEC5",
@@ -72,8 +72,8 @@
     {
       "bvid": "BV1J7xHzrEcn",
       "title": "【广：馋啥就拍啥之 今天吃东北过桥电线】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
+      "status": "excluded",
+      "reason": "成套米线商品的烹煮与试吃广告；核心汤底依赖未公开配方的专属底料包，仅说明成品料包与米线配菜煮法，不具备可独立复现的完整汤底教程。"
     }
   ],
   "missing": [
@@ -176,8 +176,8 @@
   ],
   "allRecipesComplete": false,
   "states": {
-    "excluded": 25,
-    "reviewed-included": 126,
-    "pending-review": 250
+    "excluded": 26,
+    "reviewed-included": 135,
+    "pending-review": 240
   }
 }
