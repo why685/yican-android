@@ -12,6 +12,25 @@ for (const file of ['recipes-suipo.js','recipes-laocp.js','recipes-cunlv.js']) {
 const recipes = context.window.CUNLV_RECIPES;
 const coverage=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../docs/cunlv-coverage.json'),'utf8'));
 
+test('reviewed noodle sauce does not turn a sauce serving suggestion into extra salt',()=>{
+  const recipe=recipes.find(item=>item.video.includes('BV1WVViz4Er7'));
+  assert.equal(recipe.provenance.kind,'video-reviewed');
+  assert.equal(recipe.ingredients.find(item=>item.name==='春酱').amount,'120克');
+  assert.equal(recipe.ingredients.some(item=>item.name==='盐'),false);
+  assert.doesNotMatch(JSON.stringify(recipe),/多放盐|盐可以多来/);
+});
+
+test('reviewed chicken broth lists actual spices and separates the oil batch from the serving',()=>{
+  const recipe=recipes.find(item=>item.video.includes('BV1E5TszvEeJ'));
+  assert.equal(recipe.provenance.kind,'video-reviewed');
+  assert.equal(recipe.ingredients.find(item=>item.name==='丁香（熬汤）').amount,'0.2克');
+  assert.equal(recipe.ingredients.find(item=>item.name==='食用油（整批红油）').amount,'700克');
+  assert.equal(recipe.ingredients.find(item=>item.name==='成品辣椒油').amount,'150克');
+  const restored=core.normalizeRecipeOverride(JSON.parse(JSON.stringify(recipe)));
+  assert.ok(restored.ingredients.find(item=>item.name==='成品辣椒油').note.includes('不重复'));
+  assert.deepEqual(Array.from(recipe.steps.filter(s=>s[2]).map(s=>s[2])),[4500,900,1200]);
+});
+
 test('Cunlv recipes load alongside every previous built-in without reference collisions', () => {
   const script = fs.readFileSync(path.join(root,'app.js'),'utf8');
   vm.runInNewContext(script.split('const escapeHtml')[0] + ';window.allBuiltins=builtInRecipes;',context);
