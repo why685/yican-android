@@ -7,7 +7,7 @@
   "catalogComplete": false,
   "upstreamCount": 385,
   "included": 374,
-  "reviewed": 106,
+  "reviewed": 126,
   "excluded": [
     {
       "bvid": "BV1gqTf6BEC5",
@@ -66,8 +66,8 @@
     {
       "bvid": "BV1BHS6BPE7N",
       "title": "【广：啥都能蘸！东北烧烤料！！】",
-      "status": "pending-review",
-      "reason": "等待复核完整教程，不因广告标签直接排除"
+      "status": "excluded",
+      "reason": "整片为成品东北烧烤料的用途示范、工厂生产与检测报告及售卖说明；未公开烧烤料配比，也未完整讲解淀粉肠或其他菜肴的制作参数，不构成可独立复现教程。"
     },
     {
       "bvid": "BV1J7xHzrEcn",
@@ -176,8 +176,8 @@
   ],
   "allRecipesComplete": false,
   "states": {
-    "excluded": 24,
-    "reviewed-included": 106,
-    "pending-review": 271
+    "excluded": 25,
+    "reviewed-included": 126,
+    "pending-review": 250
   }
 }
