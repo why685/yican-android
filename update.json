@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "versionCode": 16,
-  "versionName": "1.9.1",
-  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.9.1/YiCan-1.9.1.apk",
+  "versionCode": 17,
+  "versionName": "1.10.0",
+  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.10.0/YiCan-1.10.0.apk",
   "apkUrls": [
-    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.9.1/YiCan-1.9.1.apk",
-    "https://github.com/why685/yican-android/releases/download/v1.9.1/YiCan-1.9.1.apk"
+    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.10.0/YiCan-1.10.0.apk",
+    "https://github.com/why685/yican-android/releases/download/v1.10.0/YiCan-1.10.0.apk"
   ],
-  "sha256": "6453d50eab74e76132c5e3294b09fbcf6f1b4bcb8c9eb349a97a0e4b4a8eaea3",
-  "releaseNotes": "依据中餐菜谱补完计划完善 45 道已有同名菜；整理现有食材用量并增加老菜谱书名、页码和参考入口；不新增菜谱，不改变原来源视频和做法。"
+  "sha256": "8bdf5bbbc9c0c3eda7949c4026fb112c27a2cd4553c00ae57b3d50d8d15cd58f",
+  "releaseNotes": "新增375道已对照原视频核对的村驴菜谱，补足用量、处理说明、做法、Tips和视频时间点；保留原有138条菜谱及个人数据，继续支持收藏、本机修改、份数换算和备份。"
 }

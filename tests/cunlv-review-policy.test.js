@@ -38,6 +38,17 @@ test('curated sponsored candidates can be prepared without approving their relea
   assert.ok(releaseErrors(ledger,[{...recipe,provenance:{kind:'community-transcript'}}]).some(error=>error.includes('待核对')));
 });
 
+test('explicit catalog scope authorization does not approve pending recipes',()=>{
+  const ledger=reviewed();ledger.catalog.complete=false;
+  ledger.catalog.resolution={accepted:true,reason:'User excludes an unidentified catalog slot',evidence:[{path:'scope-authorization.json',sha256:'b'.repeat(64)}]};
+  assert.deepEqual(releaseErrors(ledger,[recipe]),[]);
+  ledger.items[0].status='pending-review';
+  assert.ok(releaseErrors(ledger,[recipe]).some(error=>error.includes('待核对')));
+  ledger.items[0].status='reviewed-included';
+  ledger.catalog.resolution.evidence[0].sha256='invalid';
+  assert.ok(releaseErrors(ledger,[recipe]).some(error=>error.includes('目录计数')));
+});
+
 test('a sponsored tutorial can pass review; exclusions require a reason and evidence',()=>{
   const sponsored=reviewed();sponsored.items[0].sponsored=true;
   assert.deepEqual(releaseErrors(sponsored,[recipe]),[]);

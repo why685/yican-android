@@ -826,8 +826,8 @@ function initializeAppInfo() {
   if (!window.YiCanAndroid?.getAppInfo) return;
   try {
     const info = JSON.parse(window.YiCanAndroid.getAppInfo());
-    els.currentVersion.textContent = info.versionName || "1.9.0";
-    els.updateCurrentVersion.textContent = info.versionName || "1.9.0";
+    els.currentVersion.textContent = info.versionName || "1.10.0";
+    els.updateCurrentVersion.textContent = info.versionName || "1.10.0";
     state.appVersion = info.versionName || "unknown";
     pollUpdateState();
   } catch (_) {}

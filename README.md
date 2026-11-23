@@ -2,13 +2,13 @@
 
 一餐是一款离线可用的 Android 菜谱 App。它支持统一关键词搜索、收藏、最近浏览、个人菜谱管理、完整数据备份，以及通过 GitHub Releases 检查并安装更新。
 
-## 当前开发：村驴菜谱
+## 1.10.0：村驴菜谱
 
 截至2026-11-22，已知截止日内401条村驴投稿全部完成核对：375道菜谱收录、26条排除，无待核对菜谱。支持统一搜索、分类、份数换算、本机修改、收藏与备份；食材处理说明可以独立编辑。原有138条内置记录（包括132条隋坡菜谱）保持原引用。
 
-社区底稿来源于 [Cunlv-Skill](https://github.com/Ryder-Sun/Cunlv-Skill)，结合完整转写底稿和人工查看原视频关键画面复核，不声称逐条连续播放全片。广告教程保留独立可复现的菜谱、去掉推广；纯商品介绍与日常排除并记录证据。逐条结论见[复核清单](docs/cunlv-review.json)。原目录未返回的索引202仍缺身份依据；完整重抓已证实官方接口计数不一致，但尚不足以证明该历史位置是什么作品。因此继续保留发布阻塞，不修改版本号、不创建Release。详见[本轮验收报告](docs/cunlv-audit-20261122.md)。
+社区底稿来源于 [Cunlv-Skill](https://github.com/Ryder-Sun/Cunlv-Skill)，结合完整转写底稿和人工查看原视频关键画面复核，不声称逐条连续播放全片。广告教程保留独立可复现的菜谱、去掉推广；纯商品介绍与日常排除并记录证据。逐条结论见[复核清单](docs/cunlv-review.json)。2026-11-23用户明确决定不再等待未返回BV的历史索引202，按已核对的401条投稿统一发布；原目录统计及未知身份如实保留，该位置不记为已复核或已排除。历史验收记录见[核对报告](docs/cunlv-audit-20261122.md)，最新发布范围见[1.10.0说明](docs/release-1.10.0.md)。
 
-详情区分“社区文字整理”与“已对照原视频核对”，后者显示复核日期；本机修改版另行说明。未复核内容不再自动提取数字生成预设计时。核对状态详见 [覆盖清单](docs/cunlv-coverage.json) 和 [第三方资料说明](THIRD_PARTY_NOTICES.md)。所有数据仍在开发中，尚未发布到手机端。
+本次375道菜谱均显示原视频复核日期；本机修改版另行说明。未复核内容不自动提取数字生成预设计时。核对状态详见 [覆盖清单](docs/cunlv-coverage.json) 和 [第三方资料说明](THIRD_PARTY_NOTICES.md)。手机安装1.10.0后可用。
 
 正式打包前必须执行 `node tools/cunlv/check-release.cjs`；`assembleRelease`、`bundleRelease` 已依赖该检查。目录未解释、待核对、不可访问、证据哈希变化、配方复核后内容变化均会阻止发布。开发用 Debug 构建与 Lint 可独立执行。
 
@@ -110,11 +110,11 @@ node --test tests/app-core.test.js
 
 ## 发布更新
 
-创建标签格式为 `v1.9.1` 的 GitHub Release，并上传：
+创建标签格式为 `v1.10.0` 的 GitHub Release，并上传：
 
-- `YiCan-1.9.1.apk`
-- `YiCan-1.9.1.apk.sha256`
-- `YiCan-Android-Source-1.9.1.zip`
+- `YiCan-1.10.0.apk`
+- `YiCan-1.10.0.apk.sha256`
+- `YiCan-Android-Source-1.10.0.zip`
 - `update.json`
 
 `update.json` 格式：
@@ -122,15 +122,15 @@ node --test tests/app-core.test.js
 ```json
 {
   "schemaVersion": 1,
-  "versionCode": 16,
-  "versionName": "1.9.1",
-  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.9.1/YiCan-1.9.1.apk",
+  "versionCode": 17,
+  "versionName": "1.10.0",
+  "apkUrl": "https://github.com/why685/yican-android/releases/download/v1.10.0/YiCan-1.10.0.apk",
   "apkUrls": [
-    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.9.1/YiCan-1.9.1.apk",
-    "https://github.com/why685/yican-android/releases/download/v1.9.1/YiCan-1.9.1.apk"
+    "https://gh-proxy.org/https://github.com/why685/yican-android/releases/download/v1.10.0/YiCan-1.10.0.apk",
+    "https://github.com/why685/yican-android/releases/download/v1.10.0/YiCan-1.10.0.apk"
   ],
-  "sha256": "6453d50eab74e76132c5e3294b09fbcf6f1b4bcb8c9eb349a97a0e4b4a8eaea3",
-  "releaseNotes": "完善 45 道已有同名菜，整理食材用量并增加老菜谱书名、页码和参考入口"
+  "sha256": "8bdf5bbbc9c0c3eda7949c4026fb112c27a2cd4553c00ae57b3d50d8d15cd58f",
+  "releaseNotes": "新增375道已复核村驴菜谱，保留原有138条及本机数据"
 }
 ```
 

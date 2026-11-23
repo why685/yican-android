@@ -183,7 +183,7 @@
       "reason": "麻辣烫商品煮制；核心专属料包未公开完整组成、比例和制作方法，无法去除特定商品后独立复现。"
     }
   ],
-  "allRecipesComplete": false,
+  "allRecipesComplete": true,
   "states": {
     "excluded": 26,
     "reviewed-included": 375

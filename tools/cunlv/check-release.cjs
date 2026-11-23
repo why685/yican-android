@@ -13,7 +13,9 @@ try{
   const snapshotFile=ledger.catalog.snapshotFile||'catalog-verified.json';
   if(!validSnapshotName(snapshotFile))throw new Error('目录快照文件名无效');
   if(digest(path.join(evidenceRoot,snapshotFile))!==ledger.catalog.snapshotSha256)errors.push('原始目录快照与复核清单不一致');
-  for(const record of ledger.items){
+  const records=[...ledger.items];
+  if(ledger.catalog.resolution?.accepted===true)records.push({bvid:'catalog-resolution',status:'excluded',evidence:ledger.catalog.resolution.evidence});
+  for(const record of records){
     if(!['reviewed-included','excluded'].includes(record.status))continue;
     for(const item of record.evidence||[]){
       const target=path.resolve(evidenceRoot,item.path);

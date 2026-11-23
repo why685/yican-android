@@ -16,7 +16,7 @@
     ],
     "snapshotFile": "catalog-scope-20261116.json",
     "snapshotSha256": "f1323d4da344508b16c72a06630ec43819795b5f55239b4032d38ec372227ef5",
-    "resolution": null
+    "resolution": {"accepted":true,"acceptedAt":"2026-11-23","reason":"用户明确授权忽略未返回BV的历史索引202，按已完整枚举并核对的401条投稿发布。原expected402、fetched401及complete=false保持不变；未知位置不记为已复核或排除。","evidence":[{"path":"release-scope-authorization-20261123.json","sha256":"12f73595b931805c90e08e5bbc69ae8cb29ba2bc36a930f8d984923f98741423"},{"path":"parallel-b/catalog-gap-20261122/reconciliation-summary.json","sha256":"63c5631adf4d991aebcd39194f7f6f89932622194f3c510984765a167fbff2dd"},{"path":"catalog-probe-20261123/report.json","sha256":"0f672b710f1885c7e70380b7faf2ff0a98ec3a6ad98407fe9fe260b9a02ae6ce"}]}
   },
   "policy": {
     "sponsoredRecipes": "include-independent-recipe-remove-promotion",
