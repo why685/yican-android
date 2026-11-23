@@ -1,0 +1,80 @@
+[
+  {
+    "name": "public-wbi-archives",
+    "url": "https://api.bilibili.com/x/space/wbi/arc/search?mid=417298480&pn=7&ps=30&order=pubdate",
+    "capturedAt": "2026-11-23T12:57:10.834Z",
+    "status": 412,
+    "sha256": "e7badcc8c88ee24673ace7d93d15543ef41a0f6db1f93d17a2b1fe8ef6d8ee01",
+    "file": "public-wbi-archives.txt"
+  },
+  {
+    "name": "gap-forward",
+    "url": "https://api.bilibili.com/x/v2/medialist/resource/list?type=1&biz_id=417298480&otype=2&oid=114588771228946&mobi_app=web&with_current=true&sort_field=1&tid=0&desc=true&ps=5&direction=false",
+    "capturedAt": "2026-11-23T12:57:11.081Z",
+    "status": 200,
+    "code": 0,
+    "sha256": "e51b679182cf65745f8a12c01c62e57bf94a9b4ece0e19acf3d0ae31d09345bd",
+    "file": "gap-forward.txt",
+    "items": [
+      {
+        "index": 205,
+        "aid": 114588771228946,
+        "title": "【冷吃牛肉保姆级全攻略】好吃到怀疑人生",
+        "pubtime": 1748486490
+      },
+      {
+        "index": 207,
+        "aid": 114559914352498,
+        "title": "【不用开火的懒人腌黄瓜 嘎嘣脆】",
+        "pubtime": 1748045957
+      },
+      {
+        "index": 208,
+        "aid": 114543254574848,
+        "title": "【比肉都香的杂粮菜团子】管理期一定安排上",
+        "pubtime": 1747791819
+      },
+      {
+        "index": 209,
+        "aid": 114532399714973,
+        "title": "【柠檬手撕鸡保姆级教程】",
+        "pubtime": 1747626554
+      }
+    ]
+  },
+  {
+    "name": "gap-reverse",
+    "url": "https://api.bilibili.com/x/v2/medialist/resource/list?type=1&biz_id=417298480&otype=2&oid=114559914352498&mobi_app=web&with_current=true&sort_field=1&tid=0&desc=true&ps=5&direction=true",
+    "capturedAt": "2026-11-23T12:57:11.303Z",
+    "status": 200,
+    "code": 0,
+    "sha256": "68c70e896d04f3aec5795bb31074e17e57cea4eb95fb0f3ea43a19b2b7c0817e",
+    "file": "gap-reverse.txt",
+    "items": [
+      {
+        "index": 203,
+        "aid": 114628382168286,
+        "title": "【家庭版 钵钵鸡 保姆级全攻略】",
+        "pubtime": 1749090958
+      },
+      {
+        "index": 204,
+        "aid": 114617695148927,
+        "title": "【免洗凉皮 保姆级全攻略】",
+        "pubtime": 1748927885
+      },
+      {
+        "index": 205,
+        "aid": 114588771228946,
+        "title": "【冷吃牛肉保姆级全攻略】好吃到怀疑人生",
+        "pubtime": 1748486490
+      },
+      {
+        "index": 207,
+        "aid": 114559914352498,
+        "title": "【不用开火的懒人腌黄瓜 嘎嘣脆】",
+        "pubtime": 1748045957
+      }
+    ]
+  }
+]
